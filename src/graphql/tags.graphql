@@ -1,0 +1,13 @@
+query photosWithTag($input: TagInput!) {
+  photosWithTag(input: $input) {
+    id
+    name
+    createdAt
+    updatedAt
+    photosWithTag {
+      photo {
+        ...PhotoInfo
+      }
+    }
+  }
+}

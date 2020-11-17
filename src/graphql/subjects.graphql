@@ -1,0 +1,13 @@
+query photosOfSubject($input: SubjectInput!) {
+  photosOfSubject(input: $input) {
+    id
+    name
+    createdAt
+    updatedAt
+    photosOfSubject {
+      photo {
+        ...PhotoInfo
+      }
+    }
+  }
+}

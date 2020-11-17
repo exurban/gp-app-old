@@ -1,0 +1,19 @@
+mutation getApiToken($input: GetApiTokenInput!) {
+  getApiToken(input: $input)
+}
+
+mutation addPhotoToFavorites($photoId: Float!) {
+  addPhotoToFavorites(photoId: $photoId)
+}
+
+mutation removePhotoFromFavorites($photoId: Float!) {
+  removePhotoFromFavorites(photoId: $photoId)
+}
+
+mutation addPhotoToShoppingBag($photoId: Float!) {
+  addPhotoToShoppingBag(photoId: $photoId)
+}
+
+mutation removePhotoFromShoppingBag($photoId: Float!) {
+  removePhotoFromShoppingBag(photoId: $photoId)
+}

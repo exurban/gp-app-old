@@ -1,0 +1,93 @@
+fragment PhotoInfo on Photo {
+  id
+  sku
+  isDiscontinued
+  title
+  description
+  rating
+  isFeatured
+  isLimitedEdition
+  basePrice
+  images {
+    id
+    imageUrl
+    altText
+    fileType
+    fileExtension
+    size
+    width
+    height
+  }
+  photographer {
+    id
+    name
+  }
+  location {
+    id
+    name
+  }
+  subjectsInPhoto {
+    subject {
+      id
+      name
+    }
+  }
+  tagsForPhoto {
+    tag {
+      id
+      name
+    }
+  }
+  collectionsForPhoto {
+    collection {
+      id
+      name
+    }
+  }
+  createdAt
+  updatedAt
+}
+
+query allPhotosQuery {
+  photos {
+    ...PhotoInfo
+  }
+}
+
+query featuredPhotosQuery {
+  featuredPhotos {
+    id
+    sku
+    title
+    description
+    isFeatured
+    isLimitedEdition
+    rating
+    basePrice
+    priceModifier
+    createdAt
+    updatedAt
+  }
+}
+
+mutation addPhoto($input: PhotoInput!) {
+  addPhoto(input: $input) {
+    id
+    title
+    description
+    isFeatured
+    isLimitedEdition
+    isDiscontinued
+    rating
+    basePrice
+    priceModifier
+    photographer {
+      id
+      name
+    }
+    location {
+      id
+      name
+    }
+  }
+}
