@@ -1,4 +1,4 @@
-import type { AppProps } from "next/app";
+import { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "../lib/apolloClient";
@@ -10,9 +10,9 @@ import { DefaultSeo } from "next-seo";
 import SEO from "../../next-seo.config";
 import AdminLayout from "../components/AdminLayout";
 import Layout from "../components/Layout";
-// import theme from "../theme";
+import gpTheme from "../gp-theme";
 
-const App = ({ Component, pageProps, router }: AppProps) => {
+const App = ({ Component, pageProps, router }: AppProps): JSX.Element => {
   const apolloClient = useApollo(pageProps.initialApolloState);
 
   // const authLink = setContext((_, { headers }) => {
@@ -48,7 +48,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
     <ApolloProvider client={apolloClient}>
       <AuthProvider session={pageProps.session}>
         {console.log(`_app.tsx pageProps.session:${JSON.stringify(pageProps.session, null, 2)}`)}
-        <BumbagProvider isSSR colorMode="dark">
+        <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
           {router.pathname.startsWith("/admin") ? (
             <AdminLayout>
               <Component {...pageProps} />

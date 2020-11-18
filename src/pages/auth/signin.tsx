@@ -20,7 +20,7 @@ const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
 
   // eslint-disable-next-line
-  const onChange = (e: any) => setEmail(e.target.value);
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value);
 
   // When rendering client side don't display anything until loading is complete
   if (typeof window !== "undefined" && loading) return null;

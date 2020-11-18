@@ -22,5 +22,5 @@
     "noImplicitReturns": true,
   },
   "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", "src/utils/server.js", "src/pages/api/auth/[...nextauth].js"]
+  "include": ["**/*.ts", "**/*.tsx"]
 }

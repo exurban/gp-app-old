@@ -1,14 +1,14 @@
-import { NextApiHandler } from "next";
-import NextAuth from "next-auth";
+import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import NextAuth, { InitOptions, User } from "next-auth";
 import Providers from "next-auth/providers";
 import nodemailer from "nodemailer";
 import { html, text } from "./verificationRequest";
 import { GraphQLClient } from "graphql-request";
 import { GetApiTokenDocument, GetApiTokenInput } from "../../../graphql-operations";
 
-const getApiToken = async args => {
+const getApiToken = async (args: GetApiTokenInput) => {
   // console.log(`Requesting API token with ${JSON.stringify(args, null, 2)}`);
-  const api = process.env.API_URI;
+  const api = process.env.API_URI as string;
   const graphQLClient = new GraphQLClient(api);
 
   const input = {
@@ -23,19 +23,24 @@ const getApiToken = async args => {
   return token.getApiToken;
 };
 
-const options = {
+interface GPUser extends User {
+  id: number;
+  accessToken?: string;
+}
+
+const options: InitOptions = {
   providers: [
     Providers.Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET
+      clientId: process.env.GOOGLE_ID as string,
+      clientSecret: process.env.GOOGLE_SECRET as string
     }),
     Providers.Apple({
-      clientId: process.env.APPLE_ID,
+      clientId: process.env.APPLE_ID as string,
       clientSecret: {
-        appleId: process.env.APPLE_ID,
-        teamId: process.env.APPLE_TEAM_ID,
-        privateKey: process.env.APPLE_PRIVATE_KEY,
-        keyId: process.env.APPLE_KEY_ID
+        appleId: process.env.APPLE_ID as string,
+        teamId: process.env.APPLE_TEAM_ID as string,
+        privateKey: process.env.APPLE_PRIVATE_KEY as string,
+        keyId: process.env.APPLE_KEY_ID as string
       }
     }),
     Providers.Email({
@@ -92,7 +97,7 @@ const options = {
       return Promise.resolve(true);
     },
     // redirect: async (url, baseUrl) => { return Promise.resolve(baseUrl) },
-    jwt: async (token, user) => {
+    jwt: async (token, user: GPUser) => {
       console.log(`***JWT CALLBACK***`);
       token && console.log(`token: ${JSON.stringify(token, null, 2)}`);
       user && console.log(`user: ${JSON.stringify(user, null, 2)}`);
@@ -112,7 +117,7 @@ const options = {
       }
       return Promise.resolve(token);
     },
-    session: async (session, user) => {
+    session: async (session, user: GPUser) => {
       console.log(`***SESSION***`);
       console.log(`USER: ${JSON.stringify(user, null, 2)}`);
       session.accessToken = user.accessToken;
@@ -125,5 +130,6 @@ const options = {
   debug: true
 };
 
-const authHandler = (req, res) => NextAuth(req, res, options);
+const authHandler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) =>
+  NextAuth(req, res, options);
 export default authHandler;

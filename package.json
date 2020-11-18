@@ -15,7 +15,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "bumbag": "^1.4.0",
+    "bumbag": "^1.4.1",
     "bumbag-server": "^1.4.0",
     "deepmerge": "^4.2.2",
     "formik": "^2.2.5",

@@ -27,8 +27,9 @@ import {
   faInstagram,
   faTwitter
 } from "@fortawesome/free-brands-svg-icons";
+import { ThemeConfig } from "bumbag";
 
-const theme = {
+const gpTheme: ThemeConfig = {
   TopNav: {
     Item: {
       variants: {
@@ -100,4 +101,4 @@ const theme = {
   }
 };
 
-export default theme;
+export default gpTheme;

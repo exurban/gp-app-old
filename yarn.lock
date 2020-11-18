@@ -2277,10 +2277,10 @@ bumbag-server@^1.4.0:
   dependencies:
     "@emotion/server" "11.0.0"
 
-bumbag@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/bumbag/-/bumbag-1.4.0.tgz#057fd308cca193bf5989a0ce3e74a6d0ccf45c54"
-  integrity sha512-JSB+fFTnGttB4iRqKeNKWK8mqo1IxCHBBfxmHLJoXqk90IyJkfEh9L/Gri5gNW345DRaKV3CPWtQ9ZMHVnpjOg==
+bumbag@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/bumbag/-/bumbag-1.4.1.tgz#20288ccae2b8a035b660a51974a64593c613b9c4"
+  integrity sha512-p1Xp5ORvBBbyCu2o6iKVuQmouJnTBbOcTnxeajgyqTQLQHPkiUzTQH1/W9uZhRiSmyXCvpOkngdsFd9LqFScaQ==
   dependencies:
     "@emotion/css" "11.0.0"
     "@emotion/is-prop-valid" "^0.8.2"
