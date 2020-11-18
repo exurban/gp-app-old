@@ -70,8 +70,30 @@ const theme = {
   Icon: {
     iconSets: [
       {
-        icons: [faSearch],
+        icons: [
+          faShoppingBag,
+          faSearch,
+          faSun,
+          faMoon,
+          faBars,
+          faPlus,
+          faEllipsisV,
+          faInfoCircle,
+          faExpand,
+          faCompress,
+          faAt
+        ],
         prefix: "solid-",
+        type: "font-awesome"
+      },
+      {
+        icons: [faStar, faUserCircle, faEye, faEyeSlash, faTimesCircle],
+        prefix: "regular-",
+        type: "font-awesome"
+      },
+      {
+        icons: [faGoogle, faApple, faFacebookF, faInstagram, faTwitter],
+        prefix: "brands-",
         type: "font-awesome"
       }
     ]
