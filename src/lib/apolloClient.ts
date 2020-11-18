@@ -2,20 +2,16 @@ import { useMemo } from "react";
 import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
 import { concatPagination } from "@apollo/client/utilities";
 import merge from "deepmerge";
-// import { getSession } from "next-auth/client";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null;
 
 function createApolloClient() {
-  // const session = await getSession();
-  // console.log(`SESSION: Access Token: ${JSON.stringify(session.accessToken, null, 2)}`);
-
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: new HttpLink({
       // Server URL (must be absolute)
-      uri: "https://gp-api-server.herokuapp.com/api",
-      // uri: "http://localhost:4000/api",
+      // uri: "https://gp-api-server.herokuapp.com/api",
+      uri: "http://localhost:4000/api",
       credentials: "include"
       // Additional fetch() options like `credentials` or `headers`
 

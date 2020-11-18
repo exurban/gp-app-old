@@ -41,10 +41,10 @@ const gpTheme: ThemeConfig = {
         navigationText: {
           styles: {
             base: {
-              font: "Raleway",
+              fontFamily: "Raleway",
               fontSize: "26px",
               fontVariant: "small-caps",
-              fontWeight: 700
+              fontWeight: "bold"
             },
             focus: {
               boxShadow: "inset 0 -2px 0 0"
