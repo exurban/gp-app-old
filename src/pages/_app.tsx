@@ -10,7 +10,7 @@ import { DefaultSeo } from "next-seo";
 import SEO from "../../next-seo.config";
 import AdminLayout from "../components/AdminLayout";
 import Layout from "../components/Layout";
-import theme from "../theme";
+// import theme from "../theme";
 
 const App = ({ Component, pageProps, router }: AppProps) => {
   const apolloClient = useApollo(pageProps.initialApolloState);
@@ -48,7 +48,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
     <ApolloProvider client={apolloClient}>
       <AuthProvider session={pageProps.session}>
         {console.log(`_app.tsx pageProps.session:${JSON.stringify(pageProps.session, null, 2)}`)}
-        <BumbagProvider isSSR colorMode="dark" theme={theme}>
+        <BumbagProvider isSSR colorMode="dark">
           {router.pathname.startsWith("/admin") ? (
             <AdminLayout>
               <Component {...pageProps} />
