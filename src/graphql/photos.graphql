@@ -1,30 +1,26 @@
 fragment PhotoInfo on Photo {
   id
   sku
-  isDiscontinued
   title
   description
-  rating
   isFeatured
   isLimitedEdition
+  rating
   basePrice
-  images {
-    id
-    imageUrl
-    altText
-    fileType
-    fileExtension
-    size
-    width
-    height
-  }
+  priceModifier
   photographer {
-    id
-    name
+    ...PhotographerInfo
   }
   location {
     id
     name
+  }
+  images {
+    id
+    altText
+    imageUrl
+    width
+    height
   }
   subjectsInPhoto {
     subject {
@@ -56,17 +52,7 @@ query allPhotosQuery {
 
 query featuredPhotosQuery {
   featuredPhotos {
-    id
-    sku
-    title
-    description
-    isFeatured
-    isLimitedEdition
-    rating
-    basePrice
-    priceModifier
-    createdAt
-    updatedAt
+    ...PhotoInfo
   }
 }
 

@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import FeaturedPhotoList from "../../components/FeaturedPhotoList";
-import { FeaturedPhotosQueryDocument } from "../../typed-document-nodes";
+import { FeaturedPhotosQueryDocument } from "../../graphql-operations";
 import { initializeApollo } from "../../lib/apolloClient";
 
 const IndexPage: React.FC = () => <FeaturedPhotoList />;

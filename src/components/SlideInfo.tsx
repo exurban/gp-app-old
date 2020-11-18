@@ -1,24 +1,10 @@
 import Link from "next/link";
 import { Flex, Card, Button, Icon, Heading, Text, Divider, Link as BBLink } from "bumbag";
-import { Location, Photographer, PhotoTag, PhotoSubject } from "../typed-document-nodes";
+import { PhotoInfoFragment } from "../graphql-operations";
 
-type Props = {
-  title: string;
-  description: string;
-  location: Location;
-  photographer: Photographer;
-  tagsForPhoto: PhotoTag[];
-  subjectsInPhoto: PhotoSubject[];
-  setShowInfo: any;
-};
-
-const SlideInfo: React.FC<Props> = ({
-  title,
-  description,
-  location,
-  photographer,
-  tagsForPhoto,
-  subjectsInPhoto,
+// eslint-disable-next-line @typescript-eslint/ban-types
+const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> = ({
+  photo,
   setShowInfo
 }) => {
   return (
@@ -26,29 +12,29 @@ const SlideInfo: React.FC<Props> = ({
       <Flex direction="row" paddingX="20px">
         <Card maxWidth="600px" borderRadius="4" altitude="200">
           <Heading use="h4" marginBottom="major-2">
-            {title}
+            {photo.title}
           </Heading>
           <Link href="/">
             <BBLink>
               <Heading use="h5" marginBottom="major-2">
-                {photographer.name}
+                {photo.photographer.name}
               </Heading>
             </BBLink>
           </Link>
 
           <Text.Block>
-            <Text marginBottom="major-2">{location.name}</Text>
+            <Text marginBottom="major-2">{photo.location.name}</Text>
             <br />
-            <Text fontSize="150">{description}</Text>
+            <Text fontSize="150">{photo.description}</Text>
           </Text.Block>
           <Divider marginY="major-2" />
-          {tagsForPhoto
-            ? tagsForPhoto.map(tagForPhoto => {
+          {photo.tagsForPhoto
+            ? photo.tagsForPhoto.map(tagForPhoto => {
                 <Link href="/">{tagForPhoto.tag.name}</Link>;
               })
             : null}
-          {subjectsInPhoto
-            ? subjectsInPhoto.map(subjectInPhoto => {
+          {photo.subjectsInPhoto
+            ? photo.subjectsInPhoto.map(subjectInPhoto => {
                 <Link href="/">{subjectInPhoto.subject.name}</Link>;
               })
             : null}

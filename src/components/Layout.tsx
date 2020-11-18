@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Head from "next/head";
 import Footer from "./Footer";
-import { signOut, useSession } from "next-auth/client";
+// import { useSession } from "next-auth/client";
 import {
   useColorMode,
   usePage,
@@ -15,10 +15,8 @@ import {
   SideNav,
   Icon,
   Divider,
-  Text,
   Button,
-  Input,
-  DropdownMenu
+  Input
 } from "bumbag";
 import ShoppingBagMenu from "./ShoppingBagMenu";
 
@@ -27,7 +25,7 @@ const Layout: React.FC<{ title?: string }> = ({
   title = "Gallery - Gibbs Photography"
 }) => {
   // * auth
-  const [session] = useSession();
+  // const [session] = useSession();
 
   const { colorMode, setColorMode } = useColorMode();
   const page = usePage();

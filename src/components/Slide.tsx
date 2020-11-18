@@ -1,25 +1,17 @@
 import { useState } from "react";
 import Image from "next/image";
-import { Flex, Box } from "bumbag";
+import { Flex } from "bumbag";
 import SlideInfo from "./SlideInfo";
 import SlideMenu from "./SlideMenu";
-import { Photo } from "../typed-document-nodes";
+import { PhotoInfoFragment } from "../graphql-operations";
 
-const Slide: React.FC<{ photo: Photo }> = ({ photo }) => {
+const Slide: React.FC<{ photo: PhotoInfoFragment }> = ({ photo }) => {
   const [showInfo, setShowInfo] = useState(false);
 
   return (
     <>
       {showInfo ? (
-        <SlideInfo
-          title={photo.title}
-          description={photo.description}
-          photographer={photo.photographer}
-          location={photo.location}
-          tagsForPhoto={photo.tagsForPhoto}
-          subjectsInPhoto={photo.subjectsInPhoto}
-          setShowInfo={setShowInfo}
-        />
+        <SlideInfo photo={photo} setShowInfo={setShowInfo} />
       ) : (
         <Flex className="image+button" direction="row" marginRight="20px">
           {/* <Box className="image" altitude="300" clipPath="inset(100% round 10px)"> */}

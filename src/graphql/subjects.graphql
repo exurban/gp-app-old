@@ -1,5 +1,5 @@
-query photosOfSubject($input: SubjectInput!) {
-  photosOfSubject(input: $input) {
+query subjectWithName($input: SubjectInput!) {
+  subjectWithName(input: $input) {
     id
     name
     createdAt

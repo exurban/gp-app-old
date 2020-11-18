@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import PhotoList from "../components/PhotoList";
-import { AllPhotosQueryDocument } from "../../src/typed-document-nodes";
+import { AllPhotosQueryDocument } from "../graphql-operations";
 import { initializeApollo } from "../lib/apolloClient";
 
 const IndexPage: React.FC = () => <PhotoList />;

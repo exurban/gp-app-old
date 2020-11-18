@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import { initializeApollo } from "../../lib/apolloClient";
-import { PhotosOfSubjectDocument, SubjectInput } from "../../typed-document-nodes";
+import { SubjectWithNameDocument, SubjectInput } from "../../graphql-operations";
 import Gallery from "../../components/Gallery";
 
 const subject = { name: "beast" } as SubjectInput;
@@ -10,7 +10,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
-    query: PhotosOfSubjectDocument,
+    query: SubjectWithNameDocument,
     variables: { input: subject }
   });
 

@@ -4,7 +4,6 @@ import Head from "next/head";
 
 import {
   Icon,
-  InputField,
   Input,
   FieldWrapper,
   Stack,
@@ -19,7 +18,9 @@ import {
 const SignIn: React.FC = () => {
   const [session, loading] = useSession();
   const [email, setEmail] = useState("");
-  const onChange = e => setEmail(e.target.value);
+
+  // eslint-disable-next-line
+  const onChange = (e: any) => setEmail(e.target.value);
 
   // When rendering client side don't display anything until loading is complete
   if (typeof window !== "undefined" && loading) return null;

@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
-import { PhotosOfSubjectDocument, SubjectInput } from "../typed-document-nodes";
+import { SubjectWithNameDocument, SubjectInput } from "../graphql-operations";
 import { Stack, Heading, Text, Grid, Button, Icon } from "bumbag";
 import Slide from "./Slide";
 
 const Gallery: React.FC<{ subject: SubjectInput }> = ({ subject }) => {
-  const { loading, error, data } = useQuery(PhotosOfSubjectDocument, {
+  const { loading, error, data } = useQuery(SubjectWithNameDocument, {
     variables: { input: subject }
   });
 
@@ -14,7 +14,11 @@ const Gallery: React.FC<{ subject: SubjectInput }> = ({ subject }) => {
   if (loading) return <div>Loading</div>;
 
   if (data) {
-    const photos = data.photosOfSubject.photosOfSubject;
+    const subject = data.subjectWithName;
+    const photoSubjects = subject.photosOfSubject;
+    const photos = photoSubjects.map(x => x.photo);
+
+    // return <pre>{JSON.stringify(photos, null, 2)}</pre>;
 
     return (
       <>
@@ -35,7 +39,7 @@ const Gallery: React.FC<{ subject: SubjectInput }> = ({ subject }) => {
           padding={{ default: "major-4", "max-tablet": "minor-1" }}
         >
           {photos.map(photo => (
-            <Slide key={photo.photo.id} {...photo} />
+            <Slide key={photo.id} photo={photo} />
           ))}
         </Grid>
       </>

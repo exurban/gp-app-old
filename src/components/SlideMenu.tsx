@@ -2,11 +2,11 @@ import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/client";
 import { DropdownMenu, DropdownMenuGroup, Text, Icon, Button } from "bumbag";
-import { Photo, AddPhotoToFavoritesDocument } from "../typed-document-nodes";
+import { AddPhotoToFavoritesDocument, PhotoInfoFragment } from "../graphql-operations";
 
 type Props = {
   setShowInfo: any;
-  photo: Photo;
+  photo: PhotoInfoFragment;
 };
 
 const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
@@ -16,21 +16,20 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
 
   const addPhotoToFavorites = () => {
     console.log(`looking for session's api token`);
-    if (session) {
-      const token = session.user;
+    if (!session) {
+      router.push(`/auth/signin`);
+    } else {
+      const token = session.accessToken;
       console.log(
-        `SESSION: ${JSON.stringify(session, null, 2)}\nAPI Token: ${JSON.stringify(
-          session.accessToken,
-          null,
-          2
-        )}`
+        `SESSION: ${JSON.stringify(session, null, 2)}\nAPI Token: ${JSON.stringify(token, null, 2)}`
       );
+      console.log(`Add ${photo.id} to favorites.`);
+      addToFavorites({ variables: { photoId: parseInt(photo.id) } });
+
+      if (data) {
+        console.log(`Added to favorites: ${JSON.stringify(data, null, 2)}`);
+      }
     }
-    //   router.push(`/auth/signin`);
-    // } else {
-    //   console.log(`Add ${photo.id} to favorites.`);
-    //   addToFavorites({ variables: { photoId: parseInt(photo.id) } });
-    // }
   };
 
   const addPhotoToShoppingBag = () => {
@@ -92,7 +91,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
             iconBefore="solid-plus"
             fontWeight="400"
             color="primary"
-            onClick={() => console.log(`${JSON.stringify(photo, null, 2)} `)}
+            onClick={() => addPhotoToShoppingBag()}
           >
             <Text color="text">Shopping Bag</Text>
           </DropdownMenu.Item>

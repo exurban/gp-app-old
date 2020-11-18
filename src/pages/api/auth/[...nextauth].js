@@ -4,11 +4,11 @@ import Providers from "next-auth/providers";
 import nodemailer from "nodemailer";
 import { html, text } from "./verificationRequest";
 import { GraphQLClient } from "graphql-request";
-import { GetApiTokenDocument, GetApiTokenInput } from "../../../typed-document-nodes";
+import { GetApiTokenDocument, GetApiTokenInput } from "../../../graphql-operations";
 
-const getApiToken = async (args: GetApiTokenInput): Promise<string> => {
+const getApiToken = async args => {
   // console.log(`Requesting API token with ${JSON.stringify(args, null, 2)}`);
-  const api = process.env.API_URI as string;
+  const api = process.env.API_URI;
   const graphQLClient = new GraphQLClient(api);
 
   const input = {
@@ -26,22 +26,22 @@ const getApiToken = async (args: GetApiTokenInput): Promise<string> => {
 const options = {
   providers: [
     Providers.Google({
-      clientId: process.env.GOOGLE_ID as string,
-      clientSecret: process.env.GOOGLE_SECRET as string
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET
     }),
     Providers.Apple({
-      clientId: process.env.APPLE_ID as string,
+      clientId: process.env.APPLE_ID,
       clientSecret: {
-        appleId: process.env.APPLE_ID as string,
-        teamId: process.env.APPLE_TEAM_ID as string,
-        privateKey: process.env.APPLE_PRIVATE_KEY as string,
-        keyId: process.env.APPLE_KEY_ID as string
+        appleId: process.env.APPLE_ID,
+        teamId: process.env.APPLE_TEAM_ID,
+        privateKey: process.env.APPLE_PRIVATE_KEY,
+        keyId: process.env.APPLE_KEY_ID
       }
     }),
     Providers.Email({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM,
-      sendVerificationRequest: ({ identifier: email, url, token, site, provider }) => {
+      sendVerificationRequest: ({ identifier: email, url, provider }) => {
         return new Promise((resolve, reject) => {
           const { server, from } = provider;
           // Strip protocol from URL and use domain as site name
@@ -125,5 +125,5 @@ const options = {
   debug: true
 };
 
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
+const authHandler = (req, res) => NextAuth(req, res, options);
 export default authHandler;

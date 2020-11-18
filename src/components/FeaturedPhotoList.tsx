@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
 // import allPhotosQuery from "../graphql/photos.graphql";
-import { FeaturedPhotosQueryDocument } from "../../src/typed-document-nodes";
+import { FeaturedPhotosQueryDocument } from "../graphql-operations";
 
 const FeaturedPhotoList: React.FC = () => {
   const { loading, error, data } = useQuery(FeaturedPhotosQueryDocument, {});

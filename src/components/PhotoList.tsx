@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
-import { AllPhotosQueryDocument } from "../../src/typed-document-nodes";
+import { AllPhotosQueryDocument } from "../graphql-operations";
 
 const PhotoList: React.FC = () => {
   const { loading, error, data } = useQuery(AllPhotosQueryDocument, {});
@@ -17,7 +17,8 @@ const PhotoList: React.FC = () => {
         {photos.map(photo => (
           <div key={photo.id}>
             <p>
-              {photo.title}: {photo.photographer.name}
+              {photo.id} - {photo.title}: {photo.description} {photo.photographer.name}
+              {photo.location.name}
             </p>
           </div>
         ))}
