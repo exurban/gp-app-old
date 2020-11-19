@@ -44,7 +44,7 @@ const gpTheme: ThemeConfig = {
               fontFamily: "Raleway",
               fontSize: "26px",
               fontVariant: "small-caps",
-              fontWeight: "bold"
+              fontWeight: 700
             },
             focus: {
               boxShadow: "inset 0 -2px 0 0"
