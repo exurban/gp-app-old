@@ -17,7 +17,7 @@ function createApolloClient() {
 
       // headers: {
       //   authorization: "Bearer " //+ session.accessToken
-      //   // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTYwNTM4OTQ2NX0.2Jri2VkuIt4ktDsBc_z4bc9PqK2c5pjSu3RzYgPpkco"
+      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTYwNTM4OTQ2NX0.2Jri2VkuIt4ktDsBc_z4bc9PqK2c5pjSu3RzYgPpkco"
       // }
     }),
     cache: new InMemoryCache({
