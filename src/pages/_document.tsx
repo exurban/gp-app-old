@@ -1,5 +1,5 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
-import { GA_TRACKING_ID } from "../utils/gtag";
+// import { GA_TRACKING_ID } from "../utils/gtag";
 import { extractCritical } from "bumbag-server";
 import { InitializeColorMode } from "bumbag";
 
