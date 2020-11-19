@@ -90,7 +90,9 @@ const options: InitOptions = {
   jwt: {
     secret: process.env.NEXTAUTH_SECRET
   },
-
+  pages: {
+    signIn: "/auth/signIn"
+  },
   callbacks: {
     signIn: async () => {
       console.log(`***SIGN IN***`);

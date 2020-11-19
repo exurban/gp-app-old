@@ -32,7 +32,7 @@ import { ThemeConfig } from "bumbag";
 const gpTheme: ThemeConfig = {
   fonts: {
     importUrls: [
-      "https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;700;900&display=swap"
+      "https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;600;700;900&display=swap"
     ]
   },
   TopNav: {
