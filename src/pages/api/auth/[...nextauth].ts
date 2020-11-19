@@ -35,7 +35,7 @@ const options: InitOptions = {
       clientSecret: process.env.GOOGLE_SECRET as string
     }),
     Providers.Apple({
-      clientId: process.env.APPLE_CLIENT_ID as string,
+      clientId: process.env.APPLE_ID as string,
       clientSecret: {
         appleId: process.env.APPLE_ID as string,
         teamId: process.env.APPLE_TEAM_ID as string,
