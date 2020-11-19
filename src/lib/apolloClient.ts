@@ -9,7 +9,7 @@ function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: new HttpLink({
-      // Server URL (must be absolute)
+      // Server URL (must be absolute )
       uri: "https://gp-api-server.herokuapp.com/api",
       // uri: "http://localhost:4000/api",
       credentials: "include"
