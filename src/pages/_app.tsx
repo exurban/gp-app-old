@@ -1,11 +1,11 @@
 import { AppProps } from "next/app";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "../lib/apolloClient";
 import { Provider as AuthProvider } from "next-auth/client";
 import { Provider as BumbagProvider, ToastManager } from "bumbag";
-import { useEffect } from "react";
-import * as gtag from "../utils/gtag";
+// import { useEffect } from "react";
+// import * as gtag from "../utils/gtag";
 import { DefaultSeo } from "next-seo";
 import SEO from "../../next-seo.config";
 import AdminLayout from "../components/AdminLayout";
@@ -32,22 +32,21 @@ const App = ({ Component, pageProps, router }: AppProps): JSX.Element => {
   //   headers.authorization = "Bearer " + session.apiToken;
   // }
 
-  const rtr = useRouter();
+  // const rtr = useRouter();
 
-  useEffect(() => {
-    const handleRouteChange = (url: URL) => {
-      gtag.pageview(url);
-    };
-    rtr.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      rtr.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [rtr.events]);
+  // useEffect(() => {
+  //   const handleRouteChange = (url: URL) => {
+  //     gtag.pageview(url);
+  //   };
+  //   rtr.events.on("routeChangeComplete", handleRouteChange);
+  //   return () => {
+  //     rtr.events.off("routeChangeComplete", handleRouteChange);
+  //   };
+  // }, [rtr.events]);
 
   return (
     <ApolloProvider client={apolloClient}>
       <AuthProvider session={pageProps.session}>
-        {console.log(`_app.tsx pageProps.session:${JSON.stringify(pageProps.session, null, 2)}`)}
         <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
           {router.pathname.startsWith("/admin") ? (
             <AdminLayout>
