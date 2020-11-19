@@ -127,6 +127,12 @@ const options: InitOptions = {
         `USER: ${JSON.stringify(user, null, 2)}\nSESSION: ${JSON.stringify(session, null, 2)}`
       );
       return Promise.resolve(session);
+    },
+    redirect: async (url, baseUrl) => {
+      console.log(
+        `BASE URL: ${JSON.stringify(baseUrl, null, 2)}\nURL: ${JSON.stringify(url, null, 2)}`
+      );
+      return url.startsWith(baseUrl) ? Promise.resolve(url) : Promise.resolve(baseUrl);
     }
   },
   debug: true
