@@ -7,7 +7,7 @@ import { GraphQLClient } from "graphql-request";
 import { GetApiTokenDocument, GetApiTokenInput } from "../../../graphql-operations";
 
 const getApiToken = async (args: GetApiTokenInput) => {
-  // console.log(`Requesting API token with ${JSON.stringify(args, null, 2)}`);
+  console.log(`Requesting API token with ${JSON.stringify(args, null, 2)}`);
   const api = process.env.API_URI as string;
   const graphQLClient = new GraphQLClient(api);
 
@@ -73,18 +73,14 @@ const options: InitOptions = {
       }
     })
   ],
-  database:
-    "postgres://fmeyzsfzceclie:f5ec6615aae00fea125d47cda8f0e1d198bbf7da33513fffcaa8952aa8afb8ee@ec2-54-164-134-207.compute-1.amazonaws.com:5432/dc9mj4aesbuoo3",
-  // process.env.NODE_ENV === "production"
-  //   ? process.env.API_URI
-  //   : {
-  //       type: "postgres",
-  //       host: "localhost",
-  //       port: 5432,
-  //       username: "postgres",
-  //       password: "postgres",
-  //       database: "photos"
-  //     },
+  database: {
+    type: "postgres",
+    host: "localhost",
+    port: 5432,
+    username: "postgres",
+    password: "postgres",
+    database: "photos"
+  },
   session: {
     jwt: true
   },
