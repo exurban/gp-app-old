@@ -73,14 +73,16 @@ const options: InitOptions = {
       }
     })
   ],
-  database: {
-    type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    password: "postgres",
-    database: "photos"
-  },
+  database: process.env.API_URI,
+
+  // {
+  //   type: "postgres",
+  //   host: "localhost",
+  //   port: 5432,
+  //   username: "postgres",
+  //   password: "postgres",
+  //   database: "photos"
+  // },
   session: {
     jwt: true
   },
