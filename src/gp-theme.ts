@@ -63,7 +63,7 @@ const gpTheme: ThemeConfig = {
               font: "Raleway",
               fontSize: "18px",
               fontVariant: "small-caps",
-              fontWeight: 600
+              fontWeight: "bold"
             },
             focus: {
               boxShadow: "none"
