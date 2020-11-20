@@ -80,7 +80,12 @@ const options: InitOptions = {
     username: "fmeyzsfzceclie",
     password: "f5ec6615aae00fea125d47cda8f0e1d198bbf7da33513fffcaa8952aa8afb8ee",
     database: "dc9mj4aesbuoo3",
-    ssl: true
+    ssl: true,
+    extra: {
+      ssl: {
+        rejectUnauthorized: false
+      }
+    }
   },
   // database: process.env.DB_URI,
   // database: {
