@@ -8,7 +8,7 @@ import { GetApiTokenDocument, GetApiTokenInput } from "../../../graphql-operatio
 
 const getApiToken = async (args: GetApiTokenInput) => {
   console.log(`Requesting API token with ${JSON.stringify(args, null, 2)}`);
-  const api = process.env.API_URI_REMOTE as string;
+  const api = process.env.API_URI as string;
   const graphQLClient = new GraphQLClient(api);
 
   const input = {
