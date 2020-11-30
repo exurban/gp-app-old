@@ -1,0 +1,10 @@
+fragment ImageInfo on Image {
+  id
+  imageUrl
+  altText
+  fileType
+  fileExtension
+  size
+  width
+  height
+}

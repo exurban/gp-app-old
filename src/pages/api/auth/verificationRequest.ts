@@ -1,19 +1,10 @@
 // Email HTML body
-export const html = ({
-  url,
-  site,
-  email
-}: {
-  url: string;
-  site: string;
-  email: string;
-}): string => {
+export const html = ({ url, email }: { url: string; email: string }): string => {
   // Insert invisible space into domains and email address to prevent both the
   // email address and the domain from being turned into a hyperlink by email
   // clients like Outlook and Apple mail, as this is confusing because it seems
   // like they are supposed to click on their email address to sign in.
   const escapedEmail = `${email.replace(/\./g, "&#8203;.")}`;
-  const escapedSite = `${site.replace(/\./g, "&#8203;.")}`;
 
   // Some simple styling options
   const backgroundColor = "#f9f9f9";
@@ -26,17 +17,15 @@ export const html = ({
   // Uses tables for layout and inline CSS due to email client limitations
   return `
 <body style="background: ${backgroundColor};">
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${escapedSite}</strong>
-      </td>
-    </tr>
-  </table>
   <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background: ${mainBackgroundColor}; max-width: 600px; margin: auto; border-radius: 10px;">
     <tr>
       <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        Click the 'Sign in' button below to sign in to Gibbs Photography as <strong>${escapedEmail}</strong>
+        Click the button below to sign in as 
+      </td>
+    </tr>
+    <tr>
+      <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
+        <strong>${escapedEmail}</strong>
       </td>
     </tr>
     <tr>

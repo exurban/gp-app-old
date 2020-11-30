@@ -20,6 +20,7 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noImplicitReturns": true,
+    "sourceMap": true
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx"]

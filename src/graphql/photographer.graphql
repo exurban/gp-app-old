@@ -1,9 +1,0 @@
-fragment PhotographerInfo on Photographer {
-  id
-  name
-  firstName
-  lastName
-  email
-  bio
-  photoUrl
-}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Flex, Card, Button, Icon, Heading, Text, Divider, Link as BBLink } from "bumbag";
+import { Flex, Card, Button, Icon, Heading, Text, Divider, Tag, Link as BBLink } from "bumbag";
 import { PhotoInfoFragment } from "../graphql-operations";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -7,49 +7,91 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
   photo,
   setShowInfo
 }) => {
+  const photographer = photo.photographer;
+  const name = photographer?.name as string;
+  const locationName = photo?.location?.name as string;
+  const collections = photo?.collectionsForPhoto?.map(x => x.collection);
+  const subjects = photo?.subjectsInPhoto?.map(x => x.subject);
+  const tags = photo?.tagsForPhoto?.map(x => x.tag);
   return (
     <>
-      <Flex direction="row" paddingX="20px">
-        <Card maxWidth="600px" borderRadius="4" altitude="200">
+      <Flex direction="row" width="100%" justifySelf="start" alignSelf="start">
+        <Card borderRadius="4" altitude="200">
           <Heading use="h4" marginBottom="major-2">
             {photo.title}
           </Heading>
-          <Link href="/">
+          <Link href={`/gallery/photographer/${encodeURIComponent(name.toLowerCase())}`}>
             <BBLink>
               <Heading use="h5" marginBottom="major-2">
-                {photo.photographer.name}
+                {name}
               </Heading>
             </BBLink>
           </Link>
 
           <Text.Block>
-            <Text marginBottom="major-2">{photo.location.name}</Text>
+            <Link href={`/gallery/location/${encodeURIComponent(locationName.toLowerCase())}`}>
+              <BBLink>
+                <Text marginBottom="major-2" color="secondary">
+                  {locationName}
+                </Text>
+              </BBLink>
+            </Link>
             <br />
             <Text fontSize="150">{photo.description}</Text>
           </Text.Block>
+          {collections !== undefined && collections.length > 0 ? (
+            <>
+              <Divider marginTop="major-2" />
+              <Text fontVariant="small-caps" fontSize="100">
+                Collections:
+              </Text>
+              {collections?.map(collection => (
+                <Link href={`/gallery/collection/${encodeURIComponent(collection.name)}`}>
+                  <BBLink>
+                    <p>{collection.name}</p>
+                  </BBLink>
+                </Link>
+              ))}
+            </>
+          ) : null}
+
           <Divider marginY="major-2" />
-          {photo.tagsForPhoto
-            ? photo.tagsForPhoto.map(tagForPhoto => {
-                <Link href="/">{tagForPhoto.tag.name}</Link>;
-              })
-            : null}
-          {photo.subjectsInPhoto
-            ? photo.subjectsInPhoto.map(subjectInPhoto => {
-                <Link href="/">{subjectInPhoto.subject.name}</Link>;
-              })
-            : null}
+          {subjects?.map(subject => (
+            <Link href={`/gallery/${encodeURIComponent(subject.name)}`}>
+              <BBLink>
+                <Tag palette="primary" marginLeft="minor-1">
+                  {subject.name}
+                </Tag>
+              </BBLink>
+            </Link>
+          ))}
+          {tags?.map(tag => (
+            <Link href={`/gallery/tag/${encodeURIComponent(tag.name)}`}>
+              <Tag palette="secondary" marginLeft="minor-1">
+                {tag.name}
+              </Tag>
+            </Link>
+          ))}
         </Card>
-        <div>
-          <Button
-            variant="ghost"
-            // onClick={() => setShowInfo(false)}
-            marginTop={{ default: "major-1", "max-Tablet": "minor-1" }}
-            marginLeft="minor-1"
-            onClick={() => setShowInfo(false)}
-          >
-            <Icon aria-label="options" icon="regular-times-circle" fontSize="200" />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          alignSelf="start"
+          alignX="right"
+          alignY="top"
+          marginX="major-1"
+          marginTop="major-1"
+          alignItems="center"
+          justifyContent="center"
+          onClick={() => setShowInfo(false)}
+        >
+          <Icon
+            aria-label="options"
+            icon="regular-times-circle"
+            fontSize="200"
+            alignX="center"
+            alignY="center"
+          />
+        </Button>
       </Flex>
     </>
   );

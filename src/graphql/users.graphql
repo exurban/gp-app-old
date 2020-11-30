@@ -17,3 +17,15 @@ mutation addPhotoToShoppingBag($photoId: Float!) {
 mutation removePhotoFromShoppingBag($photoId: Float!) {
   removePhotoFromShoppingBag(photoId: $photoId)
 }
+
+query favorites {
+  favorites {
+    ...PhotoInfo
+  }
+}
+
+query shoppingBagItems {
+  shoppingBagItems {
+    ...PhotoInfo
+  }
+}

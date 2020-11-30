@@ -1,72 +1,46 @@
-import Link from "next/link";
-import { Flex, Stack, Divider, Text } from "bumbag";
+import { Box, Divider, Hide, Grid } from "bumbag";
+import FooterItem from "./FooterItem";
 
 const Footer: React.FC = () => {
   return (
     <>
       <Divider borderWidth="2px" borderColor="primary" />
-      <Flex backgroundColor="black200" color="white900" alignX="center" paddingY="25px">
-        <Flex className="footer-link-container" justifyContent="space-around" width="768px">
-          <Text fontSize="100" color="gray100">
-            &#169; 2020 Gibbs Photography, LLC
-          </Text>
-          <Stack spacing="major-2">
-            <Link href="/legal/" passHref={true}>
-              <Text.Block>
-                <Text
-                  fontSize="100"
-                  color="gray100"
-                  _hover={{ color: "primary", cursor: "pointer" }}
-                >
-                  Privacy Policy
-                </Text>
-              </Text.Block>
-            </Link>
-            <Link href="/legal/" passHref={true}>
-              <Text.Block>
-                <Text
-                  fontSize="100"
-                  color="gray100"
-                  _hover={{ color: "primary", cursor: "pointer" }}
-                >
-                  Terms of Service
-                </Text>
-              </Text.Block>
-            </Link>
-          </Stack>
-          <Stack spacing="major-2">
-            <Link href="/legal/" passHref={true}>
-              <Text.Block>
-                <Text
-                  fontSize="100"
-                  color="gray100"
-                  _hover={{ color: "primary", cursor: "pointer" }}
-                >
-                  Subscribe to newsletter
-                </Text>
-              </Text.Block>
-            </Link>
-            <Link href="/legal/" passHref={true}>
-              <Text.Block>
-                <Text
-                  fontSize="100"
-                  color="gray100"
-                  _hover={{ color: "primary", cursor: "pointer" }}
-                >
-                  Contact us
-                </Text>
-              </Text.Block>
-            </Link>
-          </Stack>
-          <Link href="http://exurban.io" passHref={true}>
-            <Text.Block>
-              <Text fontSize="150" color="gray100" _hover={{ color: "primary", cursor: "pointer" }}>
-                Built by (ex)urban
-              </Text>
-            </Text.Block>
-          </Link>
-        </Flex>
-      </Flex>
+      <Box
+        className="footer"
+        backgroundColor="black200"
+        color="white900"
+        alignX="center"
+        paddingY="20px"
+      >
+        <Hide above="desktop">
+          <Box style={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: "1rem" }}>
+            <Box gridColumn="1 / span 2" alignX="center">
+              <FooterItem text={"© 2020 Gibbs Photography, LLC"} link={""} />
+            </Box>
+            <FooterItem text={"Privacy Policy"} link={"/legal/privacy-policy"} />
+            <FooterItem text={"Subscribe to Newsletter"} link={"/newsletter"} />
+            <FooterItem text={"Terms of Service"} link={"/legal/terms-of-service"} />
+
+            <FooterItem text={"Contact Us"} link={"/contact"} />
+            <Box gridColumn="1 / span 2" alignX="center">
+              <FooterItem text={"Built by (ex)urban"} link={"https://exurban.io"} />
+            </Box>
+          </Box>
+        </Hide>
+        <Hide below="desktop">
+          <Grid templateColumns="repeat(4, 1fr)" columnGap="1rem" justifyContent="space-between">
+            <Box marginRight="20px">
+              <FooterItem text={"© 2020 Gibbs Photography, LLC"} />
+            </Box>
+            <FooterItem text={"Privacy Policy"} link={"/legal/privacy-policy"} />
+            <FooterItem text={"Subscribe to Newsletter"} link={"/newsletter"} />
+            <FooterItem text={"Built by (ex)urban"} link={"https://exurban.io"} />
+            <FooterItem text={""} link={""} />
+            <FooterItem text={"Terms of Service"} link={"/legal/terms-of-service"} />
+            <FooterItem text={"Contact Us"} link={"/contact"} />
+          </Grid>
+        </Hide>
+      </Box>
     </>
   );
 };

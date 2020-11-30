@@ -1,14 +1,13 @@
-query allPhotosWithTag($input: AllPhotosWithTagInput!) {
-  allPhotosWithTag(input: $input) {
-    tagInfo {
+query allPhotosAtLocation($input: AllPhotosAtLocationInput!) {
+  allPhotosAtLocation(input: $input) {
+    locationInfo {
       id
       name
+      tag
       description
       coverImage {
         ...ImageInfo
       }
-      createdAt
-      updatedAt
     }
     items {
       ...PhotoInfo

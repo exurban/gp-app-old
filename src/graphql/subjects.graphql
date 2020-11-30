@@ -1,13 +1,20 @@
-query subjectWithName($input: SubjectInput!) {
-  subjectWithName(input: $input) {
-    id
-    name
-    createdAt
-    updatedAt
-    photosOfSubject {
-      photo {
-        ...PhotoInfo
+query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
+  allPhotosOfSubject(input: $input) {
+    subjectInfo {
+      id
+      name
+      description
+      coverImage {
+        ...ImageInfo
       }
+      createdAt
+      updatedAt
     }
+    items {
+      ...PhotoInfo
+    }
+    startCursor
+    endCursor
+    total
   }
 }

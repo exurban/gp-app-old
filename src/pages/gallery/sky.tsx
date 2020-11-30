@@ -1,18 +1,17 @@
 import { GetStaticProps } from "next";
 import { initializeApollo } from "../../lib/apolloClient";
-import { SubjectWithNameDocument, SubjectInput } from "../../graphql-operations";
+import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../../graphql-operations";
 import Gallery from "../../components/Gallery";
 
-const subject = { name: "sky" } as SubjectInput;
-
-const BirdGallery: React.FC = () => <Gallery subject={subject} />;
+const input = { subject: "sky", take: 20 } as AllPhotosOfSubjectInput;
+const SkyGallery: React.FC = () => <Gallery input={input} />;
 
 export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
-    query: SubjectWithNameDocument,
-    variables: { input: subject }
+    query: AllPhotosOfSubjectDocument,
+    variables: { input: input }
   });
 
   return {
@@ -23,4 +22,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default BirdGallery;
+export default SkyGallery;

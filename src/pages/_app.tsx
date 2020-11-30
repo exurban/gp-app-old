@@ -13,24 +13,7 @@ import Layout from "../components/Layout";
 import gpTheme from "../gp-theme";
 
 const App = ({ Component, pageProps, router }: AppProps): JSX.Element => {
-  const apolloClient = useApollo(pageProps.initialApolloState);
-
-  // const authLink = setContext((_, { headers }) => {
-  //   return {
-  //     headers: {
-  //       ...headers,
-  //       authorization:
-  //         "Bearer " +
-  //         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTYwNTM4OTQ2NX0.2Jri2VkuIt4ktDsBc_z4bc9PqK2c5pjSu3RzYgPpkco"
-  //     }
-  //   };
-  // })
-
-  // const [session] = useSession();
-  // if (session) {
-  //   console.log(`in _app.js:${JSON.stringify(session.apiToken, null, 2)}`);
-  //   headers.authorization = "Bearer " + session.apiToken;
-  // }
+  const apolloClient = useApollo(pageProps);
 
   // const rtr = useRouter();
 

@@ -1,0 +1,25 @@
+fragment PhotographerInfo on Photographer {
+  id
+  name
+  firstName
+  lastName
+  email
+  bio
+  coverImage {
+    ...ImageInfo
+  }
+}
+
+query allPhotosByPhotographer($input: AllPhotosByPhotographerInput!) {
+  allPhotosByPhotographer(input: $input) {
+    photographerInfo {
+      ...PhotographerInfo
+    }
+    items {
+      ...PhotoInfo
+    }
+    startCursor
+    endCursor
+    total
+  }
+}

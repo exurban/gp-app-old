@@ -8,22 +8,26 @@ import { PhotoInfoFragment } from "../graphql-operations";
 const Slide: React.FC<{ photo: PhotoInfoFragment }> = ({ photo }) => {
   const [showInfo, setShowInfo] = useState(false);
 
+  let img;
+  if (photo.images !== undefined && photo.images !== null) {
+    img = photo.images[0];
+  }
+
   return (
     <>
       {showInfo ? (
         <SlideInfo photo={photo} setShowInfo={setShowInfo} />
       ) : (
-        <Flex className="image+button" direction="row" marginRight="20px">
-          {/* <Box className="image" altitude="300" clipPath="inset(100% round 10px)"> */}
-          <div>
+        <Flex className="image+button" direction="row" justifySelf="start" alignSelf="start">
+          {img ? (
             <Image
-              src={photo.images[0].imageUrl}
-              alt={photo.images[0].altText}
-              width={photo.images[0].width}
-              height={photo.images[0].height}
+              src={img.imageUrl}
+              alt={img.altText}
+              width={img.width}
+              height={img.height}
+              layout="intrinsic"
             />
-          </div>
-
+          ) : null}
           <SlideMenu photo={photo} setShowInfo={setShowInfo} />
         </Flex>
       )}

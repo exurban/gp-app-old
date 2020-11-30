@@ -1,30 +1,46 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useMemo } from "react";
-import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
+import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
 import { concatPagination } from "@apollo/client/utilities";
 import merge from "deepmerge";
+import { setContext } from "@apollo/client/link/context";
+import { getSession } from "next-auth/client";
+
+export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null;
+
+const httpLink = createHttpLink({
+  // Server URL (must be absolute )
+  uri: "https://api.gibbs-photography.com"
+  // uri: "http://localhost:4000/api"
+});
+
+const authLink = setContext(async (_, { headers }) => {
+  if (typeof window !== "undefined") {
+    const session = await getSession();
+    if (session && typeof session !== "undefined") {
+      const token = session.accessToken;
+      return {
+        headers: {
+          ...headers,
+          authorization: token ? `Bearer ${token}` : ""
+        }
+      };
+    }
+  }
+  return undefined;
+});
 
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: new HttpLink({
-      // Server URL (must be absolute )
-      uri: "https://gp-api-server.herokuapp.com/api",
-      // uri: "http://localhost:4000/api",
-      credentials: "include"
-      // Additional fetch() options like `credentials` or `headers`
-
-      // headers: {
-      //   authorization: "Bearer " //+ session.accessToken
-      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTYwNTM4OTQ2NX0.2Jri2VkuIt4ktDsBc_z4bc9PqK2c5pjSu3RzYgPpkco"
-      // }
-    }),
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
           fields: {
-            allPosts: concatPagination()
+            allPhotos: concatPagination()
           }
         }
       }
@@ -55,7 +71,17 @@ export function initializeApollo(initialState = null): ApolloClient<NormalizedCa
   return _apolloClient;
 }
 
-export function useApollo(initialState: any): ApolloClient<NormalizedCacheObject> {
-  const store = useMemo(() => initializeApollo(initialState), [initialState]);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function addApolloState(client: any, pageProps: any) {
+  if (pageProps?.props) {
+    pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
+  }
+
+  return pageProps;
+}
+
+export function useApollo(pageProps: any): ApolloClient<NormalizedCacheObject> {
+  const state = pageProps[APOLLO_STATE_PROP_NAME];
+  const store = useMemo(() => initializeApollo(state), [state]);
   return store;
 }

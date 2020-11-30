@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/client";
-import { DropdownMenu, DropdownMenuGroup, Divider, Flex, Text, Icon, Button } from "bumbag";
+import { DropdownMenu, Divider, Link as BBLink, Text, Icon, Button } from "bumbag";
 
 const ShoppingBagMenu: React.FC = () => {
   const [session] = useSession();
@@ -9,53 +9,43 @@ const ShoppingBagMenu: React.FC = () => {
       menu={
         <>
           {session ? (
-            <DropdownMenuGroup>
-              <DropdownMenu.Item height="40px">
-                <Flex direction="row" alignY="center" fontWeight="400">
-                  <Icon icon="regular-star" color="primary" />
-                  <Text color="text" marginLeft="major-1">
-                    Favorites
-                  </Text>
-                  <Text marginLeft="auto" alignX="right" color="primary">
-                    0
-                  </Text>
-                </Flex>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item height="40px">
-                <Flex direction="row" alignY="center" fontWeight="400">
-                  <Icon icon="solid-shopping-bag" color="primary" />
-                  <Text color="text" marginLeft="major-1">
-                    Shopping Bag
-                  </Text>
-                  <Text marginLeft="auto" alignX="right" color="primary">
-                    0
-                  </Text>
-                </Flex>
-              </DropdownMenu.Item>
-              <Divider />
-              <DropdownMenu.Item iconBefore="regular-user-circle">
-                <Text
-                  onClick={e => {
-                    e.preventDefault();
-                    signOut();
-                  }}
-                >
-                  Sign out
-                </Text>
-              </DropdownMenu.Item>
-            </DropdownMenuGroup>
-          ) : (
-            <DropdownMenu.Item iconBefore="regular-user-circle">
-              <Link href={`/auth/signin`}>
-                <a>Sign in</a>
+            <>
+              <Link href="/gallery/user/favorites" passHref={true}>
+                <DropdownMenu.Item iconBefore="regular-star" color="primary">
+                  <Text color="text">Favorites</Text>
+                </DropdownMenu.Item>
               </Link>
-            </DropdownMenu.Item>
+              <Link href="/gallery/user/shopping-bag" passHref={true}>
+                <DropdownMenu.Item iconBefore="solid-shopping-bag" color="primary">
+                  <Text color="text">Shopping Bag</Text>
+                </DropdownMenu.Item>
+              </Link>
+              <Divider />
+              <DropdownMenu.Item
+                iconBefore="regular-user-circle"
+                color="primary"
+                onClick={e => {
+                  e.preventDefault();
+                  signOut();
+                  localStorage.removeItem("lastUrl");
+                  localStorage.removeItem("cursor");
+                }}
+              >
+                <Text color="text">Sign out</Text>
+              </DropdownMenu.Item>
+            </>
+          ) : (
+            <Link href={`/auth/signin`} passHref={true}>
+              <DropdownMenu.Item iconBefore="regular-user-circle">
+                <BBLink>Sign in</BBLink>
+              </DropdownMenu.Item>
+            </Link>
           )}
         </>
       }
     >
       <Button variant="ghost">
-        <Icon aria-label="Shopping Bag" icon="solid-shopping-bag" />
+        <Icon aria-label="Shopping Bag" icon="solid-shopping-bag" fontSize="300" />
       </Button>
     </DropdownMenu>
   );

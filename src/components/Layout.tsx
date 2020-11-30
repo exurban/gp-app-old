@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Footer from "./Footer";
@@ -7,7 +8,6 @@ import {
   usePage,
   PageWithHeader,
   PageWithSidebar,
-  PageContent,
   useBreakpoint,
   Hide,
   Level,
@@ -24,8 +24,7 @@ const Layout: React.FC<{ title?: string }> = ({
   children,
   title = "Gallery - Gibbs Photography"
 }) => {
-  // * auth
-  // const [session] = useSession();
+  const [selectedId, setSelectedId] = React.useState("home");
 
   const { colorMode, setColorMode } = useColorMode();
   const page = usePage();
@@ -44,9 +43,14 @@ const Layout: React.FC<{ title?: string }> = ({
       <PageWithHeader
         sticky
         headerHeight="80px"
+        // maxHeight="800px"
         header={
           <>
-            <TopNav backgroundColor="rgba(0, 0, 0, 0)">
+            <TopNav
+              backgroundColor="rgba(0, 0, 0, 0)"
+              selectedId={selectedId}
+              onChange={(id: React.SetStateAction<string>) => setSelectedId(id)}
+            >
               <TopNav.Section>
                 <Link href="/">
                   <TopNav.Item navId="home">
@@ -67,7 +71,7 @@ const Layout: React.FC<{ title?: string }> = ({
                 <Hide below="desktop">
                   <TopNav.Item>
                     <Button variant="ghost">
-                      <Icon aria-label="Search" icon="solid-search" />
+                      <Icon aria-label="Search" icon="solid-search" fontSize="300" />
                     </Button>
                   </TopNav.Item>
                 </Hide>
@@ -80,9 +84,9 @@ const Layout: React.FC<{ title?: string }> = ({
                     onClick={() => setColorMode(colorMode != "default" ? "default" : "dark")}
                   >
                     {colorMode == "default" ? (
-                      <Icon icon="solid-moon" />
+                      <Icon color="#dbe29c" icon="solid-moon" fontSize="300" />
                     ) : (
-                      <Icon icon="solid-sun" />
+                      <Icon color="#fee61e" icon="solid-sun" fontSize="300" />
                     )}
                   </Button>
                 </TopNav.Item>
@@ -100,8 +104,8 @@ const Layout: React.FC<{ title?: string }> = ({
       >
         {isDesktopAndOver ? page.sidebar.close : null}
         <PageWithSidebar
-          minHeight="calc(100vh - 152px)"
           defaultIsVisible={false}
+          minHeight="calc(100vh - 180px)"
           sidebar={
             <SideNav.Level>
               <Level paddingX="major-2">
@@ -130,9 +134,7 @@ const Layout: React.FC<{ title?: string }> = ({
             </SideNav.Level>
           }
         >
-          <PageContent isFluid padding="0px">
-            {children}
-          </PageContent>
+          {children}
         </PageWithSidebar>
         <Footer />
       </PageWithHeader>

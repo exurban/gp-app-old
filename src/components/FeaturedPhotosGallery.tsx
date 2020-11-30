@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
-import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../graphql-operations";
+import { AllFeaturedPhotosDocument, AllFeaturedPhotosInput } from "../graphql-operations";
 import { Stack, Heading, Text, Grid, Button, Icon } from "bumbag";
 import Slide from "./Slide";
 import Loader from "./Loader";
 
-const Gallery: React.FC<{ input: AllPhotosOfSubjectInput }> = ({ input }) => {
-  const { loading, error, data } = useQuery(AllPhotosOfSubjectDocument, {
+const FeaturedPhotosGallery: React.FC<{ input: AllFeaturedPhotosInput }> = ({ input }) => {
+  const { loading, error, data } = useQuery(AllFeaturedPhotosDocument, {
     variables: { input: input }
   });
 
@@ -15,21 +15,15 @@ const Gallery: React.FC<{ input: AllPhotosOfSubjectInput }> = ({ input }) => {
   if (loading) return <Loader />;
 
   if (data) {
-    const subject = data.allPhotosOfSubject;
-    // const subjectInfo = subject.subjectInfo;
-    const photos = subject.items;
+    const photos = data.allFeaturedPhotos.items;
 
-    // return (
-    //   <pre>
-    //     {JSON.stringify(subjectInfo, null, 2)},{JSON.stringify(photos, null, 2)}
-    //   </pre>
-    // );
+    // return <pre>{JSON.stringify(photos, null, 2)}</pre>;
 
     return (
       <>
         <Stack orientation="horizontal" marginY="major-4" alignX="right" width="90%">
           <Heading use="h4" alignY="bottom">
-            <Text>{subject.total} photos</Text>
+            <Text>{photos.length} photos</Text>
           </Heading>
           <Button palette="primary" fontSize="500">
             <Icon icon="solid-expand" />
@@ -53,4 +47,4 @@ const Gallery: React.FC<{ input: AllPhotosOfSubjectInput }> = ({ input }) => {
   return <div>failed to load photos</div>;
 };
 
-export default Gallery;
+export default FeaturedPhotosGallery;

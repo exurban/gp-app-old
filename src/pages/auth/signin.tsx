@@ -14,16 +14,27 @@ import {
   Paragraph,
   Text
 } from "bumbag";
+import { useRouter } from "next/router";
 
 const SignIn: React.FC = () => {
   const [session, loading] = useSession();
   const [email, setEmail] = useState("");
+  const router = useRouter();
 
-  // eslint-disable-next-line
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value);
 
   // When rendering client side don't display anything until loading is complete
-  if (typeof window !== "undefined" && loading) return null;
+  if (typeof window !== "undefined" && loading) {
+    console.log(`checking for session while loading===true`);
+    if (session) {
+      const url = localStorage.getItem("lastUrl");
+      if (url !== null) {
+        router.push(url);
+      }
+    } else {
+      return null;
+    }
+  }
 
   if (loading) return <Heading>One moment please while we complete sign in.</Heading>;
 
@@ -45,17 +56,17 @@ const SignIn: React.FC = () => {
           content="Member sign in to add to favorites and shopping bag and to purchase art."
         />
       </Head>
-      <Flex minHeight="calc(100vh - 220px)">
+      <Flex>
         <Stack
           className="stack-bjg"
           maxWidth="650px"
           marginX="auto"
-          marginY="auto"
+          marginY="50px"
           alignX="center"
           spacing="major-2"
         >
           <>
-            <Flex alignY="center" marginTop="major-5">
+            <Flex alignY="center">
               <Icon icon="gpLogo" fontSize="900" marginRight="major-3" />
               <Heading marginTop="major-1">Sign in.</Heading>
             </Flex>

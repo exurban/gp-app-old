@@ -1,6 +1,8 @@
 fragment PhotoInfo on Photo {
   id
+  rating
   sku
+  sortIndex
   title
   description
   isFeatured
@@ -8,19 +10,23 @@ fragment PhotoInfo on Photo {
   rating
   basePrice
   priceModifier
+  images {
+    id
+    imageUrl
+    altText
+    fileType
+    fileExtension
+    size
+    width
+    height
+  }
   photographer {
-    ...PhotographerInfo
+    id
+    name
   }
   location {
     id
     name
-  }
-  images {
-    id
-    altText
-    imageUrl
-    width
-    height
   }
   subjectsInPhoto {
     subject {
@@ -40,19 +46,27 @@ fragment PhotoInfo on Photo {
       name
     }
   }
-  createdAt
-  updatedAt
 }
 
-query allPhotosQuery {
-  photos {
-    ...PhotoInfo
+query allPhotos($input: AllPhotosInput!) {
+  allPhotos(input: $input) {
+    startCursor
+    endCursor
+    total
+    items {
+      ...PhotoInfo
+    }
   }
 }
 
-query featuredPhotosQuery {
-  featuredPhotos {
-    ...PhotoInfo
+query allFeaturedPhotos($input: AllFeaturedPhotosInput!) {
+  allFeaturedPhotos(input: $input) {
+    items {
+      ...PhotoInfo
+    }
+    startCursor
+    endCursor
+    total
   }
 }
 

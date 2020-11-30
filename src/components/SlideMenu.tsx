@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/client";
-import { DropdownMenu, DropdownMenuGroup, Text, Icon, Button } from "bumbag";
+import { DropdownMenu, DropdownMenuGroup, Text, Icon, Button, applyTheme, useToasts } from "bumbag";
 import { AddPhotoToFavoritesDocument, PhotoInfoFragment } from "../graphql-operations";
 
 type Props = {
@@ -12,22 +12,24 @@ type Props = {
 const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   const [session] = useSession();
   const router = useRouter();
+  const toasts = useToasts();
   const [addToFavorites, { data }] = useMutation(AddPhotoToFavoritesDocument);
 
   const addPhotoToFavorites = () => {
     console.log(`looking for session's api token`);
     if (!session) {
+      localStorage.setItem("lastUrl", router.pathname);
+      localStorage.setItem("cursor", photo.id);
       router.push(`/auth/signin`);
     } else {
-      const token = session.accessToken;
-      console.log(
-        `SESSION: ${JSON.stringify(session, null, 2)}\nAPI Token: ${JSON.stringify(token, null, 2)}`
-      );
-      console.log(`Add ${photo.id} to favorites.`);
       addToFavorites({ variables: { photoId: parseInt(photo.id) } });
 
       if (data) {
         console.log(`Added to favorites: ${JSON.stringify(data, null, 2)}`);
+        toasts.add({
+          title: "Added to Favorites",
+          message: `${photo.title} was added to your favorites.`
+        });
       }
     }
   };
@@ -64,42 +66,45 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     }
   };
 
+  const DDMenu = applyTheme(DropdownMenu, {
+    Popover: {
+      styles: {
+        base: {
+          altitude: 400
+        }
+      },
+      modes: {
+        dark: {
+          styles: {
+            base: {
+              backgroundColor: "#2f3747"
+            }
+          }
+        }
+      }
+    }
+  });
+
   return (
-    <DropdownMenu
+    <DDMenu
       menu={
         <>
-          <DropdownMenu.Item
-            fontWeight="400"
-            iconBefore="solid-info-circle"
-            color="primary"
-            onClick={() => setShowInfo(true)}
-          >
-            <Text color="text">Info</Text>
+          <DropdownMenu.Item iconBefore="solid-info-circle" onClick={() => setShowInfo(true)}>
+            <Text>Info</Text>
           </DropdownMenu.Item>
-          <DropdownMenu.Item iconBefore="solid-expand" fontWeight="400" color="primary">
-            <Text color="text">View Larger</Text>
+          <DropdownMenu.Item iconBefore="solid-expand">
+            <Text>View Larger</Text>
           </DropdownMenu.Item>
-          <DropdownMenu.Item
-            iconBefore="solid-plus"
-            fontWeight="400"
-            color="primary"
-            onClick={() => addPhotoToFavorites()}
-          >
-            <Text color="text">Favorites</Text>
+          <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToFavorites()}>
+            <Text>Favorites</Text>
           </DropdownMenu.Item>
-          <DropdownMenu.Item
-            iconBefore="solid-plus"
-            fontWeight="400"
-            color="primary"
-            onClick={() => addPhotoToShoppingBag()}
-          >
-            <Text color="text">Shopping Bag</Text>
+          <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToShoppingBag()}>
+            <Text>Shopping Bag</Text>
           </DropdownMenu.Item>
           <DropdownMenu.Divider />
           <DropdownMenuGroup title="Share">
             <DropdownMenu.Item
               iconBefore="brands-twitter"
-              fontWeight="400"
               color="#1da1f2"
               onClick={() => sharePhotoOnTwitter()}
             >
@@ -107,26 +112,13 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
             </DropdownMenu.Item>
             <DropdownMenu.Item
               iconBefore="brands-facebook-f"
-              fontWeight="400"
               color="#4267b2"
               onClick={() => sharePhotoOnFacebook()}
             >
               <Text color="text">Facebook</Text>
             </DropdownMenu.Item>
-            <DropdownMenu.Item>
-              <Icon
-                icon="brands-instagram"
-                fontWeight="400"
-                background="radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)"
-                color="#fff"
-              />
-              <Text color="text" fontWeight="400" marginLeft="major-1">
-                Instagram
-              </Text>
-            </DropdownMenu.Item>
             <DropdownMenu.Item
-              iconBefore="solid-faAt"
-              fontWeight="400"
+              iconBefore="solid-at"
               color="#4267b2"
               onClick={() => sharePhotoViaEmail()}
             >
@@ -139,11 +131,11 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
       <Button
         variant="ghost"
         marginTop={{ default: "major-1", "max-Tablet": "minor-1" }}
-        marginLeft="4px"
+        marginX="major-1"
       >
         <Icon aria-label="options" icon="solid-ellipsis-v" fontSize="200" />
       </Button>
-    </DropdownMenu>
+    </DDMenu>
   );
 };
 
