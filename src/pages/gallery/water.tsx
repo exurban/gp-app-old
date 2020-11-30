@@ -3,7 +3,7 @@ import { initializeApollo } from "../../lib/apolloClient";
 import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../../graphql-operations";
 import Gallery from "../../components/Gallery";
 
-const input = { subject: "water", take: 20 } as AllPhotosOfSubjectInput;
+const input = { subject: "water", take: 10 } as AllPhotosOfSubjectInput;
 const WaterGallery: React.FC = () => <Gallery input={input} />;
 
 export const getStaticProps: GetStaticProps = async () => {

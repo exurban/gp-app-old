@@ -17,7 +17,7 @@ const PhotographerGallery: React.FC = () => {
   const { name } = router.query;
   console.log(name);
 
-  const input = { name: name, take: 20 } as AllPhotosByPhotographerInput;
+  const input = { name: name, take: 10 } as AllPhotosByPhotographerInput;
 
   const { loading, error, data } = useQuery(AllPhotosByPhotographerDocument, {
     variables: { input: input }

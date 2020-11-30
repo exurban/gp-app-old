@@ -10,7 +10,7 @@ const TagGallery: React.FC = () => {
 
   // * get tag from router
   const { tag } = router.query;
-  const tagInput = { tag: tag, take: 20 } as AllPhotosWithTagInput;
+  const tagInput = { tag: tag, take: 10 } as AllPhotosWithTagInput;
 
   const { loading, error, data } = useQuery(AllPhotosWithTagDocument, {
     variables: { input: tagInput }

@@ -3,7 +3,7 @@ import { initializeApollo } from "../../lib/apolloClient";
 import { AllFeaturedPhotosDocument, AllFeaturedPhotosInput } from "../../graphql-operations";
 import FeaturedPhotosGallery from "../../components/FeaturedPhotosGallery";
 
-const input = { take: 20 } as AllFeaturedPhotosInput;
+const input = { take: 10 } as AllFeaturedPhotosInput;
 const FeaturedGallery: React.FC = () => <FeaturedPhotosGallery input={input} />;
 
 export const getStaticProps: GetStaticProps = async () => {

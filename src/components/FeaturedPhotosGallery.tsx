@@ -23,7 +23,7 @@ const FeaturedPhotosGallery: React.FC<{ input: AllFeaturedPhotosInput }> = ({ in
       <>
         <Stack orientation="horizontal" marginY="major-4" alignX="right" width="90%">
           <Heading use="h4" alignY="bottom">
-            <Text>{photos.length} photos</Text>
+            <Text>{data.allFeaturedPhotos.total} photos</Text>
           </Heading>
           <Button palette="primary" fontSize="500">
             <Icon icon="solid-expand" />

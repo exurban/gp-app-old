@@ -14,7 +14,7 @@ const LocationGallery: React.FC = () => {
   const { name } = router.query;
   console.log(name);
 
-  const input = { name: name, take: 20 } as AllPhotosAtLocationInput;
+  const input = { name: name, take: 10 } as AllPhotosAtLocationInput;
 
   const { loading, error, data } = useQuery(AllPhotosAtLocationDocument, {
     variables: { input: input }
