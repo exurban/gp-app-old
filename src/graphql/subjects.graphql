@@ -10,7 +10,7 @@ query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
       createdAt
       updatedAt
     }
-    items {
+    photos {
       ...PhotoInfo
     }
     startCursor

@@ -29,7 +29,7 @@ const PhotographerGallery: React.FC = () => {
 
   if (data) {
     const photographer = data.allPhotosByPhotographer.photographerInfo;
-    const photos = data.allPhotosByPhotographer.items;
+    const photos = data.allPhotosByPhotographer.photos;
     const total = data.allPhotosByPhotographer.total;
     // const cursor = data.allPhotosByPhotographer.endCursor;
     // const imgUrl = photographer?.image?.imageUrl as string;

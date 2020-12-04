@@ -50,18 +50,18 @@ fragment PhotoInfo on Photo {
 
 query allPhotos($input: AllPhotosInput!) {
   allPhotos(input: $input) {
+    photos {
+      ...PhotoInfo
+    }
     startCursor
     endCursor
     total
-    items {
-      ...PhotoInfo
-    }
   }
 }
 
 query allFeaturedPhotos($input: AllFeaturedPhotosInput!) {
   allFeaturedPhotos(input: $input) {
-    items {
+    photos {
       ...PhotoInfo
     }
     startCursor

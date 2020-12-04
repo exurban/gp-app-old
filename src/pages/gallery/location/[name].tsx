@@ -26,7 +26,7 @@ const LocationGallery: React.FC = () => {
 
   if (data) {
     const location = data.allPhotosAtLocation.locationInfo;
-    const photos = data.allPhotosAtLocation.items;
+    const photos = data.allPhotosAtLocation.photos;
     const total = data.allPhotosAtLocation.total;
     // const cursor = data.allPhotosAtLocation.endCursor;
     const imgUrl = location.coverImage?.imageUrl as string;

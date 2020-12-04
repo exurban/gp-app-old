@@ -15,7 +15,7 @@ const FeaturedPhotosGallery: React.FC<{ input: AllFeaturedPhotosInput }> = ({ in
   if (loading) return <Loader />;
 
   if (data) {
-    const photos = data.allFeaturedPhotos.items;
+    const photos = data.allFeaturedPhotos.photos;
 
     // return <pre>{JSON.stringify(photos, null, 2)}</pre>;
 

@@ -112,7 +112,7 @@ const AdminLayout: React.FC<{ title?: string }> = ({ children, title = "Admin" }
                   {session && (
                     <>
                       <Link href="/api/auth/signout">
-                        <Tooltip content={session.user.email || session.user.name}>
+                        <Tooltip content={session.user.name as string}>
                           <Button
                             palette="secondary"
                             variant="ghost"

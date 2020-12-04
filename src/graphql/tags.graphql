@@ -10,7 +10,7 @@ query allPhotosWithTag($input: AllPhotosWithTagInput!) {
       createdAt
       updatedAt
     }
-    items {
+    photos {
       ...PhotoInfo
     }
     startCursor

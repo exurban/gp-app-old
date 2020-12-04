@@ -15,7 +15,7 @@ query allPhotosByPhotographer($input: AllPhotosByPhotographerInput!) {
     photographerInfo {
       ...PhotographerInfo
     }
-    items {
+    photos {
       ...PhotoInfo
     }
     startCursor

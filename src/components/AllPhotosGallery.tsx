@@ -1,20 +1,13 @@
 import { useQuery, NetworkStatus } from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
-import {
-  AllPhotosOfSubjectDocument,
-  AllPhotosOfSubjectInput,
-  PaginatedPhotosOfSubjectResponse
-} from "../graphql-operations";
-import { Flex, Text, Button, Paragraph } from "bumbag";
+import { AllPhotosDocument, AllPhotosInput, PaginatedPhotoResponse } from "../graphql-operations";
+import { Button, Flex, Paragraph, Text } from "bumbag";
 import Loader from "./Loader";
 
-const input: AllPhotosOfSubjectInput = {
-  subject: "beast",
-  take: 5
-};
+const input: AllPhotosInput = { take: 10 };
 
-const Gallery: React.FC = () => {
-  const { loading, error, data, fetchMore, networkStatus } = useQuery(AllPhotosOfSubjectDocument, {
+const AllPhotosGallery: React.FC = () => {
+  const { loading, error, data, fetchMore, networkStatus } = useQuery(AllPhotosDocument, {
     variables: {
       input: input
     }
@@ -34,19 +27,18 @@ const Gallery: React.FC = () => {
 
   if (loading && !loadingMorePhotos) return <Loader />;
 
-  // console.log(`GALLERY`);
-  // if (data) {
-  //   console.log(`data`, data);
-  // }
+  console.log(`GALLERY`);
+  if (data) {
+    console.log(`data`, data);
+  }
 
-  // if (data?.allPhotosOfSubject?.photos) {
-  //   console.log(`photos: ${data.allPhotosOfSubject.photos}`);
-  // }
-
-  const { photos, endCursor, total } = data?.allPhotosOfSubject as PaginatedPhotosOfSubjectResponse;
+  if (data?.allPhotos?.photos) {
+    console.log(`photos: ${data.allPhotos.photos}`);
+  }
+  const { photos, endCursor, total } = data?.allPhotos as PaginatedPhotoResponse;
 
   input.cursor = endCursor;
-  input.take = 10;
+
   // let areMorePhotos = false;
 
   // if (photos && total) {
@@ -58,16 +50,19 @@ const Gallery: React.FC = () => {
       {photos.map((photo, index) => (
         <Paragraph key={photo.sortIndex}>
           <Text>
-            {index} {photo.title}
+            {index} {photo.sortIndex} {photo.title}
           </Text>
         </Paragraph>
       ))}
 
-      <Button width="200px" onClick={() => loadMorePhotos()} disabled={loadingMorePhotos}>
+      {/* <Button width="200px" onClick={() => loadMorePhotos()} disabled={loadingMorePhotos}>
+        fetch more
+      </Button> */}
+      <Button width="200px" onClick={() => loadMorePhotos()}>
         fetch more
       </Button>
     </Flex>
   );
 };
 
-export default Gallery;
+export default AllPhotosGallery;
