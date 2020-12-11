@@ -10,12 +10,23 @@ fragment PhotographerInfo on Photographer {
   }
 }
 
-query allPhotosByPhotographer($input: AllPhotosByPhotographerInput!) {
-  allPhotosByPhotographer(input: $input) {
+query groupedPhotosByPhotographer($input: GroupedPhotosByPhotographerInput!) {
+  groupedPhotosByPhotographer(input: $input) {
     photographerInfo {
       ...PhotographerInfo
     }
-    items {
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
+query paginatedPhotosByPhotographer($input: PaginatedPhotosByPhotographerInput!) {
+  paginatedPhotosByPhotographer(input: $input) {
+    photographerInfo {
+      ...PhotographerInfo
+    }
+    photos {
       ...PhotoInfo
     }
     startCursor

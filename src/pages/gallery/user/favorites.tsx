@@ -24,7 +24,7 @@ const FavoritesGallery: React.FC = () => {
   if (loading) return <Loader />;
 
   if (data) {
-    const photos = data.favorites;
+    const photos = data.favorites?.photoList;
 
     // return <pre>{JSON.stringify(photos, null, 2)}</pre>;
     return (

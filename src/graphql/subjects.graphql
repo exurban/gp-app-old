@@ -1,5 +1,5 @@
-query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
-  allPhotosOfSubject(input: $input) {
+query groupedPhotosOfSubject($input: GroupedPhotosOfSubjectInput!) {
+  groupedPhotosOfSubject(input: $input) {
     subjectInfo {
       id
       name
@@ -10,7 +10,25 @@ query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
       createdAt
       updatedAt
     }
-    items {
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
+query PaginatedPhotosOfSubject($input: PaginatedPhotosOfSubjectInput!) {
+  paginatedPhotosOfSubject(input: $input) {
+    subjectInfo {
+      id
+      name
+      description
+      coverImage {
+        ...ImageInfo
+      }
+      createdAt
+      updatedAt
+    }
+    photos {
       ...PhotoInfo
     }
     startCursor

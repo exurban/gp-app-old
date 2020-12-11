@@ -1,5 +1,5 @@
-query allPhotosAtLocation($input: AllPhotosAtLocationInput!) {
-  allPhotosAtLocation(input: $input) {
+query GroupedPhotosAtLocation($input: GroupedPhotosAtLocationInput!) {
+  groupedPhotosAtLocation(input: $input) {
     locationInfo {
       id
       name
@@ -9,7 +9,24 @@ query allPhotosAtLocation($input: AllPhotosAtLocationInput!) {
         ...ImageInfo
       }
     }
-    items {
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
+query PaginatedPhotosAtLocation($input: PaginatedPhotosAtLocationInput!) {
+  paginatedPhotosAtLocation(input: $input) {
+    locationInfo {
+      id
+      name
+      tag
+      description
+      coverImage {
+        ...ImageInfo
+      }
+    }
+    photos {
       ...PhotoInfo
     }
     startCursor

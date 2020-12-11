@@ -1,16 +1,19 @@
 import { GetStaticProps } from "next";
 import { initializeApollo } from "../../lib/apolloClient";
-import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../../graphql-operations";
+import {
+  GroupedPhotosOfSubjectDocument,
+  GroupedPhotosOfSubjectInput
+} from "../../graphql-operations";
 import Gallery from "../../components/Gallery";
 
-const input = { subject: "beast", take: 10 } as AllPhotosOfSubjectInput;
+const input = { name: "beast" } as GroupedPhotosOfSubjectInput;
 const BeastGallery: React.FC = () => <Gallery input={input} />;
 
 export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
-    query: AllPhotosOfSubjectDocument,
+    query: GroupedPhotosOfSubjectDocument,
     variables: { input: input }
   });
 

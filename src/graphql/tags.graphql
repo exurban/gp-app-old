@@ -1,5 +1,5 @@
-query allPhotosWithTag($input: AllPhotosWithTagInput!) {
-  allPhotosWithTag(input: $input) {
+query groupedPhotosWithTag($input: GroupedPhotosWithTagInput!) {
+  groupedPhotosWithTag(input: $input) {
     tagInfo {
       id
       name
@@ -10,7 +10,25 @@ query allPhotosWithTag($input: AllPhotosWithTagInput!) {
       createdAt
       updatedAt
     }
-    items {
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
+query paginatedPhotosWithTag($input: PaginatedPhotosWithTagInput!) {
+  paginatedPhotosWithTag(input: $input) {
+    tagInfo {
+      id
+      name
+      description
+      coverImage {
+        ...ImageInfo
+      }
+      createdAt
+      updatedAt
+    }
+    photos {
       ...PhotoInfo
     }
     startCursor

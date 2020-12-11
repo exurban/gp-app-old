@@ -5,6 +5,7 @@ import {
   faSun,
   faBars,
   faPlus,
+  faMinus,
   faEllipsisV,
   faInfoCircle,
   faExpand,
@@ -35,6 +36,24 @@ const gpTheme: ThemeConfig = {
       "https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
     ]
   },
+
+  // Label: {
+  //   styles: {
+  //     base: {
+  //       fontSize: "100",
+  //       fontColor: "blue"
+  //     }
+  //   }
+  // },
+  // Radio: {
+  //   Icon: {
+  //     styles: {
+  //       base: {
+  //         fontSize: "100"
+  //       }
+  //     }
+  //   }
+  // },
   TopNav: {
     Item: {
       variants: {
@@ -112,6 +131,7 @@ const gpTheme: ThemeConfig = {
           faMoon,
           faBars,
           faPlus,
+          faMinus,
           faEllipsisV,
           faInfoCircle,
           faExpand,

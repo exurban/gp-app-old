@@ -3,8 +3,19 @@ import { useSession } from "next-auth/client";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { useQuery } from "@apollo/client";
 import { ShoppingBagItemsDocument } from "../../../graphql-operations";
-import { Heading, Flex, Text, Grid, Button, Icon } from "bumbag";
-import Slide from "../../../components/Slide";
+import {
+  Heading,
+  Flex,
+  Text,
+  Grid,
+  Button,
+  Icon,
+  Divider,
+  Radio,
+  RadioGroup,
+  Label,
+  applyTheme
+} from "bumbag";
 import Loader from "../../../components/Loader";
 
 const ShoppingBagGallery: React.FC = () => {
@@ -53,29 +64,58 @@ const ShoppingBagGallery: React.FC = () => {
           justifyContent="space-between"
         >
           <Heading use="h2" marginLeft="major-1">
-            Items in your shopping bag
+            <Icon aria-label="Shopping Bag" icon="solid-shopping-bag" fontSize="600" />
+            Your shopping bag
           </Heading>
           <Flex>
             <Heading use="h4" alignY="bottom" marginRight="major-1">
               <Text>{photos?.length} photos</Text>
             </Heading>
-            <Button palette="primary" fontSize="500">
-              <Icon icon="solid-expand" />
-            </Button>
           </Flex>
         </Flex>
-        <Grid
-          templateColumns="repeat(auto-fit, minmax(min(375px, 100%), max(700px)))"
-          rowGap="5rem"
-          columnGap="1rem"
-          justifyContent="space-evenly"
-          justifyItems="center"
-          padding={{ default: "major-4", "max-tablet": "minor-1" }}
-        >
+        <Flex flexDirection="column" width="90%" maxWidth="1200px" marginX="auto">
           {photos?.map(photo => (
-            <Slide key={photo.id} photo={photo} />
+            <Flex key={photo.id} flexDirection="row">
+              <Flex flexDirection="column" width="40%">
+                <Heading use="h4">{photo.title}</Heading>
+                <Heading use="h6">{photo?.photographer?.name}</Heading>
+                <Text>{photo?.location?.name}</Text>
+                <Text>{photo?.description}</Text>
+              </Flex>
+              <Flex flexDirection="column" width="12%" marginLeft="major-3">
+                <Heading use="h6" marginBottom="major-2">
+                  Finish
+                </Heading>
+                <RadioGroup
+                  spacing="major-2"
+                  name={photo.id}
+                  options={[
+                    { label: "Fine Art Print", value: "fap" },
+                    { label: "Aluminum", value: "alu" },
+                    { label: "Ceramic", value: "cer" }
+                  ]}
+                ></RadioGroup>
+              </Flex>
+              <Flex flexDirection="column" width="12%" marginLeft="major-3">
+                <Heading use="h6" marginBottom="major-2">
+                  Size
+                </Heading>
+                <RadioGroup
+                  spacing="major-2"
+                  name={photo.id}
+                  marginBottom="major-4"
+                  options={[
+                    { label: `12"h x 18"w`, value: "12x18" },
+                    { label: `16"h x 24"w`, value: "16x24" },
+                    { label: `20"h x 30"w`, value: "20x30" },
+                    { label: `30"h x 40"w`, value: "30x40" }
+                  ]}
+                ></RadioGroup>
+              </Flex>
+              <Divider marginY="major-4" />
+            </Flex>
           ))}
-        </Grid>
+        </Flex>
       </>
     );
   } else {

@@ -3,29 +3,72 @@ mutation getApiToken($input: GetApiTokenInput!) {
 }
 
 mutation addPhotoToFavorites($photoId: Float!) {
-  addPhotoToFavorites(photoId: $photoId)
+  addPhotoToFavorites(photoId: $photoId) {
+    success
+    message
+    addedPhoto {
+      ...PhotoInfo
+    }
+  }
 }
 
 mutation removePhotoFromFavorites($photoId: Float!) {
-  removePhotoFromFavorites(photoId: $photoId)
+  removePhotoFromFavorites(photoId: $photoId) {
+    success
+    message
+    removedPhoto {
+      ...PhotoInfo
+    }
+  }
 }
 
 mutation addPhotoToShoppingBag($photoId: Float!) {
-  addPhotoToShoppingBag(photoId: $photoId)
+  addPhotoToShoppingBag(photoId: $photoId) {
+    success
+    message
+    addedPhoto {
+      ...PhotoInfo
+    }
+  }
 }
 
 mutation removePhotoFromShoppingBag($photoId: Float!) {
-  removePhotoFromShoppingBag(photoId: $photoId)
+  removePhotoFromShoppingBag(photoId: $photoId) {
+    success
+    message
+    removedPhoto {
+      ...PhotoInfo
+    }
+  }
 }
 
 query favorites {
   favorites {
-    ...PhotoInfo
+    photoList {
+      ...PhotoInfo
+    }
   }
 }
 
 query shoppingBagItems {
   shoppingBagItems {
-    ...PhotoInfo
+    photoList {
+      ...PhotoInfo
+    }
+  }
+}
+
+query getUserPreferences {
+  getUserPreferences {
+    favorites {
+      photo {
+        ...PhotoInfo
+      }
+    }
+    shoppingBagItems {
+      photo {
+        ...PhotoInfo
+      }
+    }
   }
 }

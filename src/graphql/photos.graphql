@@ -48,20 +48,26 @@ fragment PhotoInfo on Photo {
   }
 }
 
-query allPhotos($input: AllPhotosInput!) {
-  allPhotos(input: $input) {
+query Photos {
+  photos {
+    ...PhotoInfo
+  }
+}
+
+query paginatedPhotos($input: PaginatedPhotosInput!) {
+  paginatedPhotos(input: $input) {
     startCursor
     endCursor
     total
-    items {
+    photos {
       ...PhotoInfo
     }
   }
 }
 
-query allFeaturedPhotos($input: AllFeaturedPhotosInput!) {
-  allFeaturedPhotos(input: $input) {
-    items {
+query paginatedFeaturedPhotos($input: PaginatedPhotosInput!) {
+  paginatedFeaturedPhotos(input: $input) {
+    photos {
       ...PhotoInfo
     }
     startCursor

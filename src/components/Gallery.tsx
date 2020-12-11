@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
-import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../graphql-operations";
+import { GroupedPhotosOfSubjectDocument, GroupedPhotosOfSubjectInput } from "../graphql-operations";
 import { Stack, Heading, Text, Grid, Button, Icon } from "bumbag";
 import Slide from "./Slide";
 import Loader from "./Loader";
 
-const Gallery: React.FC<{ input: AllPhotosOfSubjectInput }> = ({ input }) => {
-  const { loading, error, data } = useQuery(AllPhotosOfSubjectDocument, {
+const Gallery: React.FC<{ input: GroupedPhotosOfSubjectInput }> = ({ input }) => {
+  const { loading, error, data } = useQuery(GroupedPhotosOfSubjectDocument, {
     variables: { input: input }
   });
 
@@ -15,9 +15,9 @@ const Gallery: React.FC<{ input: AllPhotosOfSubjectInput }> = ({ input }) => {
   if (loading) return <Loader />;
 
   if (data) {
-    const subject = data.allPhotosOfSubject;
+    const subject = data.groupedPhotosOfSubject;
     // const subjectInfo = subject.subjectInfo;
-    const photos = subject.items;
+    const photos = subject.photos;
 
     // return (
     //   <pre>
@@ -29,7 +29,7 @@ const Gallery: React.FC<{ input: AllPhotosOfSubjectInput }> = ({ input }) => {
       <>
         <Stack orientation="horizontal" marginY="major-4" alignX="right" width="90%">
           <Heading use="h4" alignY="bottom">
-            <Text>{subject.total} photos</Text>
+            <Text>{photos.length} photos</Text>
           </Heading>
           <Button palette="primary" fontSize="500">
             <Icon icon="solid-expand" />

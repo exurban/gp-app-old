@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useSession, signIn } from "next-auth/client";
 import Head from "next/head";
-
 import {
   Icon,
   Input,
@@ -23,29 +22,21 @@ const SignIn: React.FC = () => {
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value);
 
+  // if (session) {
+  //   // * redirect to sign-success to complete sign in process
+  //   console.log(`found session. re-directing to signin-success`);
+  //   router.push("/auth/signin-success");
+  // }
+
   // When rendering client side don't display anything until loading is complete
-  if (typeof window !== "undefined" && loading) {
-    console.log(`checking for session while loading===true`);
+  if (typeof window !== "undefined") {
     if (session) {
-      const url = localStorage.getItem("lastUrl");
-      if (url !== null) {
-        router.push(url);
-      }
-    } else {
-      return null;
+      // * redirect to sign-success to complete sign in process
+      router.push("/auth/signin-success");
     }
   }
 
   if (loading) return <Heading>One moment please while we complete sign in.</Heading>;
-
-  // ! TO DO:
-  // Google, Apple and email redirect to this page after successful login and they have token info at this point. Before redirecting to the page the user was on before signing in, sign in to the API server. Store the returned JWT in local storage.
-
-  // Sign in flow: User clicks continue with Apple, Google or email, consents and JWT is issued. Auth provider redirects to this page after issuing token. This page will reload, but with a session. So, if (session), send a request to the API login router, take info from the JWT and send API signin request to the API, which returns a JWT, which we'll store in local storage before redirecting back to the page the user was on before beginning the sign in process.
-
-  if (session) {
-    console.log(`Reloading after APP sign in.`);
-  }
 
   return (
     <>

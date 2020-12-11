@@ -3,6 +3,10 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -11,7 +15,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: string;
+  DateTime: any;
 };
 
 export type Image = {
@@ -70,7 +74,7 @@ export type PhotoCollection = {
 export type Photographer = {
   __typename?: "Photographer";
   id: Scalars["ID"];
-  /** Derived field that returns `${firstName} ${lastName}` */
+  /** The artist's full name */
   name: Scalars["String"];
   /** The artist's first name. */
   firstName: Scalars["String"];
@@ -220,18 +224,36 @@ export type User = {
   updatedAt: Scalars["DateTime"];
 };
 
+export type GroupedPhotosAtLocationResponse = {
+  __typename?: "GroupedPhotosAtLocationResponse";
+  photos: Array<Photo>;
+  locationInfo: Location;
+};
+
 export type PaginatedPhotosAtLocationResponse = {
   __typename?: "PaginatedPhotosAtLocationResponse";
-  items: Array<Photo>;
+  photos: Array<Photo>;
   startCursor: Scalars["Int"];
   endCursor: Scalars["Int"];
   total: Scalars["Int"];
   locationInfo: Location;
 };
 
+export type ItemCount = {
+  __typename?: "ItemCount";
+  name: Scalars["String"];
+  count: Scalars["Int"];
+};
+
+export type GroupedPhotosByPhotographerResponse = {
+  __typename?: "GroupedPhotosByPhotographerResponse";
+  photos: Array<Photo>;
+  photographerInfo: Photographer;
+};
+
 export type PaginatedPhotosByPhotographerResponse = {
   __typename?: "PaginatedPhotosByPhotographerResponse";
-  items: Array<Photo>;
+  photos: Array<Photo>;
   startCursor: Scalars["Int"];
   endCursor: Scalars["Int"];
   total: Scalars["Int"];
@@ -240,28 +262,90 @@ export type PaginatedPhotosByPhotographerResponse = {
 
 export type PaginatedPhotoResponse = {
   __typename?: "PaginatedPhotoResponse";
-  items: Array<Photo>;
+  photos: Array<Photo>;
   startCursor: Scalars["Int"];
   endCursor: Scalars["Int"];
   total: Scalars["Int"];
 };
 
+export type GroupedPhotosOfSubjectResponse = {
+  __typename?: "GroupedPhotosOfSubjectResponse";
+  photos: Array<Photo>;
+  subjectInfo: Subject;
+};
+
 export type PaginatedPhotosOfSubjectResponse = {
   __typename?: "PaginatedPhotosOfSubjectResponse";
-  items: Array<Photo>;
+  photos: Array<Photo>;
   startCursor: Scalars["Int"];
   endCursor: Scalars["Int"];
   total: Scalars["Int"];
   subjectInfo: Subject;
 };
 
-export type PaginatedPhotosOfTagResponse = {
-  __typename?: "PaginatedPhotosOfTagResponse";
-  items: Array<Photo>;
+export type SuccessMessageResponse = {
+  __typename?: "SuccessMessageResponse";
+  success: Scalars["Boolean"];
+  message: Scalars["String"];
+};
+
+export type GroupedPhotosWithTagResponse = {
+  __typename?: "GroupedPhotosWithTagResponse";
+  photos: Array<Photo>;
+  tagInfo: Tag;
+};
+
+export type PaginatedPhotosWithTagResponse = {
+  __typename?: "PaginatedPhotosWithTagResponse";
+  photos: Array<Photo>;
   startCursor: Scalars["Int"];
   endCursor: Scalars["Int"];
   total: Scalars["Int"];
   tagInfo: Tag;
+};
+
+export type FavoritesResponse = {
+  __typename?: "FavoritesResponse";
+  photoList?: Maybe<Array<Photo>>;
+};
+
+export type AddPhotoToFavoritesResponse = {
+  __typename?: "AddPhotoToFavoritesResponse";
+  success: Scalars["Boolean"];
+  message: Scalars["String"];
+  addedPhoto?: Maybe<Photo>;
+};
+
+export type RemovePhotoFromFavoritesResponse = {
+  __typename?: "RemovePhotoFromFavoritesResponse";
+  success: Scalars["Boolean"];
+  message: Scalars["String"];
+  removedPhoto?: Maybe<Photo>;
+};
+
+export type ShoppingBagItemsResponse = {
+  __typename?: "ShoppingBagItemsResponse";
+  photoList?: Maybe<Array<Photo>>;
+};
+
+export type AddPhotoToShoppingBagResponse = {
+  __typename?: "AddPhotoToShoppingBagResponse";
+  success: Scalars["Boolean"];
+  message: Scalars["String"];
+  addedPhoto?: Maybe<Photo>;
+};
+
+export type RemovePhotoFromShoppingBagResponse = {
+  __typename?: "RemovePhotoFromShoppingBagResponse";
+  success: Scalars["Boolean"];
+  message: Scalars["String"];
+  removedPhoto?: Maybe<Photo>;
+};
+
+export type UserPreferencesResponse = {
+  __typename?: "UserPreferencesResponse";
+  favorites?: Maybe<Array<UserFavorite>>;
+  shoppingBagItems?: Maybe<Array<UserShoppingBagItem>>;
 };
 
 export type CollectionInput = {
@@ -328,7 +412,9 @@ export type ImageUpdateInput = {
 
 /** Inputs to create a new Location entity. */
 export type LocationInput = {
+  /** Name of the location. */
   name: Scalars["String"];
+  /** Tag used to ID the location in Photo Info links. */
   tag: Scalars["String"];
   /** Vignette describing the location. */
   description?: Maybe<Scalars["String"]>;
@@ -336,7 +422,7 @@ export type LocationInput = {
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-/** Optional inputs to be used to update the Location's metadata. */
+/** Optional inputs to be used to update the Location Info. */
 export type LocationUpdateInput = {
   /** Optional. Name of the Location. */
   name?: Maybe<Scalars["String"]>;
@@ -348,12 +434,12 @@ export type LocationUpdateInput = {
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-/** Input to retrieve Location and Location's Photos. */
-export type LocationNamedInput = {
-  name: Scalars["String"];
+export type GroupedPhotosAtLocationInput = {
+  name?: Maybe<Scalars["String"]>;
+  id?: Maybe<Scalars["Float"]>;
 };
 
-export type AllPhotosAtLocationInput = {
+export type PaginatedPhotosAtLocationInput = {
   name?: Maybe<Scalars["String"]>;
   id?: Maybe<Scalars["Float"]>;
   cursor?: Maybe<Scalars["Int"]>;
@@ -372,6 +458,8 @@ export type PhotoFinishInput = {
 
 /** Inputs to create a new Photographer entity. */
 export type PhotographerInput = {
+  /** Photographer's full name. */
+  name: Scalars["String"];
   /** Photographer's first name. */
   firstName: Scalars["String"];
   /** Photographer's last name. */
@@ -386,6 +474,8 @@ export type PhotographerInput = {
 
 /** Inputs to update a Photographer entity. */
 export type PhotographerUpdateInput = {
+  /** Optional: Photographer's full name. */
+  name?: Maybe<Scalars["String"]>;
   /** Optional: Photographer's first name. */
   firstName?: Maybe<Scalars["String"]>;
   /** Optional: Photographer's last name. */
@@ -398,14 +488,13 @@ export type PhotographerUpdateInput = {
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-/** Input to retrieve Photographer and Photographer's Photos. */
-export type PhotographerNamedInput = {
-  name: Scalars["String"];
+export type GroupedPhotosByPhotographerInput = {
+  id?: Maybe<Scalars["Float"]>;
+  name?: Maybe<Scalars["String"]>;
 };
 
-export type AllPhotosByPhotographerInput = {
+export type PaginatedPhotosByPhotographerInput = {
   id?: Maybe<Scalars["Float"]>;
-  firstName?: Maybe<Scalars["String"]>;
   name?: Maybe<Scalars["String"]>;
   cursor?: Maybe<Scalars["Int"]>;
   take: Scalars["Int"];
@@ -439,30 +528,39 @@ export type PhotoUpdateInput = {
   locationId?: Maybe<Scalars["Float"]>;
 };
 
-export type AllPhotosInput = {
+export type PaginatedPhotosInput = {
   cursor?: Maybe<Scalars["Int"]>;
   take: Scalars["Int"];
 };
 
-export type AllFeaturedPhotosInput = {
-  cursor?: Maybe<Scalars["Int"]>;
-  take: Scalars["Int"];
-};
-
+/** Inputs to create a new Subject entity. */
 export type SubjectInput = {
+  /** Name of the subject. Used in Photo Info links. */
   name: Scalars["String"];
+  /** A vignette used to introduce the subject. */
   description?: Maybe<Scalars["String"]>;
+  /** A cover image to be displayed next to the opening vignette. */
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
+/** Optional inputs to be used to update the Subject Info. */
 export type SubjectUpdateInput = {
+  /** Optional. Name of the subject. Used in Photo Info links. */
   name?: Maybe<Scalars["String"]>;
+  /** Optional. A vignette used to introduce the subject. */
   description?: Maybe<Scalars["String"]>;
+  /** Optional. A cover image to be displayed next to the opening vignette. */
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-export type AllPhotosOfSubjectInput = {
-  subject: Scalars["String"];
+export type GroupedPhotosOfSubjectInput = {
+  id?: Maybe<Scalars["Float"]>;
+  name?: Maybe<Scalars["String"]>;
+};
+
+export type PaginatedPhotosOfSubjectInput = {
+  name?: Maybe<Scalars["String"]>;
+  id?: Maybe<Scalars["Float"]>;
   cursor?: Maybe<Scalars["Int"]>;
   take: Scalars["Int"];
 };
@@ -479,8 +577,14 @@ export type TagUpdateInput = {
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-export type AllPhotosWithTagInput = {
-  tag: Scalars["String"];
+export type GroupedPhotosWithTagInput = {
+  id?: Maybe<Scalars["Float"]>;
+  name?: Maybe<Scalars["String"]>;
+};
+
+export type PaginatedPhotosWithTagInput = {
+  name?: Maybe<Scalars["String"]>;
+  id?: Maybe<Scalars["Float"]>;
   cursor?: Maybe<Scalars["Int"]>;
   take: Scalars["Int"];
 };
@@ -502,39 +606,52 @@ export type Query = {
   finishWithPhotos?: Maybe<Finish>;
   images: Array<Image>;
   image: Image;
-  allPhotosAtLocation: PaginatedPhotosAtLocationResponse;
-  /** Returns all Locations + maps, only. Meant to be used on the backend. */
+  /** Returns all Locations + maps, only. */
   locations: Array<Location>;
   /** Returns one Location + portrait, only or null, if no matching id is found. Meant to be used on the backend. */
   location?: Maybe<Location>;
-  /** Returns one Location + portrait AND Location's Photos and related data, or undefined if no Location matching name provided is found. Meant to be used on the frontend. Used for the Location's Gallery. */
-  locationNamed?: Maybe<Location>;
-  allPhotosByPhotographer: PaginatedPhotosByPhotographerResponse;
+  /** Returns one Location + portrait, only or null, if no matching name is found. */
+  locationWithName?: Maybe<Location>;
+  groupedPhotosAtLocation: GroupedPhotosAtLocationResponse;
+  paginatedPhotosAtLocation: PaginatedPhotosAtLocationResponse;
+  photoCountBySubject: Array<ItemCount>;
+  photoCountByTag: Array<ItemCount>;
+  photoCountByCollection: Array<ItemCount>;
+  photoCountByLocation: Array<ItemCount>;
+  photoCountByPhotographer: Array<ItemCount>;
   /** Returns all Photographers + portraits, only. Meant to be used on the backend. */
   photographers: Array<Photographer>;
   /** Returns one Photographer + portrait, only or null, if no matching id is found. Meant to be used on the backend. */
   photographer?: Maybe<Photographer>;
   /** Returns one Photographer + portrait AND Photographer's Photos and related data. Meant to be used on the frontend. Used for the Photographer's Gallery. */
-  photographerNamed?: Maybe<Photographer>;
+  photographerWithName?: Maybe<Photographer>;
+  groupedPhotosByPhotographer: GroupedPhotosByPhotographerResponse;
+  paginatedPhotosByPhotographer: PaginatedPhotosByPhotographerResponse;
   photos: Array<Photo>;
-  allPhotos: PaginatedPhotoResponse;
-  allFeaturedPhotos: PaginatedPhotoResponse;
+  paginatedPhotos: PaginatedPhotoResponse;
+  paginatedFeaturedPhotos: PaginatedPhotoResponse;
   photo?: Maybe<Photo>;
-  allPhotosOfSubject: PaginatedPhotosOfSubjectResponse;
+  userSearch: Array<UserSearchResult>;
+  /** Returns all subjects + cover images only. */
   subjects: Array<Subject>;
-  subject: Subject;
+  subject?: Maybe<Subject>;
   subjectWithName?: Maybe<Subject>;
-  allPhotosWithTag: PaginatedPhotosOfTagResponse;
+  groupedPhotosOfSubject: GroupedPhotosOfSubjectResponse;
+  paginatedPhotosOfSubject: PaginatedPhotosOfSubjectResponse;
   tags: Array<Tag>;
-  photosWithTag: Tag;
+  tag: Tag;
+  tagWithName?: Maybe<Tag>;
+  groupedPhotosWithTag: GroupedPhotosWithTagResponse;
+  paginatedPhotosWithTag: PaginatedPhotosWithTagResponse;
+  /** Returns all Photos favorited by the signed in User. */
+  favorites: FavoritesResponse;
+  /** Returns all Photos in the shopping bag of the signed in User. */
+  shoppingBagItems: ShoppingBagItemsResponse;
   users: Array<User>;
   user: User;
   userSummaries: Array<User>;
   newsletterSubscribers: Array<User>;
-  /** Returns all Photos favorited by the signed in User. */
-  favorites?: Maybe<Array<Photo>>;
-  /** Returns all Photos in the shopping bag of the signed in User. */
-  shoppingBagItems?: Maybe<Array<Photo>>;
+  getUserPreferences: UserPreferencesResponse;
 };
 
 export type QueryCollectionArgs = {
@@ -557,44 +674,52 @@ export type QueryImageArgs = {
   id: Scalars["Int"];
 };
 
-export type QueryAllPhotosAtLocationArgs = {
-  input: AllPhotosAtLocationInput;
-};
-
 export type QueryLocationArgs = {
   id: Scalars["Int"];
 };
 
-export type QueryLocationNamedArgs = {
-  input: LocationNamedInput;
+export type QueryLocationWithNameArgs = {
+  name: Scalars["String"];
 };
 
-export type QueryAllPhotosByPhotographerArgs = {
-  input: AllPhotosByPhotographerInput;
+export type QueryGroupedPhotosAtLocationArgs = {
+  input: GroupedPhotosAtLocationInput;
+};
+
+export type QueryPaginatedPhotosAtLocationArgs = {
+  input: PaginatedPhotosAtLocationInput;
 };
 
 export type QueryPhotographerArgs = {
   id: Scalars["Int"];
 };
 
-export type QueryPhotographerNamedArgs = {
-  input: PhotographerNamedInput;
+export type QueryPhotographerWithNameArgs = {
+  name: Scalars["String"];
 };
 
-export type QueryAllPhotosArgs = {
-  input: AllPhotosInput;
+export type QueryGroupedPhotosByPhotographerArgs = {
+  input: GroupedPhotosByPhotographerInput;
 };
 
-export type QueryAllFeaturedPhotosArgs = {
-  input: AllFeaturedPhotosInput;
+export type QueryPaginatedPhotosByPhotographerArgs = {
+  input: PaginatedPhotosByPhotographerInput;
+};
+
+export type QueryPaginatedPhotosArgs = {
+  input: PaginatedPhotosInput;
+};
+
+export type QueryPaginatedFeaturedPhotosArgs = {
+  input: PaginatedPhotosInput;
 };
 
 export type QueryPhotoArgs = {
   id: Scalars["Int"];
 };
 
-export type QueryAllPhotosOfSubjectArgs = {
-  input: AllPhotosOfSubjectInput;
+export type QueryUserSearchArgs = {
+  phrase: Scalars["String"];
 };
 
 export type QuerySubjectArgs = {
@@ -602,20 +727,38 @@ export type QuerySubjectArgs = {
 };
 
 export type QuerySubjectWithNameArgs = {
-  input: SubjectInput;
+  name: Scalars["String"];
 };
 
-export type QueryAllPhotosWithTagArgs = {
-  input: AllPhotosWithTagInput;
+export type QueryGroupedPhotosOfSubjectArgs = {
+  input: GroupedPhotosOfSubjectInput;
 };
 
-export type QueryPhotosWithTagArgs = {
-  input: TagInput;
+export type QueryPaginatedPhotosOfSubjectArgs = {
+  input: PaginatedPhotosOfSubjectInput;
+};
+
+export type QueryTagArgs = {
+  id: Scalars["Int"];
+};
+
+export type QueryTagWithNameArgs = {
+  name: Scalars["String"];
+};
+
+export type QueryGroupedPhotosWithTagArgs = {
+  input: GroupedPhotosWithTagInput;
+};
+
+export type QueryPaginatedPhotosWithTagArgs = {
+  input: PaginatedPhotosWithTagInput;
 };
 
 export type QueryUserArgs = {
   id: Scalars["Int"];
 };
+
+export type UserSearchResult = Subject | Tag | Location;
 
 export type Mutation = {
   __typename?: "Mutation";
@@ -645,17 +788,16 @@ export type Mutation = {
   addSubject: Subject;
   updateSubject: Subject;
   deleteSubject: Scalars["Boolean"];
+  subscribeToNewsletter: SuccessMessageResponse;
+  unsubscribeFromNewsletter: SuccessMessageResponse;
   addTag: Tag;
   updateTag: Tag;
   deleteTag: Scalars["Boolean"];
+  addPhotoToFavorites: AddPhotoToFavoritesResponse;
+  removePhotoFromFavorites: RemovePhotoFromFavoritesResponse;
+  addPhotoToShoppingBag: AddPhotoToShoppingBagResponse;
+  removePhotoFromShoppingBag: RemovePhotoFromShoppingBagResponse;
   getApiToken: Scalars["String"];
-  subscribeToNewsletter: Scalars["Boolean"];
-  unsubscribeFromNewsletter: Scalars["Boolean"];
-  addPhotoToFavorites: Scalars["Boolean"];
-  removePhotoFromFavorites: Scalars["Boolean"];
-  toggleUserFavorite: Scalars["Boolean"];
-  addPhotoToShoppingBag: Scalars["Boolean"];
-  removePhotoFromShoppingBag: Scalars["Boolean"];
 };
 
 export type MutationAddCollectionArgs = {
@@ -783,19 +925,11 @@ export type MutationDeleteTagArgs = {
   id: Scalars["Int"];
 };
 
-export type MutationGetApiTokenArgs = {
-  input: GetApiTokenInput;
-};
-
 export type MutationAddPhotoToFavoritesArgs = {
   photoId: Scalars["Float"];
 };
 
 export type MutationRemovePhotoFromFavoritesArgs = {
-  photoId: Scalars["Float"];
-};
-
-export type MutationToggleUserFavoriteArgs = {
   photoId: Scalars["Float"];
 };
 
@@ -807,24 +941,54 @@ export type MutationRemovePhotoFromShoppingBagArgs = {
   photoId: Scalars["Float"];
 };
 
+export type MutationGetApiTokenArgs = {
+  input: GetApiTokenInput;
+};
+
 export type ImageInfoFragment = { __typename?: "Image" } & Pick<
   Image,
-  "id" | "imageUrl" | "altText" | "fileType" | "fileExtension" | "size" | "width" | "height"
+  | "id"
+  | "imageUrl"
+  | "altText"
+  | "fileType"
+  | "fileExtension"
+  | "size"
+  | "width"
+  | "height"
 >;
 
-export type AllPhotosAtLocationQueryVariables = Exact<{
-  input: AllPhotosAtLocationInput;
+export type GroupedPhotosAtLocationQueryVariables = Exact<{
+  input: GroupedPhotosAtLocationInput;
 }>;
 
-export type AllPhotosAtLocationQuery = { __typename?: "Query" } & {
-  allPhotosAtLocation: {
+export type GroupedPhotosAtLocationQuery = { __typename?: "Query" } & {
+  groupedPhotosAtLocation: {
+    __typename?: "GroupedPhotosAtLocationResponse";
+  } & {
+    locationInfo: { __typename?: "Location" } & Pick<
+      Location,
+      "id" | "name" | "tag" | "description"
+    > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
+    photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+  };
+};
+
+export type PaginatedPhotosAtLocationQueryVariables = Exact<{
+  input: PaginatedPhotosAtLocationInput;
+}>;
+
+export type PaginatedPhotosAtLocationQuery = { __typename?: "Query" } & {
+  paginatedPhotosAtLocation: {
     __typename?: "PaginatedPhotosAtLocationResponse";
-  } & Pick<PaginatedPhotosAtLocationResponse, "startCursor" | "endCursor" | "total"> & {
+  } & Pick<
+    PaginatedPhotosAtLocationResponse,
+    "startCursor" | "endCursor" | "total"
+  > & {
       locationInfo: { __typename?: "Location" } & Pick<
         Location,
         "id" | "name" | "tag" | "description"
       > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
-      items: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+      photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
     };
 };
 
@@ -833,18 +997,36 @@ export type PhotographerInfoFragment = { __typename?: "Photographer" } & Pick<
   "id" | "name" | "firstName" | "lastName" | "email" | "bio"
 > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
 
-export type AllPhotosByPhotographerQueryVariables = Exact<{
-  input: AllPhotosByPhotographerInput;
+export type GroupedPhotosByPhotographerQueryVariables = Exact<{
+  input: GroupedPhotosByPhotographerInput;
 }>;
 
-export type AllPhotosByPhotographerQuery = { __typename?: "Query" } & {
-  allPhotosByPhotographer: {
+export type GroupedPhotosByPhotographerQuery = { __typename?: "Query" } & {
+  groupedPhotosByPhotographer: {
+    __typename?: "GroupedPhotosByPhotographerResponse";
+  } & {
+    photographerInfo: {
+      __typename?: "Photographer";
+    } & PhotographerInfoFragment;
+    photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+  };
+};
+
+export type PaginatedPhotosByPhotographerQueryVariables = Exact<{
+  input: PaginatedPhotosByPhotographerInput;
+}>;
+
+export type PaginatedPhotosByPhotographerQuery = { __typename?: "Query" } & {
+  paginatedPhotosByPhotographer: {
     __typename?: "PaginatedPhotosByPhotographerResponse";
-  } & Pick<PaginatedPhotosByPhotographerResponse, "startCursor" | "endCursor" | "total"> & {
+  } & Pick<
+    PaginatedPhotosByPhotographerResponse,
+    "startCursor" | "endCursor" | "total"
+  > & {
       photographerInfo: {
         __typename?: "Photographer";
       } & PhotographerInfoFragment;
-      items: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+      photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
     };
 };
 
@@ -865,12 +1047,23 @@ export type PhotoInfoFragment = { __typename?: "Photo" } & Pick<
       Array<
         { __typename?: "Image" } & Pick<
           Image,
-          "id" | "imageUrl" | "altText" | "fileType" | "fileExtension" | "size" | "width" | "height"
+          | "id"
+          | "imageUrl"
+          | "altText"
+          | "fileType"
+          | "fileExtension"
+          | "size"
+          | "width"
+          | "height"
         >
       >
     >;
-    photographer?: Maybe<{ __typename?: "Photographer" } & Pick<Photographer, "id" | "name">>;
-    location?: Maybe<{ __typename?: "Location" } & Pick<Location, "id" | "name">>;
+    photographer?: Maybe<
+      { __typename?: "Photographer" } & Pick<Photographer, "id" | "name">
+    >;
+    location?: Maybe<
+      { __typename?: "Location" } & Pick<Location, "id" | "name">
+    >;
     subjectsInPhoto?: Maybe<
       Array<
         { __typename?: "PhotoSubject" } & {
@@ -888,32 +1081,41 @@ export type PhotoInfoFragment = { __typename?: "Photo" } & Pick<
     collectionsForPhoto?: Maybe<
       Array<
         { __typename?: "PhotoCollection" } & {
-          collection: { __typename?: "Collection" } & Pick<Collection, "id" | "name">;
+          collection: { __typename?: "Collection" } & Pick<
+            Collection,
+            "id" | "name"
+          >;
         }
       >
     >;
   };
 
-export type AllPhotosQueryVariables = Exact<{
-  input: AllPhotosInput;
-}>;
+export type PhotosQueryVariables = Exact<{ [key: string]: never }>;
 
-export type AllPhotosQuery = { __typename?: "Query" } & {
-  allPhotos: { __typename?: "PaginatedPhotoResponse" } & Pick<
-    PaginatedPhotoResponse,
-    "startCursor" | "endCursor" | "total"
-  > & { items: Array<{ __typename?: "Photo" } & PhotoInfoFragment> };
+export type PhotosQuery = { __typename?: "Query" } & {
+  photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
 };
 
-export type AllFeaturedPhotosQueryVariables = Exact<{
-  input: AllFeaturedPhotosInput;
+export type PaginatedPhotosQueryVariables = Exact<{
+  input: PaginatedPhotosInput;
 }>;
 
-export type AllFeaturedPhotosQuery = { __typename?: "Query" } & {
-  allFeaturedPhotos: { __typename?: "PaginatedPhotoResponse" } & Pick<
+export type PaginatedPhotosQuery = { __typename?: "Query" } & {
+  paginatedPhotos: { __typename?: "PaginatedPhotoResponse" } & Pick<
     PaginatedPhotoResponse,
     "startCursor" | "endCursor" | "total"
-  > & { items: Array<{ __typename?: "Photo" } & PhotoInfoFragment> };
+  > & { photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment> };
+};
+
+export type PaginatedFeaturedPhotosQueryVariables = Exact<{
+  input: PaginatedPhotosInput;
+}>;
+
+export type PaginatedFeaturedPhotosQuery = { __typename?: "Query" } & {
+  paginatedFeaturedPhotos: { __typename?: "PaginatedPhotoResponse" } & Pick<
+    PaginatedPhotoResponse,
+    "startCursor" | "endCursor" | "total"
+  > & { photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment> };
 };
 
 export type AddPhotoMutationVariables = Exact<{
@@ -933,41 +1135,78 @@ export type AddPhotoMutation = { __typename?: "Mutation" } & {
     | "basePrice"
     | "priceModifier"
   > & {
-      photographer?: Maybe<{ __typename?: "Photographer" } & Pick<Photographer, "id" | "name">>;
-      location?: Maybe<{ __typename?: "Location" } & Pick<Location, "id" | "name">>;
+      photographer?: Maybe<
+        { __typename?: "Photographer" } & Pick<Photographer, "id" | "name">
+      >;
+      location?: Maybe<
+        { __typename?: "Location" } & Pick<Location, "id" | "name">
+      >;
     };
 };
 
-export type AllPhotosOfSubjectQueryVariables = Exact<{
-  input: AllPhotosOfSubjectInput;
+export type GroupedPhotosOfSubjectQueryVariables = Exact<{
+  input: GroupedPhotosOfSubjectInput;
 }>;
 
-export type AllPhotosOfSubjectQuery = { __typename?: "Query" } & {
-  allPhotosOfSubject: {
+export type GroupedPhotosOfSubjectQuery = { __typename?: "Query" } & {
+  groupedPhotosOfSubject: { __typename?: "GroupedPhotosOfSubjectResponse" } & {
+    subjectInfo: { __typename?: "Subject" } & Pick<
+      Subject,
+      "id" | "name" | "description" | "createdAt" | "updatedAt"
+    > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
+    photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+  };
+};
+
+export type PaginatedPhotosOfSubjectQueryVariables = Exact<{
+  input: PaginatedPhotosOfSubjectInput;
+}>;
+
+export type PaginatedPhotosOfSubjectQuery = { __typename?: "Query" } & {
+  paginatedPhotosOfSubject: {
     __typename?: "PaginatedPhotosOfSubjectResponse";
-  } & Pick<PaginatedPhotosOfSubjectResponse, "startCursor" | "endCursor" | "total"> & {
+  } & Pick<
+    PaginatedPhotosOfSubjectResponse,
+    "startCursor" | "endCursor" | "total"
+  > & {
       subjectInfo: { __typename?: "Subject" } & Pick<
         Subject,
         "id" | "name" | "description" | "createdAt" | "updatedAt"
       > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
-      items: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+      photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
     };
 };
 
-export type AllPhotosWithTagQueryVariables = Exact<{
-  input: AllPhotosWithTagInput;
+export type GroupedPhotosWithTagQueryVariables = Exact<{
+  input: GroupedPhotosWithTagInput;
 }>;
 
-export type AllPhotosWithTagQuery = { __typename?: "Query" } & {
-  allPhotosWithTag: { __typename?: "PaginatedPhotosOfTagResponse" } & Pick<
-    PaginatedPhotosOfTagResponse,
+export type GroupedPhotosWithTagQuery = { __typename?: "Query" } & {
+  groupedPhotosWithTag: { __typename?: "GroupedPhotosWithTagResponse" } & {
+    tagInfo: { __typename?: "Tag" } & Pick<
+      Tag,
+      "id" | "name" | "description" | "createdAt" | "updatedAt"
+    > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
+    photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+  };
+};
+
+export type PaginatedPhotosWithTagQueryVariables = Exact<{
+  input: PaginatedPhotosWithTagInput;
+}>;
+
+export type PaginatedPhotosWithTagQuery = { __typename?: "Query" } & {
+  paginatedPhotosWithTag: {
+    __typename?: "PaginatedPhotosWithTagResponse";
+  } & Pick<
+    PaginatedPhotosWithTagResponse,
     "startCursor" | "endCursor" | "total"
   > & {
       tagInfo: { __typename?: "Tag" } & Pick<
         Tag,
         "id" | "name" | "description" | "createdAt" | "updatedAt"
       > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
-      items: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+      photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
     };
 };
 
@@ -975,52 +1214,93 @@ export type GetApiTokenMutationVariables = Exact<{
   input: GetApiTokenInput;
 }>;
 
-export type GetApiTokenMutation = { __typename?: "Mutation" } & Pick<Mutation, "getApiToken">;
+export type GetApiTokenMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "getApiToken"
+>;
 
 export type AddPhotoToFavoritesMutationVariables = Exact<{
   photoId: Scalars["Float"];
 }>;
 
-export type AddPhotoToFavoritesMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "addPhotoToFavorites"
->;
+export type AddPhotoToFavoritesMutation = { __typename?: "Mutation" } & {
+  addPhotoToFavorites: { __typename?: "AddPhotoToFavoritesResponse" } & Pick<
+    AddPhotoToFavoritesResponse,
+    "success" | "message"
+  > & { addedPhoto?: Maybe<{ __typename?: "Photo" } & PhotoInfoFragment> };
+};
 
 export type RemovePhotoFromFavoritesMutationVariables = Exact<{
   photoId: Scalars["Float"];
 }>;
 
-export type RemovePhotoFromFavoritesMutation = {
-  __typename?: "Mutation";
-} & Pick<Mutation, "removePhotoFromFavorites">;
+export type RemovePhotoFromFavoritesMutation = { __typename?: "Mutation" } & {
+  removePhotoFromFavorites: {
+    __typename?: "RemovePhotoFromFavoritesResponse";
+  } & Pick<RemovePhotoFromFavoritesResponse, "success" | "message"> & {
+      removedPhoto?: Maybe<{ __typename?: "Photo" } & PhotoInfoFragment>;
+    };
+};
 
 export type AddPhotoToShoppingBagMutationVariables = Exact<{
   photoId: Scalars["Float"];
 }>;
 
-export type AddPhotoToShoppingBagMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "addPhotoToShoppingBag"
->;
+export type AddPhotoToShoppingBagMutation = { __typename?: "Mutation" } & {
+  addPhotoToShoppingBag: {
+    __typename?: "AddPhotoToShoppingBagResponse";
+  } & Pick<AddPhotoToShoppingBagResponse, "success" | "message"> & {
+      addedPhoto?: Maybe<{ __typename?: "Photo" } & PhotoInfoFragment>;
+    };
+};
 
 export type RemovePhotoFromShoppingBagMutationVariables = Exact<{
   photoId: Scalars["Float"];
 }>;
 
-export type RemovePhotoFromShoppingBagMutation = {
-  __typename?: "Mutation";
-} & Pick<Mutation, "removePhotoFromShoppingBag">;
+export type RemovePhotoFromShoppingBagMutation = { __typename?: "Mutation" } & {
+  removePhotoFromShoppingBag: {
+    __typename?: "RemovePhotoFromShoppingBagResponse";
+  } & Pick<RemovePhotoFromShoppingBagResponse, "success" | "message"> & {
+      removedPhoto?: Maybe<{ __typename?: "Photo" } & PhotoInfoFragment>;
+    };
+};
 
 export type FavoritesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FavoritesQuery = { __typename?: "Query" } & {
-  favorites?: Maybe<Array<{ __typename?: "Photo" } & PhotoInfoFragment>>;
+  favorites: { __typename?: "FavoritesResponse" } & {
+    photoList?: Maybe<Array<{ __typename?: "Photo" } & PhotoInfoFragment>>;
+  };
 };
 
 export type ShoppingBagItemsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ShoppingBagItemsQuery = { __typename?: "Query" } & {
-  shoppingBagItems?: Maybe<Array<{ __typename?: "Photo" } & PhotoInfoFragment>>;
+  shoppingBagItems: { __typename?: "ShoppingBagItemsResponse" } & {
+    photoList?: Maybe<Array<{ __typename?: "Photo" } & PhotoInfoFragment>>;
+  };
+};
+
+export type GetUserPreferencesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetUserPreferencesQuery = { __typename?: "Query" } & {
+  getUserPreferences: { __typename?: "UserPreferencesResponse" } & {
+    favorites?: Maybe<
+      Array<
+        { __typename?: "UserFavorite" } & {
+          photo: { __typename?: "Photo" } & PhotoInfoFragment;
+        }
+      >
+    >;
+    shoppingBagItems?: Maybe<
+      Array<
+        { __typename?: "UserShoppingBagItem" } & {
+          photo: { __typename?: "Photo" } & PhotoInfoFragment;
+        }
+      >
+    >;
+  };
 };
 
 export const ImageInfoFragmentDoc: DocumentNode<ImageInfoFragment, unknown> = {
@@ -1031,66 +1311,28 @@ export const ImageInfoFragmentDoc: DocumentNode<ImageInfoFragment, unknown> = {
       name: { kind: "Name", value: "ImageInfo" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "Image" }
+        name: { kind: "Name", value: "Image" },
       },
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "id" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "imageUrl" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "altText" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "fileType" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "fileExtension" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "size" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "width" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "height" },
-            arguments: [],
-            directives: []
-          }
-        ]
-      }
-    }
-  ]
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "imageUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "altText" } },
+          { kind: "Field", name: { kind: "Name", value: "fileType" } },
+          { kind: "Field", name: { kind: "Name", value: "fileExtension" } },
+          { kind: "Field", name: { kind: "Name", value: "size" } },
+          { kind: "Field", name: { kind: "Name", value: "width" } },
+          { kind: "Field", name: { kind: "Name", value: "height" } },
+        ],
+      },
+    },
+  ],
 };
-export const PhotographerInfoFragmentDoc: DocumentNode<PhotographerInfoFragment, unknown> = {
+export const PhotographerInfoFragmentDoc: DocumentNode<
+  PhotographerInfoFragment,
+  unknown
+> = {
   kind: "Document",
   definitions: [
     {
@@ -1098,69 +1340,35 @@ export const PhotographerInfoFragmentDoc: DocumentNode<PhotographerInfoFragment,
       name: { kind: "Name", value: "PhotographerInfo" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "Photographer" }
+        name: { kind: "Name", value: "Photographer" },
       },
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "id" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "name" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "firstName" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "lastName" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "email" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "bio" },
-            arguments: [],
-            directives: []
-          },
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "bio" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "coverImage" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "FragmentSpread",
                   name: { kind: "Name", value: "ImageInfo" },
-                  directives: []
-                }
-              ]
-            }
-          }
-        ]
-      }
+                },
+              ],
+            },
+          },
+        ],
+      },
     },
-    ...ImageInfoFragmentDoc.definitions
-  ]
+    ...ImageInfoFragmentDoc.definitions,
+  ],
 };
 export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
   kind: "Document",
@@ -1170,721 +1378,667 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
       name: { kind: "Name", value: "PhotoInfo" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "Photo" }
+        name: { kind: "Name", value: "Photo" },
       },
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "id" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "rating" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "sku" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "sortIndex" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "title" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "description" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "isFeatured" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "isLimitedEdition" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "rating" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "basePrice" },
-            arguments: [],
-            directives: []
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "priceModifier" },
-            arguments: [],
-            directives: []
-          },
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "rating" } },
+          { kind: "Field", name: { kind: "Name", value: "sku" } },
+          { kind: "Field", name: { kind: "Name", value: "sortIndex" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "isFeatured" } },
+          { kind: "Field", name: { kind: "Name", value: "isLimitedEdition" } },
+          { kind: "Field", name: { kind: "Name", value: "rating" } },
+          { kind: "Field", name: { kind: "Name", value: "basePrice" } },
+          { kind: "Field", name: { kind: "Name", value: "priceModifier" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "images" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "id" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "imageUrl" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "altText" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "fileType" },
-                  arguments: [],
-                  directives: []
-                },
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "imageUrl" } },
+                { kind: "Field", name: { kind: "Name", value: "altText" } },
+                { kind: "Field", name: { kind: "Name", value: "fileType" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "fileExtension" },
-                  arguments: [],
-                  directives: []
                 },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "size" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "width" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "height" },
-                  arguments: [],
-                  directives: []
-                }
-              ]
-            }
+                { kind: "Field", name: { kind: "Name", value: "size" } },
+                { kind: "Field", name: { kind: "Name", value: "width" } },
+                { kind: "Field", name: { kind: "Name", value: "height" } },
+              ],
+            },
           },
           {
             kind: "Field",
             name: { kind: "Name", value: "photographer" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "id" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "name" },
-                  arguments: [],
-                  directives: []
-                }
-              ]
-            }
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
           },
           {
             kind: "Field",
             name: { kind: "Name", value: "location" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "id" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "name" },
-                  arguments: [],
-                  directives: []
-                }
-              ]
-            }
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
           },
           {
             kind: "Field",
             name: { kind: "Name", value: "subjectsInPhoto" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "subject" },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: []
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+              ],
+            },
           },
           {
             kind: "Field",
             name: { kind: "Name", value: "tagsForPhoto" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "tag" },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: []
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+              ],
+            },
           },
           {
             kind: "Field",
             name: { kind: "Name", value: "collectionsForPhoto" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "collection" },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: []
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  ]
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
 };
-export const AllPhotosAtLocationDocument: DocumentNode<
-  AllPhotosAtLocationQuery,
-  AllPhotosAtLocationQueryVariables
+export const GroupedPhotosAtLocationDocument: DocumentNode<
+  GroupedPhotosAtLocationQuery,
+  GroupedPhotosAtLocationQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allPhotosAtLocation" },
+      name: { kind: "Name", value: "GroupedPhotosAtLocation" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" }
+            name: { kind: "Name", value: "input" },
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosAtLocationInput" }
-            }
+              name: { kind: "Name", value: "GroupedPhotosAtLocationInput" },
+            },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "allPhotosAtLocation" },
+            name: { kind: "Name", value: "groupedPhotosAtLocation" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" }
-                }
-              }
+                  name: { kind: "Name", value: "input" },
+                },
+              },
             ],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "locationInfo" },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "tag" },
-                        arguments: [],
-                        directives: []
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "tag" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "description" },
-                        arguments: [],
-                        directives: []
                       },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "coverImage" },
-                        arguments: [],
-                        directives: [],
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
                             {
                               kind: "FragmentSpread",
                               name: { kind: "Name", value: "ImageInfo" },
-                              directives: []
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
                 },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "items" },
-                  arguments: [],
-                  directives: [],
+                  name: { kind: "Name", value: "photos" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
                         name: { kind: "Name", value: "PhotoInfo" },
-                        directives: []
-                      }
-                    ]
-                  }
+                      },
+                    ],
+                  },
                 },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "startCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "endCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "total" },
-                  arguments: [],
-                  directives: []
-                }
-              ]
-            }
-          }
-        ]
-      }
+              ],
+            },
+          },
+        ],
+      },
     },
     ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions
-  ]
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
-export const AllPhotosByPhotographerDocument: DocumentNode<
-  AllPhotosByPhotographerQuery,
-  AllPhotosByPhotographerQueryVariables
+export const PaginatedPhotosAtLocationDocument: DocumentNode<
+  PaginatedPhotosAtLocationQuery,
+  PaginatedPhotosAtLocationQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allPhotosByPhotographer" },
+      name: { kind: "Name", value: "PaginatedPhotosAtLocation" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" }
+            name: { kind: "Name", value: "input" },
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosByPhotographerInput" }
-            }
+              name: { kind: "Name", value: "PaginatedPhotosAtLocationInput" },
+            },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "allPhotosByPhotographer" },
+            name: { kind: "Name", value: "paginatedPhotosAtLocation" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" }
-                }
-              }
+                  name: { kind: "Name", value: "input" },
+                },
+              },
             ],
-            directives: [],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "locationInfo" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "tag" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "coverImage" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "FragmentSpread",
+                              name: { kind: "Name", value: "ImageInfo" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "photos" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "startCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "endCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "total" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ImageInfoFragmentDoc.definitions,
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
+};
+export const GroupedPhotosByPhotographerDocument: DocumentNode<
+  GroupedPhotosByPhotographerQuery,
+  GroupedPhotosByPhotographerQueryVariables
+> = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "groupedPhotosByPhotographer" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GroupedPhotosByPhotographerInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "groupedPhotosByPhotographer" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "photographerInfo" },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
                         name: { kind: "Name", value: "PhotographerInfo" },
-                        directives: []
-                      }
-                    ]
-                  }
+                      },
+                    ],
+                  },
                 },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "items" },
-                  arguments: [],
-                  directives: [],
+                  name: { kind: "Name", value: "photos" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
                         name: { kind: "Name", value: "PhotoInfo" },
-                        directives: []
-                      }
-                    ]
-                  }
+                      },
+                    ],
+                  },
                 },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "startCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "endCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "total" },
-                  arguments: [],
-                  directives: []
-                }
-              ]
-            }
-          }
-        ]
-      }
+              ],
+            },
+          },
+        ],
+      },
     },
     ...PhotographerInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions
-  ]
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
-export const AllPhotosDocument: DocumentNode<AllPhotosQuery, AllPhotosQueryVariables> = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "allPhotos" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "input" }
-          },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosInput" }
-            }
-          },
-          directives: []
-        }
-      ],
-      directives: [],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "allPhotos" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "input" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "input" }
-                }
-              }
-            ],
-            directives: [],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "startCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "endCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "total" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "items" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                        directives: []
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    ...PhotoInfoFragmentDoc.definitions
-  ]
-};
-export const AllFeaturedPhotosDocument: DocumentNode<
-  AllFeaturedPhotosQuery,
-  AllFeaturedPhotosQueryVariables
+export const PaginatedPhotosByPhotographerDocument: DocumentNode<
+  PaginatedPhotosByPhotographerQuery,
+  PaginatedPhotosByPhotographerQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allFeaturedPhotos" },
+      name: { kind: "Name", value: "paginatedPhotosByPhotographer" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" }
+            name: { kind: "Name", value: "input" },
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllFeaturedPhotosInput" }
-            }
+              name: {
+                kind: "Name",
+                value: "PaginatedPhotosByPhotographerInput",
+              },
+            },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "allFeaturedPhotos" },
+            name: { kind: "Name", value: "paginatedPhotosByPhotographer" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" }
-                }
-              }
+                  name: { kind: "Name", value: "input" },
+                },
+              },
             ],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "items" },
-                  arguments: [],
-                  directives: [],
+                  name: { kind: "Name", value: "photographerInfo" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotographerInfo" },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "photos" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
                         name: { kind: "Name", value: "PhotoInfo" },
-                        directives: []
-                      }
-                    ]
-                  }
+                      },
+                    ],
+                  },
                 },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "startCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "endCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "total" },
-                  arguments: [],
-                  directives: []
-                }
-              ]
-            }
-          }
-        ]
-      }
+                { kind: "Field", name: { kind: "Name", value: "startCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "endCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "total" } },
+              ],
+            },
+          },
+        ],
+      },
     },
-    ...PhotoInfoFragmentDoc.definitions
-  ]
+    ...PhotographerInfoFragmentDoc.definitions,
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
-export const AddPhotoDocument: DocumentNode<AddPhotoMutation, AddPhotoMutationVariables> = {
+export const PhotosDocument: DocumentNode<PhotosQuery, PhotosQueryVariables> = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Photos" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "photos" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "PhotoInfo" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
+};
+export const PaginatedPhotosDocument: DocumentNode<
+  PaginatedPhotosQuery,
+  PaginatedPhotosQueryVariables
+> = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "paginatedPhotos" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "PaginatedPhotosInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "paginatedPhotos" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "startCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "endCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "total" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "photos" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
+};
+export const PaginatedFeaturedPhotosDocument: DocumentNode<
+  PaginatedFeaturedPhotosQuery,
+  PaginatedFeaturedPhotosQueryVariables
+> = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "paginatedFeaturedPhotos" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "PaginatedPhotosInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "paginatedFeaturedPhotos" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "photos" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "startCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "endCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "total" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
+};
+export const AddPhotoDocument: DocumentNode<
+  AddPhotoMutation,
+  AddPhotoMutationVariables
+> = {
   kind: "Document",
   definitions: [
     {
@@ -1896,19 +2050,17 @@ export const AddPhotoDocument: DocumentNode<AddPhotoMutation, AddPhotoMutationVa
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" }
+            name: { kind: "Name", value: "input" },
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "PhotoInput" }
-            }
+              name: { kind: "Name", value: "PhotoInput" },
+            },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -1921,419 +2073,482 @@ export const AddPhotoDocument: DocumentNode<AddPhotoMutation, AddPhotoMutationVa
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" }
-                }
-              }
+                  name: { kind: "Name", value: "input" },
+                },
+              },
             ],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "id" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "title" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "description" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "isFeatured" },
-                  arguments: [],
-                  directives: []
-                },
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "isFeatured" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "isLimitedEdition" },
-                  arguments: [],
-                  directives: []
                 },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "isDiscontinued" },
-                  arguments: [],
-                  directives: []
                 },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "rating" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "basePrice" },
-                  arguments: [],
-                  directives: []
-                },
+                { kind: "Field", name: { kind: "Name", value: "rating" } },
+                { kind: "Field", name: { kind: "Name", value: "basePrice" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "priceModifier" },
-                  arguments: [],
-                  directives: []
                 },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "photographer" },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: []
-                      }
-                    ]
-                  }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
                 },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "location" },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: []
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  ]
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
 };
-export const AllPhotosOfSubjectDocument: DocumentNode<
-  AllPhotosOfSubjectQuery,
-  AllPhotosOfSubjectQueryVariables
+export const GroupedPhotosOfSubjectDocument: DocumentNode<
+  GroupedPhotosOfSubjectQuery,
+  GroupedPhotosOfSubjectQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allPhotosOfSubject" },
+      name: { kind: "Name", value: "groupedPhotosOfSubject" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" }
+            name: { kind: "Name", value: "input" },
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosOfSubjectInput" }
-            }
+              name: { kind: "Name", value: "GroupedPhotosOfSubjectInput" },
+            },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "allPhotosOfSubject" },
+            name: { kind: "Name", value: "groupedPhotosOfSubject" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" }
-                }
-              }
+                  name: { kind: "Name", value: "input" },
+                },
+              },
             ],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "subjectInfo" },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: []
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "description" },
-                        arguments: [],
-                        directives: []
                       },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "coverImage" },
-                        arguments: [],
-                        directives: [],
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
                             {
                               kind: "FragmentSpread",
                               name: { kind: "Name", value: "ImageInfo" },
-                              directives: []
-                            }
-                          ]
-                        }
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "createdAt" },
-                        arguments: [],
-                        directives: []
                       },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "updatedAt" },
-                        arguments: [],
-                        directives: []
-                      }
-                    ]
-                  }
+                      },
+                    ],
+                  },
                 },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "items" },
-                  arguments: [],
-                  directives: [],
+                  name: { kind: "Name", value: "photos" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
                         name: { kind: "Name", value: "PhotoInfo" },
-                        directives: []
-                      }
-                    ]
-                  }
+                      },
+                    ],
+                  },
                 },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "startCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "endCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "total" },
-                  arguments: [],
-                  directives: []
-                }
-              ]
-            }
-          }
-        ]
-      }
+              ],
+            },
+          },
+        ],
+      },
     },
     ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions
-  ]
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
-export const AllPhotosWithTagDocument: DocumentNode<
-  AllPhotosWithTagQuery,
-  AllPhotosWithTagQueryVariables
+export const PaginatedPhotosOfSubjectDocument: DocumentNode<
+  PaginatedPhotosOfSubjectQuery,
+  PaginatedPhotosOfSubjectQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allPhotosWithTag" },
+      name: { kind: "Name", value: "PaginatedPhotosOfSubject" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" }
+            name: { kind: "Name", value: "input" },
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosWithTagInput" }
-            }
+              name: { kind: "Name", value: "PaginatedPhotosOfSubjectInput" },
+            },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "allPhotosWithTag" },
+            name: { kind: "Name", value: "paginatedPhotosOfSubject" },
             arguments: [
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" }
-                }
-              }
+                  name: { kind: "Name", value: "input" },
+                },
+              },
             ],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "tagInfo" },
-                  arguments: [],
-                  directives: [],
+                  name: { kind: "Name", value: "subjectInfo" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: []
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: []
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "description" },
-                        arguments: [],
-                        directives: []
                       },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "coverImage" },
-                        arguments: [],
-                        directives: [],
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
                             {
                               kind: "FragmentSpread",
                               name: { kind: "Name", value: "ImageInfo" },
-                              directives: []
-                            }
-                          ]
-                        }
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "createdAt" },
-                        arguments: [],
-                        directives: []
                       },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "updatedAt" },
-                        arguments: [],
-                        directives: []
-                      }
-                    ]
-                  }
+                      },
+                    ],
+                  },
                 },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "items" },
-                  arguments: [],
-                  directives: [],
+                  name: { kind: "Name", value: "photos" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
                         name: { kind: "Name", value: "PhotoInfo" },
-                        directives: []
-                      }
-                    ]
-                  }
+                      },
+                    ],
+                  },
                 },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "startCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "endCursor" },
-                  arguments: [],
-                  directives: []
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "total" },
-                  arguments: [],
-                  directives: []
-                }
-              ]
-            }
-          }
-        ]
-      }
+                { kind: "Field", name: { kind: "Name", value: "startCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "endCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "total" } },
+              ],
+            },
+          },
+        ],
+      },
     },
     ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions
-  ]
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
+};
+export const GroupedPhotosWithTagDocument: DocumentNode<
+  GroupedPhotosWithTagQuery,
+  GroupedPhotosWithTagQueryVariables
+> = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "groupedPhotosWithTag" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GroupedPhotosWithTagInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "groupedPhotosWithTag" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "tagInfo" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "coverImage" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "FragmentSpread",
+                              name: { kind: "Name", value: "ImageInfo" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "photos" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ImageInfoFragmentDoc.definitions,
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
+};
+export const PaginatedPhotosWithTagDocument: DocumentNode<
+  PaginatedPhotosWithTagQuery,
+  PaginatedPhotosWithTagQueryVariables
+> = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "paginatedPhotosWithTag" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "PaginatedPhotosWithTagInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "paginatedPhotosWithTag" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "tagInfo" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "coverImage" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "FragmentSpread",
+                              name: { kind: "Name", value: "ImageInfo" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "photos" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "startCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "endCursor" } },
+                { kind: "Field", name: { kind: "Name", value: "total" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ImageInfoFragmentDoc.definitions,
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
 export const GetApiTokenDocument: DocumentNode<
   GetApiTokenMutation,
@@ -2350,19 +2565,17 @@ export const GetApiTokenDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" }
+            name: { kind: "Name", value: "input" },
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "GetApiTokenInput" }
-            }
+              name: { kind: "Name", value: "GetApiTokenInput" },
+            },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -2375,16 +2588,15 @@ export const GetApiTokenDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" }
-                }
-              }
+                  name: { kind: "Name", value: "input" },
+                },
+              },
             ],
-            directives: []
-          }
-        ]
-      }
-    }
-  ]
+          },
+        ],
+      },
+    },
+  ],
 };
 export const AddPhotoToFavoritesDocument: DocumentNode<
   AddPhotoToFavoritesMutation,
@@ -2401,16 +2613,14 @@ export const AddPhotoToFavoritesDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "photoId" }
+            name: { kind: "Name", value: "photoId" },
           },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } }
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -2423,16 +2633,36 @@ export const AddPhotoToFavoritesDocument: DocumentNode<
                 name: { kind: "Name", value: "photoId" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "photoId" }
-                }
-              }
+                  name: { kind: "Name", value: "photoId" },
+                },
+              },
             ],
-            directives: []
-          }
-        ]
-      }
-    }
-  ]
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "success" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "addedPhoto" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
 export const RemovePhotoFromFavoritesDocument: DocumentNode<
   RemovePhotoFromFavoritesMutation,
@@ -2449,16 +2679,14 @@ export const RemovePhotoFromFavoritesDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "photoId" }
+            name: { kind: "Name", value: "photoId" },
           },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } }
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -2471,16 +2699,36 @@ export const RemovePhotoFromFavoritesDocument: DocumentNode<
                 name: { kind: "Name", value: "photoId" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "photoId" }
-                }
-              }
+                  name: { kind: "Name", value: "photoId" },
+                },
+              },
             ],
-            directives: []
-          }
-        ]
-      }
-    }
-  ]
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "success" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "removedPhoto" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
 export const AddPhotoToShoppingBagDocument: DocumentNode<
   AddPhotoToShoppingBagMutation,
@@ -2497,16 +2745,14 @@ export const AddPhotoToShoppingBagDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "photoId" }
+            name: { kind: "Name", value: "photoId" },
           },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } }
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -2519,16 +2765,36 @@ export const AddPhotoToShoppingBagDocument: DocumentNode<
                 name: { kind: "Name", value: "photoId" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "photoId" }
-                }
-              }
+                  name: { kind: "Name", value: "photoId" },
+                },
+              },
             ],
-            directives: []
-          }
-        ]
-      }
-    }
-  ]
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "success" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "addedPhoto" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
 export const RemovePhotoFromShoppingBagDocument: DocumentNode<
   RemovePhotoFromShoppingBagMutation,
@@ -2545,16 +2811,14 @@ export const RemovePhotoFromShoppingBagDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "photoId" }
+            name: { kind: "Name", value: "photoId" },
           },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } }
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
           },
-          directives: []
-        }
+        },
       ],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -2567,50 +2831,77 @@ export const RemovePhotoFromShoppingBagDocument: DocumentNode<
                 name: { kind: "Name", value: "photoId" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "photoId" }
-                }
-              }
+                  name: { kind: "Name", value: "photoId" },
+                },
+              },
             ],
-            directives: []
-          }
-        ]
-      }
-    }
-  ]
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "success" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "removedPhoto" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
-export const FavoritesDocument: DocumentNode<FavoritesQuery, FavoritesQueryVariables> = {
+export const FavoritesDocument: DocumentNode<
+  FavoritesQuery,
+  FavoritesQueryVariables
+> = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
       name: { kind: "Name", value: "favorites" },
-      variableDefinitions: [],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
             name: { kind: "Name", value: "favorites" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "PhotoInfo" },
-                  directives: []
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  kind: "Field",
+                  name: { kind: "Name", value: "photoList" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
     },
-    ...PhotoInfoFragmentDoc.definitions
-  ]
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
 export const ShoppingBagItemsDocument: DocumentNode<
   ShoppingBagItemsQuery,
@@ -2622,30 +2913,106 @@ export const ShoppingBagItemsDocument: DocumentNode<
       kind: "OperationDefinition",
       operation: "query",
       name: { kind: "Name", value: "shoppingBagItems" },
-      variableDefinitions: [],
-      directives: [],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
             name: { kind: "Name", value: "shoppingBagItems" },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "PhotoInfo" },
-                  directives: []
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  kind: "Field",
+                  name: { kind: "Name", value: "photoList" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "PhotoInfo" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
     },
-    ...PhotoInfoFragmentDoc.definitions
-  ]
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
+};
+export const GetUserPreferencesDocument: DocumentNode<
+  GetUserPreferencesQuery,
+  GetUserPreferencesQueryVariables
+> = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "getUserPreferences" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getUserPreferences" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "favorites" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "photo" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "FragmentSpread",
+                              name: { kind: "Name", value: "PhotoInfo" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "shoppingBagItems" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "photo" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "FragmentSpread",
+                              name: { kind: "Name", value: "PhotoInfo" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+  ],
 };
