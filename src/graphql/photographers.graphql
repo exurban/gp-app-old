@@ -15,11 +15,13 @@ query allPhotosByPhotographer($input: AllPhotosByPhotographerInput!) {
     photographerInfo {
       ...PhotographerInfo
     }
+    pageInfo {
+      startCursor
+      endCursor
+      total
+    }
     photos {
       ...PhotoInfo
     }
-    startCursor
-    endCursor
-    total
   }
 }

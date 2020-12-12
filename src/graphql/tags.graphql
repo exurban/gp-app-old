@@ -10,11 +10,13 @@ query allPhotosWithTag($input: AllPhotosWithTagInput!) {
       createdAt
       updatedAt
     }
+    pageInfo {
+      startCursor
+      endCursor
+      total
+    }
     photos {
       ...PhotoInfo
     }
-    startCursor
-    endCursor
-    total
   }
 }

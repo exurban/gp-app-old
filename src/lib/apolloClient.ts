@@ -4,7 +4,11 @@ import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } fr
 import merge from "deepmerge";
 import { setContext } from "@apollo/client/link/context";
 import { getSession } from "next-auth/client";
+<<<<<<< Updated upstream
 import { Photo } from "../graphql-operations";
+=======
+import { TypedTypePolicies } from "../graphql-operations";
+>>>>>>> Stashed changes
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
@@ -32,10 +36,39 @@ const authLink = setContext(async (_, { headers }) => {
   return undefined;
 });
 
+const typePolicies: TypedTypePolicies = {
+  Query: {
+    fields: {
+      paginatedPhotosOfSubject: {
+        read: function (existing) {
+          return existing;
+        },
+        merge: function (existing, incoming) {
+          return !existing
+            ? {
+                __typename: incoming.__typename,
+                photos: [...incoming.photos],
+                subjectInfo: { ...incoming.subjectInfo },
+                pageInfo: { ...incoming.pageInfo }
+              }
+            : {
+                __typename: incoming.__typename,
+                photos: [...existing.photos, ...incoming.photos],
+                subjectInfo: { ...incoming.subjectInfo },
+                pageInfo: { ...incoming.pageInfo }
+              };
+        },
+        keyArgs: false
+      }
+    }
+  }
+};
+
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
+<<<<<<< Updated upstream
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
@@ -104,6 +137,9 @@ function createApolloClient() {
         }
       }
     })
+=======
+    cache: new InMemoryCache({ typePolicies })
+>>>>>>> Stashed changes
   });
 }
 

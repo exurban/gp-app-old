@@ -9,11 +9,13 @@ query allPhotosAtLocation($input: AllPhotosAtLocationInput!) {
         ...ImageInfo
       }
     }
+    pageInfo {
+      startCursor
+      endCursor
+      total
+    }
     photos {
       ...PhotoInfo
     }
-    startCursor
-    endCursor
-    total
   }
 }

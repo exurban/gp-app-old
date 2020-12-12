@@ -3,6 +3,7 @@ mutation getApiToken($input: GetApiTokenInput!) {
 }
 
 mutation addPhotoToFavorites($photoId: Float!) {
+<<<<<<< Updated upstream
   addPhotoToFavorites(photoId: $photoId)
 }
 
@@ -16,6 +17,37 @@ mutation addPhotoToShoppingBag($photoId: Float!) {
 
 mutation removePhotoFromShoppingBag($photoId: Float!) {
   removePhotoFromShoppingBag(photoId: $photoId)
+=======
+  addPhotoToFavorites(photoId: $photoId) {
+    success
+    message
+    addedPhotoWithId
+  }
+}
+
+mutation removePhotoFromFavorites($photoId: Float!) {
+  removePhotoFromFavorites(photoId: $photoId) {
+    success
+    message
+    removedPhotoWithId
+  }
+}
+
+mutation addPhotoToShoppingBag($photoId: Float!) {
+  addPhotoToShoppingBag(photoId: $photoId) {
+    success
+    message
+    addedPhotoWithId
+  }
+}
+
+mutation removePhotoFromShoppingBag($photoId: Float!) {
+  removePhotoFromShoppingBag(photoId: $photoId) {
+    success
+    message
+    removedPhotoWithId
+  }
+>>>>>>> Stashed changes
 }
 
 query favorites {
