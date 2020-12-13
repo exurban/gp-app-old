@@ -1,25 +1,27 @@
 import { GetStaticProps } from "next";
 import { addApolloState, initializeApollo } from "../../lib/apolloClient";
-import { AllPhotosOfSubjectDocument } from "../../graphql-operations";
-import Gallery from "../../components/Gallery";
+import {
+  PaginatedPhotosOfSubjectDocument,
+  PaginatedPhotosOfSubjectInput
+} from "../../graphql-operations";
+import PaginatedGallery from "../../components/PaginatedGallery";
 
-const BeastGallery: React.FC = () => <Gallery />;
+const input = { name: "beast", take: 10 } as PaginatedPhotosOfSubjectInput;
+
+const BeastGallery: React.FC = () => <PaginatedGallery input={input} />;
 
 export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
-    query: AllPhotosOfSubjectDocument,
-    variables: {
-      input: {
-        subject: "beast",
-        take: 5
-      }
-    }
+    query: PaginatedPhotosOfSubjectDocument,
+    variables: { input: input }
   });
 
   return addApolloState(apolloClient, {
-    props: {},
+    props: {
+      initialApolloState: apolloClient.cache.extract()
+    },
     revalidate: 1
   });
 };

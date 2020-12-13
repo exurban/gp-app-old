@@ -1,5 +1,5 @@
-query allPhotosAtLocation($input: AllPhotosAtLocationInput!) {
-  allPhotosAtLocation(input: $input) {
+query paginatedPhotosAtLocation($input: PaginatedPhotosAtLocationInput!) {
+  paginatedPhotosAtLocation(input: $input) {
     locationInfo {
       id
       name

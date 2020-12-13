@@ -10,8 +10,8 @@ fragment PhotographerInfo on Photographer {
   }
 }
 
-query allPhotosByPhotographer($input: AllPhotosByPhotographerInput!) {
-  allPhotosByPhotographer(input: $input) {
+query paginatedPhotosByPhotographer($input: PaginatedPhotosByPhotographerInput!) {
+  paginatedPhotosByPhotographer(input: $input) {
     photographerInfo {
       ...PhotographerInfo
     }

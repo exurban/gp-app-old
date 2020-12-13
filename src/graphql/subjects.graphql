@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
-  allPhotosOfSubject(input: $input) {
-=======
 query groupedPhotosOfSubject($input: GroupedPhotosOfSubjectInput!) {
   groupedPhotosOfSubject(input: $input) {
     subjectInfo {
@@ -22,7 +18,6 @@ query groupedPhotosOfSubject($input: GroupedPhotosOfSubjectInput!) {
 
 query paginatedPhotosOfSubject($input: PaginatedPhotosOfSubjectInput!) {
   paginatedPhotosOfSubject(input: $input) {
->>>>>>> Stashed changes
     subjectInfo {
       id
       name

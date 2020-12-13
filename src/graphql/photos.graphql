@@ -48,10 +48,6 @@ fragment PhotoInfo on Photo {
   }
 }
 
-<<<<<<< Updated upstream
-query allPhotos($input: AllPhotosInput!) {
-  allPhotos(input: $input) {
-=======
 query Photos {
   photos {
     ...PhotoInfo
@@ -65,20 +61,12 @@ query paginatedPhotos($input: PaginatedPhotosInput!) {
       endCursor
       total
     }
->>>>>>> Stashed changes
     photos {
       ...PhotoInfo
     }
-    startCursor
-    endCursor
-    total
   }
 }
 
-<<<<<<< Updated upstream
-query allFeaturedPhotos($input: AllFeaturedPhotosInput!) {
-  allFeaturedPhotos(input: $input) {
-=======
 query paginatedFeaturedPhotos($input: PaginatedPhotosInput!) {
   paginatedFeaturedPhotos(input: $input) {
     pageInfo {
@@ -86,7 +74,6 @@ query paginatedFeaturedPhotos($input: PaginatedPhotosInput!) {
       endCursor
       total
     }
->>>>>>> Stashed changes
     photos {
       ...PhotoInfo
     }

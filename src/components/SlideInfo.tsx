@@ -67,7 +67,7 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
           ))}
           {tags?.map(tag => (
             <Link href={`/gallery/tag/${encodeURIComponent(tag.name)}`}>
-              <Tag palette="secondary" marginLeft="minor-1" key={tag.id}>
+              <Tag key={tag.id} palette="secondary" marginLeft="minor-1">
                 {tag.name}
               </Tag>
             </Link>

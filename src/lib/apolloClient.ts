@@ -4,11 +4,7 @@ import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } fr
 import merge from "deepmerge";
 import { setContext } from "@apollo/client/link/context";
 import { getSession } from "next-auth/client";
-<<<<<<< Updated upstream
-import { Photo } from "../graphql-operations";
-=======
 import { TypedTypePolicies } from "../graphql-operations";
->>>>>>> Stashed changes
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
@@ -40,6 +36,7 @@ const typePolicies: TypedTypePolicies = {
   Query: {
     fields: {
       paginatedPhotosOfSubject: {
+        keyArgs: ["input", ["name"]],
         read: function (existing) {
           return existing;
         },
@@ -48,98 +45,33 @@ const typePolicies: TypedTypePolicies = {
             ? {
                 __typename: incoming.__typename,
                 photos: [...incoming.photos],
-                subjectInfo: { ...incoming.subjectInfo },
-                pageInfo: { ...incoming.pageInfo }
+                subjectInfo: incoming.subjectInfo,
+                pageInfo: incoming.pageInfo
               }
             : {
                 __typename: incoming.__typename,
                 photos: [...existing.photos, ...incoming.photos],
-                subjectInfo: { ...incoming.subjectInfo },
-                pageInfo: { ...incoming.pageInfo }
+                subjectInfo: incoming.subjectInfo,
+                pageInfo: incoming.pageInfo
               };
-        },
-        keyArgs: false
+        }
       }
     }
   }
+  // Photo: {
+  //   fields: {
+  //     subjectsInPhoto: {
+  //       keyArgs: ["subject"]
+  //     }
+  //   }
+  // }
 };
 
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
-<<<<<<< Updated upstream
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            allPhotos: {
-              merge(existing, incoming) {
-                console.log(`MERGE`);
-                const photos = existing
-                  ? [...existing.photos, ...incoming.photos]
-                  : [...incoming.photos];
-                // console.log(`incoming: ${JSON.stringify(incoming, null, 2)}`);
-
-                console.log(photos);
-                // incoming.photos.forEach(photo => {
-                //   photos[readField("id", photo)] = photo;
-                // });
-                return {
-                  startCursor: incoming.startCursor,
-                  endCursor: incoming.endCursor,
-                  total: incoming.total,
-                  photos: photos
-                };
-              },
-
-              read(existing) {
-                if (!existing) {
-                  return;
-                }
-                return {
-                  startCursor: existing.startCursor,
-                  endCursor: existing.endCursor,
-                  total: existing.total,
-                  photos: Object.values(existing.photos)
-                };
-              }
-            },
-            allPhotosOfSubject: {
-              keyArgs: ["subject"],
-              merge(existing, incoming) {
-                const photos = existing
-                  ? { ...existing.photos, ...incoming.photos }
-                  : { ...incoming.photos };
-
-                return {
-                  // subjectInfo: incoming.startInfo,
-                  startCursor: incoming.startCursor,
-                  endCursor: incoming.endCursor,
-                  total: incoming.total,
-                  photos: photos
-                };
-              },
-              read(existing) {
-                if (!existing) {
-                  return;
-                }
-                return {
-                  subjectInfo: existing.subjectInfo,
-                  startCursor: existing.startCursor,
-                  endCursor: existing.endCursor,
-                  total: existing.total,
-                  photos: Object.values(existing.photos)
-                };
-              }
-            }
-          }
-        }
-      }
-    })
-=======
     cache: new InMemoryCache({ typePolicies })
->>>>>>> Stashed changes
   });
 }
 

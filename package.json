@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
-    "@apollo/client": "^3.2.5",
+    "@apollo/client": "^3.3.6",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
@@ -33,18 +33,11 @@
     "yup": "^0.29.3"
   },
   "devDependencies": {
-<<<<<<< Updated upstream
-    "@graphql-codegen/cli": "^1.19.4",
-    "@graphql-codegen/typed-document-node": "^1.18.1",
-    "@graphql-codegen/typescript": "^1.19.0",
-    "@graphql-codegen/typescript-operations": "^1.17.12",
-=======
     "@graphql-codegen/cli": "^1.19.2",
     "@graphql-codegen/typed-document-node": "^1.17.10",
     "@graphql-codegen/typescript": "1.17.11",
     "@graphql-codegen/typescript-apollo-client-helpers": "^1.1.1",
     "@graphql-codegen/typescript-operations": "1.17.9",
->>>>>>> Stashed changes
     "@graphql-typed-document-node/core": "^3.1.0",
     "@types/deepmerge": "^2.2.0",
     "@types/graphql": "^14.5.0",

@@ -1,5 +1,5 @@
-query allPhotosWithTag($input: AllPhotosWithTagInput!) {
-  allPhotosWithTag(input: $input) {
+query paginatedPhotosWithTag($input: PaginatedPhotosWithTagInput!) {
+  paginatedPhotosWithTag(input: $input) {
     tagInfo {
       id
       name

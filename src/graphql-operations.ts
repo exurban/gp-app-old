@@ -75,7 +75,7 @@ export type PhotoCollection = {
 export type Photographer = {
   __typename?: "Photographer";
   id: Scalars["ID"];
-  /** Derived field that returns `${firstName} ${lastName}` */
+  /** The artist's full name */
   name: Scalars["String"];
   /** The artist's first name. */
   firstName: Scalars["String"];
@@ -225,8 +225,6 @@ export type User = {
   updatedAt: Scalars["DateTime"];
 };
 
-<<<<<<< Updated upstream
-=======
 export type PaginatedResponse = {
   __typename?: "PaginatedResponse";
   startCursor: Scalars["Int"];
@@ -240,12 +238,23 @@ export type GroupedPhotosAtLocationResponse = {
   locationInfo: Location;
 };
 
->>>>>>> Stashed changes
 export type PaginatedPhotosAtLocationResponse = {
   __typename?: "PaginatedPhotosAtLocationResponse";
   photos: Array<Photo>;
   pageInfo: PaginatedResponse;
   locationInfo: Location;
+};
+
+export type ItemCount = {
+  __typename?: "ItemCount";
+  name: Scalars["String"];
+  count: Scalars["Int"];
+};
+
+export type GroupedPhotosByPhotographerResponse = {
+  __typename?: "GroupedPhotosByPhotographerResponse";
+  photos: Array<Photo>;
+  photographerInfo: Photographer;
 };
 
 export type PaginatedPhotosByPhotographerResponse = {
@@ -267,6 +276,12 @@ export type PaginatedFeaturedPhotosResponse = {
   pageInfo: PaginatedResponse;
 };
 
+export type GroupedPhotosOfSubjectResponse = {
+  __typename?: "GroupedPhotosOfSubjectResponse";
+  photos: Array<Photo>;
+  subjectInfo: Subject;
+};
+
 export type PaginatedPhotosOfSubjectResponse = {
   __typename?: "PaginatedPhotosOfSubjectResponse";
   photos: Array<Photo>;
@@ -274,15 +289,25 @@ export type PaginatedPhotosOfSubjectResponse = {
   subjectInfo: Subject;
 };
 
-export type PaginatedPhotosOfTagResponse = {
-  __typename?: "PaginatedPhotosOfTagResponse";
+export type SuccessMessageResponse = {
+  __typename?: "SuccessMessageResponse";
+  success: Scalars["Boolean"];
+  message: Scalars["String"];
+};
+
+export type GroupedPhotosWithTagResponse = {
+  __typename?: "GroupedPhotosWithTagResponse";
+  photos: Array<Photo>;
+  tagInfo: Tag;
+};
+
+export type PaginatedPhotosWithTagResponse = {
+  __typename?: "PaginatedPhotosWithTagResponse";
   photos: Array<Photo>;
   pageInfo: PaginatedResponse;
   tagInfo: Tag;
 };
 
-<<<<<<< Updated upstream
-=======
 export type FavoritesResponse = {
   __typename?: "FavoritesResponse";
   /** Returns list of Photo objects in user's favorites. */
@@ -329,7 +354,6 @@ export type UserPreferencesResponse = {
   shoppingBagItems?: Maybe<Array<UserShoppingBagItem>>;
 };
 
->>>>>>> Stashed changes
 export type CollectionInput = {
   name: Scalars["String"];
   tag: Scalars["String"];
@@ -394,7 +418,9 @@ export type ImageUpdateInput = {
 
 /** Inputs to create a new Location entity. */
 export type LocationInput = {
+  /** Name of the location. */
   name: Scalars["String"];
+  /** Tag used to ID the location in Photo Info links. */
   tag: Scalars["String"];
   /** Vignette describing the location. */
   description?: Maybe<Scalars["String"]>;
@@ -402,7 +428,7 @@ export type LocationInput = {
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-/** Optional inputs to be used to update the Location's metadata. */
+/** Optional inputs to be used to update the Location Info. */
 export type LocationUpdateInput = {
   /** Optional. Name of the Location. */
   name?: Maybe<Scalars["String"]>;
@@ -414,12 +440,12 @@ export type LocationUpdateInput = {
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-/** Input to retrieve Location and Location's Photos. */
-export type LocationNamedInput = {
-  name: Scalars["String"];
+export type GroupedPhotosAtLocationInput = {
+  name?: Maybe<Scalars["String"]>;
+  id?: Maybe<Scalars["Float"]>;
 };
 
-export type AllPhotosAtLocationInput = {
+export type PaginatedPhotosAtLocationInput = {
   name?: Maybe<Scalars["String"]>;
   id?: Maybe<Scalars["Float"]>;
   cursor?: Maybe<Scalars["Int"]>;
@@ -438,6 +464,8 @@ export type PhotoFinishInput = {
 
 /** Inputs to create a new Photographer entity. */
 export type PhotographerInput = {
+  /** Photographer's full name. */
+  name: Scalars["String"];
   /** Photographer's first name. */
   firstName: Scalars["String"];
   /** Photographer's last name. */
@@ -452,6 +480,8 @@ export type PhotographerInput = {
 
 /** Inputs to update a Photographer entity. */
 export type PhotographerUpdateInput = {
+  /** Optional: Photographer's full name. */
+  name?: Maybe<Scalars["String"]>;
   /** Optional: Photographer's first name. */
   firstName?: Maybe<Scalars["String"]>;
   /** Optional: Photographer's last name. */
@@ -464,14 +494,13 @@ export type PhotographerUpdateInput = {
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-/** Input to retrieve Photographer and Photographer's Photos. */
-export type PhotographerNamedInput = {
-  name: Scalars["String"];
+export type GroupedPhotosByPhotographerInput = {
+  id?: Maybe<Scalars["Float"]>;
+  name?: Maybe<Scalars["String"]>;
 };
 
-export type AllPhotosByPhotographerInput = {
+export type PaginatedPhotosByPhotographerInput = {
   id?: Maybe<Scalars["Float"]>;
-  firstName?: Maybe<Scalars["String"]>;
   name?: Maybe<Scalars["String"]>;
   cursor?: Maybe<Scalars["Int"]>;
   take: Scalars["Int"];
@@ -505,30 +534,39 @@ export type PhotoUpdateInput = {
   locationId?: Maybe<Scalars["Float"]>;
 };
 
-export type AllPhotosInput = {
+export type PaginatedPhotosInput = {
   cursor?: Maybe<Scalars["Int"]>;
   take: Scalars["Int"];
 };
 
-export type AllFeaturedPhotosInput = {
-  cursor?: Maybe<Scalars["Int"]>;
-  take: Scalars["Int"];
-};
-
+/** Inputs to create a new Subject entity. */
 export type SubjectInput = {
+  /** Name of the subject. Used in Photo Info links. */
   name: Scalars["String"];
+  /** A vignette used to introduce the subject. */
   description?: Maybe<Scalars["String"]>;
+  /** A cover image to be displayed next to the opening vignette. */
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
+/** Optional inputs to be used to update the Subject Info. */
 export type SubjectUpdateInput = {
+  /** Optional. Name of the subject. Used in Photo Info links. */
   name?: Maybe<Scalars["String"]>;
+  /** Optional. A vignette used to introduce the subject. */
   description?: Maybe<Scalars["String"]>;
+  /** Optional. A cover image to be displayed next to the opening vignette. */
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-export type AllPhotosOfSubjectInput = {
-  subject: Scalars["String"];
+export type GroupedPhotosOfSubjectInput = {
+  id?: Maybe<Scalars["Float"]>;
+  name?: Maybe<Scalars["String"]>;
+};
+
+export type PaginatedPhotosOfSubjectInput = {
+  name?: Maybe<Scalars["String"]>;
+  id?: Maybe<Scalars["Float"]>;
   cursor?: Maybe<Scalars["Int"]>;
   take: Scalars["Int"];
 };
@@ -545,8 +583,14 @@ export type TagUpdateInput = {
   coverImageId?: Maybe<Scalars["Float"]>;
 };
 
-export type AllPhotosWithTagInput = {
-  tag: Scalars["String"];
+export type GroupedPhotosWithTagInput = {
+  id?: Maybe<Scalars["Float"]>;
+  name?: Maybe<Scalars["String"]>;
+};
+
+export type PaginatedPhotosWithTagInput = {
+  name?: Maybe<Scalars["String"]>;
+  id?: Maybe<Scalars["Float"]>;
   cursor?: Maybe<Scalars["Int"]>;
   take: Scalars["Int"];
 };
@@ -568,44 +612,52 @@ export type Query = {
   finishWithPhotos?: Maybe<Finish>;
   images: Array<Image>;
   image: Image;
-  allPhotosAtLocation: PaginatedPhotosAtLocationResponse;
-  /** Returns all Locations + maps, only. Meant to be used on the backend. */
+  /** Returns all Locations + maps, only. */
   locations: Array<Location>;
   /** Returns one Location + portrait, only or null, if no matching id is found. Meant to be used on the backend. */
   location?: Maybe<Location>;
-  /** Returns one Location + portrait AND Location's Photos and related data, or undefined if no Location matching name provided is found. Meant to be used on the frontend. Used for the Location's Gallery. */
-  locationNamed?: Maybe<Location>;
-  allPhotosByPhotographer: PaginatedPhotosByPhotographerResponse;
+  /** Returns one Location + portrait, only or null, if no matching name is found. */
+  locationWithName?: Maybe<Location>;
+  groupedPhotosAtLocation: GroupedPhotosAtLocationResponse;
+  paginatedPhotosAtLocation: PaginatedPhotosAtLocationResponse;
+  photoCountBySubject: Array<ItemCount>;
+  photoCountByTag: Array<ItemCount>;
+  photoCountByCollection: Array<ItemCount>;
+  photoCountByLocation: Array<ItemCount>;
+  photoCountByPhotographer: Array<ItemCount>;
   /** Returns all Photographers + portraits, only. Meant to be used on the backend. */
   photographers: Array<Photographer>;
   /** Returns one Photographer + portrait, only or null, if no matching id is found. Meant to be used on the backend. */
   photographer?: Maybe<Photographer>;
   /** Returns one Photographer + portrait AND Photographer's Photos and related data. Meant to be used on the frontend. Used for the Photographer's Gallery. */
-  photographerNamed?: Maybe<Photographer>;
+  photographerWithName?: Maybe<Photographer>;
+  groupedPhotosByPhotographer: GroupedPhotosByPhotographerResponse;
+  paginatedPhotosByPhotographer: PaginatedPhotosByPhotographerResponse;
   photos: Array<Photo>;
-<<<<<<< Updated upstream
-  allPhotos: PaginatedPhotoResponse;
-  allFeaturedPhotos: PaginatedPhotoResponse;
-=======
   paginatedPhotos: PaginatedAllPhotosResponse;
   paginatedFeaturedPhotos: PaginatedFeaturedPhotosResponse;
->>>>>>> Stashed changes
   photo?: Maybe<Photo>;
-  allPhotosOfSubject: PaginatedPhotosOfSubjectResponse;
+  userSearch: Array<UserSearchResult>;
+  /** Returns all subjects + cover images only. */
   subjects: Array<Subject>;
-  subject: Subject;
+  subject?: Maybe<Subject>;
   subjectWithName?: Maybe<Subject>;
-  allPhotosWithTag: PaginatedPhotosOfTagResponse;
+  groupedPhotosOfSubject: GroupedPhotosOfSubjectResponse;
+  paginatedPhotosOfSubject: PaginatedPhotosOfSubjectResponse;
   tags: Array<Tag>;
-  photosWithTag: Tag;
+  tag: Tag;
+  tagWithName?: Maybe<Tag>;
+  groupedPhotosWithTag: GroupedPhotosWithTagResponse;
+  paginatedPhotosWithTag: PaginatedPhotosWithTagResponse;
+  /** Returns all Photos favorited by the signed in User. */
+  favorites: FavoritesResponse;
+  /** Returns all Photos in the shopping bag of the signed in User. */
+  shoppingBagItems: ShoppingBagItemsResponse;
   users: Array<User>;
   user: User;
   userSummaries: Array<User>;
   newsletterSubscribers: Array<User>;
-  /** Returns all Photos favorited by the signed in User. */
-  favorites?: Maybe<Array<Photo>>;
-  /** Returns all Photos in the shopping bag of the signed in User. */
-  shoppingBagItems?: Maybe<Array<Photo>>;
+  getUserPreferences: UserPreferencesResponse;
 };
 
 export type QueryCollectionArgs = {
@@ -628,44 +680,52 @@ export type QueryImageArgs = {
   id: Scalars["Int"];
 };
 
-export type QueryAllPhotosAtLocationArgs = {
-  input: AllPhotosAtLocationInput;
-};
-
 export type QueryLocationArgs = {
   id: Scalars["Int"];
 };
 
-export type QueryLocationNamedArgs = {
-  input: LocationNamedInput;
+export type QueryLocationWithNameArgs = {
+  name: Scalars["String"];
 };
 
-export type QueryAllPhotosByPhotographerArgs = {
-  input: AllPhotosByPhotographerInput;
+export type QueryGroupedPhotosAtLocationArgs = {
+  input: GroupedPhotosAtLocationInput;
+};
+
+export type QueryPaginatedPhotosAtLocationArgs = {
+  input: PaginatedPhotosAtLocationInput;
 };
 
 export type QueryPhotographerArgs = {
   id: Scalars["Int"];
 };
 
-export type QueryPhotographerNamedArgs = {
-  input: PhotographerNamedInput;
+export type QueryPhotographerWithNameArgs = {
+  name: Scalars["String"];
 };
 
-export type QueryAllPhotosArgs = {
-  input: AllPhotosInput;
+export type QueryGroupedPhotosByPhotographerArgs = {
+  input: GroupedPhotosByPhotographerInput;
 };
 
-export type QueryAllFeaturedPhotosArgs = {
-  input: AllFeaturedPhotosInput;
+export type QueryPaginatedPhotosByPhotographerArgs = {
+  input: PaginatedPhotosByPhotographerInput;
+};
+
+export type QueryPaginatedPhotosArgs = {
+  input: PaginatedPhotosInput;
+};
+
+export type QueryPaginatedFeaturedPhotosArgs = {
+  input: PaginatedPhotosInput;
 };
 
 export type QueryPhotoArgs = {
   id: Scalars["Int"];
 };
 
-export type QueryAllPhotosOfSubjectArgs = {
-  input: AllPhotosOfSubjectInput;
+export type QueryUserSearchArgs = {
+  phrase: Scalars["String"];
 };
 
 export type QuerySubjectArgs = {
@@ -673,20 +733,38 @@ export type QuerySubjectArgs = {
 };
 
 export type QuerySubjectWithNameArgs = {
-  input: SubjectInput;
+  name: Scalars["String"];
 };
 
-export type QueryAllPhotosWithTagArgs = {
-  input: AllPhotosWithTagInput;
+export type QueryGroupedPhotosOfSubjectArgs = {
+  input: GroupedPhotosOfSubjectInput;
 };
 
-export type QueryPhotosWithTagArgs = {
-  input: TagInput;
+export type QueryPaginatedPhotosOfSubjectArgs = {
+  input: PaginatedPhotosOfSubjectInput;
+};
+
+export type QueryTagArgs = {
+  id: Scalars["Int"];
+};
+
+export type QueryTagWithNameArgs = {
+  name: Scalars["String"];
+};
+
+export type QueryGroupedPhotosWithTagArgs = {
+  input: GroupedPhotosWithTagInput;
+};
+
+export type QueryPaginatedPhotosWithTagArgs = {
+  input: PaginatedPhotosWithTagInput;
 };
 
 export type QueryUserArgs = {
   id: Scalars["Int"];
 };
+
+export type UserSearchResult = Subject | Tag | Location;
 
 export type Mutation = {
   __typename?: "Mutation";
@@ -716,17 +794,16 @@ export type Mutation = {
   addSubject: Subject;
   updateSubject: Subject;
   deleteSubject: Scalars["Boolean"];
+  subscribeToNewsletter: SuccessMessageResponse;
+  unsubscribeFromNewsletter: SuccessMessageResponse;
   addTag: Tag;
   updateTag: Tag;
   deleteTag: Scalars["Boolean"];
+  addPhotoToFavorites: AddPhotoToFavoritesResponse;
+  removePhotoFromFavorites: RemovePhotoFromFavoritesResponse;
+  addPhotoToShoppingBag: AddPhotoToShoppingBagResponse;
+  removePhotoFromShoppingBag: RemovePhotoFromShoppingBagResponse;
   getApiToken: Scalars["String"];
-  subscribeToNewsletter: Scalars["Boolean"];
-  unsubscribeFromNewsletter: Scalars["Boolean"];
-  addPhotoToFavorites: Scalars["Boolean"];
-  removePhotoFromFavorites: Scalars["Boolean"];
-  toggleUserFavorite: Scalars["Boolean"];
-  addPhotoToShoppingBag: Scalars["Boolean"];
-  removePhotoFromShoppingBag: Scalars["Boolean"];
 };
 
 export type MutationAddCollectionArgs = {
@@ -854,19 +931,11 @@ export type MutationDeleteTagArgs = {
   id: Scalars["Int"];
 };
 
-export type MutationGetApiTokenArgs = {
-  input: GetApiTokenInput;
-};
-
 export type MutationAddPhotoToFavoritesArgs = {
   photoId: Scalars["Float"];
 };
 
 export type MutationRemovePhotoFromFavoritesArgs = {
-  photoId: Scalars["Float"];
-};
-
-export type MutationToggleUserFavoriteArgs = {
   photoId: Scalars["Float"];
 };
 
@@ -876,6 +945,10 @@ export type MutationAddPhotoToShoppingBagArgs = {
 
 export type MutationRemovePhotoFromShoppingBagArgs = {
   photoId: Scalars["Float"];
+};
+
+export type MutationGetApiTokenArgs = {
+  input: GetApiTokenInput;
 };
 
 export type ImageInfoFragment = { __typename?: "Image" } & Pick<
@@ -890,12 +963,12 @@ export type ImageInfoFragment = { __typename?: "Image" } & Pick<
   | "height"
 >;
 
-export type AllPhotosAtLocationQueryVariables = Exact<{
-  input: AllPhotosAtLocationInput;
+export type PaginatedPhotosAtLocationQueryVariables = Exact<{
+  input: PaginatedPhotosAtLocationInput;
 }>;
 
-export type AllPhotosAtLocationQuery = { __typename?: "Query" } & {
-  allPhotosAtLocation: {
+export type PaginatedPhotosAtLocationQuery = { __typename?: "Query" } & {
+  paginatedPhotosAtLocation: {
     __typename?: "PaginatedPhotosAtLocationResponse";
   } & {
     locationInfo: { __typename?: "Location" } & Pick<
@@ -915,12 +988,12 @@ export type PhotographerInfoFragment = { __typename?: "Photographer" } & Pick<
   "id" | "name" | "firstName" | "lastName" | "email" | "bio"
 > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
 
-export type AllPhotosByPhotographerQueryVariables = Exact<{
-  input: AllPhotosByPhotographerInput;
+export type PaginatedPhotosByPhotographerQueryVariables = Exact<{
+  input: PaginatedPhotosByPhotographerInput;
 }>;
 
-export type AllPhotosByPhotographerQuery = { __typename?: "Query" } & {
-  allPhotosByPhotographer: {
+export type PaginatedPhotosByPhotographerQuery = { __typename?: "Query" } & {
+  paginatedPhotosByPhotographer: {
     __typename?: "PaginatedPhotosByPhotographerResponse";
   } & {
     photographerInfo: {
@@ -994,17 +1067,16 @@ export type PhotoInfoFragment = { __typename?: "Photo" } & Pick<
     >;
   };
 
-export type AllPhotosQueryVariables = Exact<{
-  input: AllPhotosInput;
+export type PhotosQueryVariables = Exact<{ [key: string]: never }>;
+
+export type PhotosQuery = { __typename?: "Query" } & {
+  photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+};
+
+export type PaginatedPhotosQueryVariables = Exact<{
+  input: PaginatedPhotosInput;
 }>;
 
-<<<<<<< Updated upstream
-export type AllPhotosQuery = { __typename?: "Query" } & {
-  allPhotos: { __typename?: "PaginatedPhotoResponse" } & Pick<
-    PaginatedPhotoResponse,
-    "startCursor" | "endCursor" | "total"
-  > & { photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment> };
-=======
 export type PaginatedPhotosQuery = { __typename?: "Query" } & {
   paginatedPhotos: { __typename?: "PaginatedAllPhotosResponse" } & {
     pageInfo: { __typename?: "PaginatedResponse" } & Pick<
@@ -1013,20 +1085,12 @@ export type PaginatedPhotosQuery = { __typename?: "Query" } & {
     >;
     photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
   };
->>>>>>> Stashed changes
 };
 
-export type AllFeaturedPhotosQueryVariables = Exact<{
-  input: AllFeaturedPhotosInput;
+export type PaginatedFeaturedPhotosQueryVariables = Exact<{
+  input: PaginatedPhotosInput;
 }>;
 
-<<<<<<< Updated upstream
-export type AllFeaturedPhotosQuery = { __typename?: "Query" } & {
-  allFeaturedPhotos: { __typename?: "PaginatedPhotoResponse" } & Pick<
-    PaginatedPhotoResponse,
-    "startCursor" | "endCursor" | "total"
-  > & { photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment> };
-=======
 export type PaginatedFeaturedPhotosQuery = { __typename?: "Query" } & {
   paginatedFeaturedPhotos: {
     __typename?: "PaginatedFeaturedPhotosResponse";
@@ -1037,7 +1101,6 @@ export type PaginatedFeaturedPhotosQuery = { __typename?: "Query" } & {
     >;
     photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
   };
->>>>>>> Stashed changes
 };
 
 export type AddPhotoMutationVariables = Exact<{
@@ -1066,12 +1129,26 @@ export type AddPhotoMutation = { __typename?: "Mutation" } & {
     };
 };
 
-export type AllPhotosOfSubjectQueryVariables = Exact<{
-  input: AllPhotosOfSubjectInput;
+export type GroupedPhotosOfSubjectQueryVariables = Exact<{
+  input: GroupedPhotosOfSubjectInput;
 }>;
 
-export type AllPhotosOfSubjectQuery = { __typename?: "Query" } & {
-  allPhotosOfSubject: {
+export type GroupedPhotosOfSubjectQuery = { __typename?: "Query" } & {
+  groupedPhotosOfSubject: { __typename?: "GroupedPhotosOfSubjectResponse" } & {
+    subjectInfo: { __typename?: "Subject" } & Pick<
+      Subject,
+      "id" | "name" | "description" | "createdAt" | "updatedAt"
+    > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
+    photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
+  };
+};
+
+export type PaginatedPhotosOfSubjectQueryVariables = Exact<{
+  input: PaginatedPhotosOfSubjectInput;
+}>;
+
+export type PaginatedPhotosOfSubjectQuery = { __typename?: "Query" } & {
+  paginatedPhotosOfSubject: {
     __typename?: "PaginatedPhotosOfSubjectResponse";
   } & {
     subjectInfo: { __typename?: "Subject" } & Pick<
@@ -1082,33 +1159,6 @@ export type AllPhotosOfSubjectQuery = { __typename?: "Query" } & {
       PaginatedResponse,
       "startCursor" | "endCursor" | "total"
     >;
-    photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
-  };
-};
-
-export type AllPhotosWithTagQueryVariables = Exact<{
-  input: AllPhotosWithTagInput;
-}>;
-
-<<<<<<< Updated upstream
-export type AllPhotosWithTagQuery = { __typename?: "Query" } & {
-  allPhotosWithTag: { __typename?: "PaginatedPhotosOfTagResponse" } & Pick<
-    PaginatedPhotosOfTagResponse,
-    "startCursor" | "endCursor" | "total"
-  > & {
-      tagInfo: { __typename?: "Tag" } & Pick<
-        Tag,
-        "id" | "name" | "description" | "createdAt" | "updatedAt"
-      > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
-      photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
-    };
-=======
-export type GroupedPhotosWithTagQuery = { __typename?: "Query" } & {
-  groupedPhotosWithTag: { __typename?: "GroupedPhotosWithTagResponse" } & {
-    tagInfo: { __typename?: "Tag" } & Pick<
-      Tag,
-      "id" | "name" | "description" | "createdAt" | "updatedAt"
-    > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
     photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
   };
 };
@@ -1129,7 +1179,6 @@ export type PaginatedPhotosWithTagQuery = { __typename?: "Query" } & {
     >;
     photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
   };
->>>>>>> Stashed changes
 };
 
 export type GetApiTokenMutationVariables = Exact<{
@@ -1145,29 +1194,17 @@ export type AddPhotoToFavoritesMutationVariables = Exact<{
   photoId: Scalars["Float"];
 }>;
 
-<<<<<<< Updated upstream
-export type AddPhotoToFavoritesMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "addPhotoToFavorites"
->;
-=======
 export type AddPhotoToFavoritesMutation = { __typename?: "Mutation" } & {
   addPhotoToFavorites: { __typename?: "AddPhotoToFavoritesResponse" } & Pick<
     AddPhotoToFavoritesResponse,
     "success" | "message" | "addedPhotoWithId"
   >;
 };
->>>>>>> Stashed changes
 
 export type RemovePhotoFromFavoritesMutationVariables = Exact<{
   photoId: Scalars["Float"];
 }>;
 
-<<<<<<< Updated upstream
-export type RemovePhotoFromFavoritesMutation = {
-  __typename?: "Mutation";
-} & Pick<Mutation, "removePhotoFromFavorites">;
-=======
 export type RemovePhotoFromFavoritesMutation = { __typename?: "Mutation" } & {
   removePhotoFromFavorites: {
     __typename?: "RemovePhotoFromFavoritesResponse";
@@ -1176,18 +1213,11 @@ export type RemovePhotoFromFavoritesMutation = { __typename?: "Mutation" } & {
     "success" | "message" | "removedPhotoWithId"
   >;
 };
->>>>>>> Stashed changes
 
 export type AddPhotoToShoppingBagMutationVariables = Exact<{
   photoId: Scalars["Float"];
 }>;
 
-<<<<<<< Updated upstream
-export type AddPhotoToShoppingBagMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "addPhotoToShoppingBag"
->;
-=======
 export type AddPhotoToShoppingBagMutation = { __typename?: "Mutation" } & {
   addPhotoToShoppingBag: {
     __typename?: "AddPhotoToShoppingBagResponse";
@@ -1196,17 +1226,11 @@ export type AddPhotoToShoppingBagMutation = { __typename?: "Mutation" } & {
     "success" | "message" | "addedPhotoWithId"
   >;
 };
->>>>>>> Stashed changes
 
 export type RemovePhotoFromShoppingBagMutationVariables = Exact<{
   photoId: Scalars["Float"];
 }>;
 
-<<<<<<< Updated upstream
-export type RemovePhotoFromShoppingBagMutation = {
-  __typename?: "Mutation";
-} & Pick<Mutation, "removePhotoFromShoppingBag">;
-=======
 export type RemovePhotoFromShoppingBagMutation = { __typename?: "Mutation" } & {
   removePhotoFromShoppingBag: {
     __typename?: "RemovePhotoFromShoppingBagResponse";
@@ -1215,18 +1239,21 @@ export type RemovePhotoFromShoppingBagMutation = { __typename?: "Mutation" } & {
     "success" | "message" | "removedPhotoWithId"
   >;
 };
->>>>>>> Stashed changes
 
 export type FavoritesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FavoritesQuery = { __typename?: "Query" } & {
-  favorites?: Maybe<Array<{ __typename?: "Photo" } & PhotoInfoFragment>>;
+  favorites: { __typename?: "FavoritesResponse" } & {
+    photoList?: Maybe<Array<{ __typename?: "Photo" } & PhotoInfoFragment>>;
+  };
 };
 
 export type ShoppingBagItemsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ShoppingBagItemsQuery = { __typename?: "Query" } & {
-  shoppingBagItems?: Maybe<Array<{ __typename?: "Photo" } & PhotoInfoFragment>>;
+  shoppingBagItems: { __typename?: "ShoppingBagItemsResponse" } & {
+    photoList?: Maybe<Array<{ __typename?: "Photo" } & PhotoInfoFragment>>;
+  };
 };
 
 export const ImageInfoFragmentDoc: DocumentNode<ImageInfoFragment, unknown> = {
@@ -1663,16 +1690,16 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
     },
   ],
 };
-export const AllPhotosAtLocationDocument: DocumentNode<
-  AllPhotosAtLocationQuery,
-  AllPhotosAtLocationQueryVariables
+export const PaginatedPhotosAtLocationDocument: DocumentNode<
+  PaginatedPhotosAtLocationQuery,
+  PaginatedPhotosAtLocationQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allPhotosAtLocation" },
+      name: { kind: "Name", value: "paginatedPhotosAtLocation" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -1684,7 +1711,7 @@ export const AllPhotosAtLocationDocument: DocumentNode<
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosAtLocationInput" },
+              name: { kind: "Name", value: "PaginatedPhotosAtLocationInput" },
             },
           },
           directives: [],
@@ -1696,7 +1723,7 @@ export const AllPhotosAtLocationDocument: DocumentNode<
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "allPhotosAtLocation" },
+            name: { kind: "Name", value: "paginatedPhotosAtLocation" },
             arguments: [
               {
                 kind: "Argument",
@@ -1764,6 +1791,35 @@ export const AllPhotosAtLocationDocument: DocumentNode<
                 },
                 {
                   kind: "Field",
+                  name: { kind: "Name", value: "pageInfo" },
+                  arguments: [],
+                  directives: [],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "startCursor" },
+                        arguments: [],
+                        directives: [],
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "endCursor" },
+                        arguments: [],
+                        directives: [],
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "total" },
+                        arguments: [],
+                        directives: [],
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
                   name: { kind: "Name", value: "photos" },
                   arguments: [],
                   directives: [],
@@ -1778,9 +1834,6 @@ export const AllPhotosAtLocationDocument: DocumentNode<
                     ],
                   },
                 },
-                { kind: "Field", name: { kind: "Name", value: "startCursor" } },
-                { kind: "Field", name: { kind: "Name", value: "endCursor" } },
-                { kind: "Field", name: { kind: "Name", value: "total" } },
               ],
             },
           },
@@ -1791,16 +1844,16 @@ export const AllPhotosAtLocationDocument: DocumentNode<
     ...PhotoInfoFragmentDoc.definitions,
   ],
 };
-export const AllPhotosByPhotographerDocument: DocumentNode<
-  AllPhotosByPhotographerQuery,
-  AllPhotosByPhotographerQueryVariables
+export const PaginatedPhotosByPhotographerDocument: DocumentNode<
+  PaginatedPhotosByPhotographerQuery,
+  PaginatedPhotosByPhotographerQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allPhotosByPhotographer" },
+      name: { kind: "Name", value: "paginatedPhotosByPhotographer" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -1812,7 +1865,10 @@ export const AllPhotosByPhotographerDocument: DocumentNode<
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosByPhotographerInput" },
+              name: {
+                kind: "Name",
+                value: "PaginatedPhotosByPhotographerInput",
+              },
             },
           },
           directives: [],
@@ -1824,7 +1880,7 @@ export const AllPhotosByPhotographerDocument: DocumentNode<
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "allPhotosByPhotographer" },
+            name: { kind: "Name", value: "paginatedPhotosByPhotographer" },
             arguments: [
               {
                 kind: "Argument",
@@ -1841,267 +1897,6 @@ export const AllPhotosByPhotographerDocument: DocumentNode<
               selections: [
                 {
                   kind: "Field",
-<<<<<<< Updated upstream
-                  name: { kind: "Name", value: "photographerInfo" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotographerInfo" },
-=======
-                  name: { kind: "Name", value: "locationInfo" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "tag" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "coverImage" },
-                        arguments: [],
-                        directives: [],
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "FragmentSpread",
-                              name: { kind: "Name", value: "ImageInfo" },
-                              directives: [],
-                            },
-                          ],
-                        },
->>>>>>> Stashed changes
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "pageInfo" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "startCursor" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "endCursor" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "total" },
-                        arguments: [],
-                        directives: [],
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "photos" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                        directives: [],
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...PhotographerInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
-};
-export const AllPhotosDocument: DocumentNode<
-  AllPhotosQuery,
-  AllPhotosQueryVariables
-> = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "allPhotos" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "input" },
-          },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosInput" },
-            },
-          },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "allPhotos" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "input" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-<<<<<<< Updated upstream
-=======
-                  name: { kind: "Name", value: "photographerInfo" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotographerInfo" },
-                        directives: [],
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
->>>>>>> Stashed changes
-                  name: { kind: "Name", value: "photos" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                        directives: [],
-                      },
-                    ],
-                  },
-                },
-                { kind: "Field", name: { kind: "Name", value: "startCursor" } },
-                { kind: "Field", name: { kind: "Name", value: "endCursor" } },
-                { kind: "Field", name: { kind: "Name", value: "total" } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
-};
-export const AllFeaturedPhotosDocument: DocumentNode<
-  AllFeaturedPhotosQuery,
-  AllFeaturedPhotosQueryVariables
-> = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "allFeaturedPhotos" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "input" },
-          },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AllFeaturedPhotosInput" },
-            },
-          },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "allFeaturedPhotos" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "input" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-<<<<<<< Updated upstream
-=======
                   name: { kind: "Name", value: "photographerInfo" },
                   arguments: [],
                   directives: [],
@@ -2147,7 +1942,6 @@ export const AllFeaturedPhotosDocument: DocumentNode<
                 },
                 {
                   kind: "Field",
->>>>>>> Stashed changes
                   name: { kind: "Name", value: "photos" },
                   arguments: [],
                   directives: [],
@@ -2168,8 +1962,6 @@ export const AllFeaturedPhotosDocument: DocumentNode<
         ],
       },
     },
-<<<<<<< Updated upstream
-=======
     ...PhotographerInfoFragmentDoc.definitions,
     ...PhotoInfoFragmentDoc.definitions,
   ],
@@ -2205,20 +1997,19 @@ export const PhotosDocument: DocumentNode<PhotosQuery, PhotosQueryVariables> = {
         ],
       },
     },
->>>>>>> Stashed changes
     ...PhotoInfoFragmentDoc.definitions,
   ],
 };
-export const AddPhotoDocument: DocumentNode<
-  AddPhotoMutation,
-  AddPhotoMutationVariables
+export const PaginatedPhotosDocument: DocumentNode<
+  PaginatedPhotosQuery,
+  PaginatedPhotosQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
-      operation: "mutation",
-      name: { kind: "Name", value: "addPhoto" },
+      operation: "query",
+      name: { kind: "Name", value: "paginatedPhotos" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -2230,7 +2021,7 @@ export const AddPhotoDocument: DocumentNode<
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "PhotoInput" },
+              name: { kind: "Name", value: "PaginatedPhotosInput" },
             },
           },
           directives: [],
@@ -2242,7 +2033,7 @@ export const AddPhotoDocument: DocumentNode<
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "addPhoto" },
+            name: { kind: "Name", value: "paginatedPhotos" },
             arguments: [
               {
                 kind: "Argument",
@@ -2257,12 +2048,6 @@ export const AddPhotoDocument: DocumentNode<
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-<<<<<<< Updated upstream
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "title" } },
-                { kind: "Field", name: { kind: "Name", value: "description" } },
-                { kind: "Field", name: { kind: "Name", value: "isFeatured" } },
-=======
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "pageInfo" },
@@ -2491,7 +2276,6 @@ export const AddPhotoDocument: DocumentNode<
                   arguments: [],
                   directives: [],
                 },
->>>>>>> Stashed changes
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "isLimitedEdition" },
@@ -2576,16 +2360,16 @@ export const AddPhotoDocument: DocumentNode<
     },
   ],
 };
-export const AllPhotosOfSubjectDocument: DocumentNode<
-  AllPhotosOfSubjectQuery,
-  AllPhotosOfSubjectQueryVariables
+export const GroupedPhotosOfSubjectDocument: DocumentNode<
+  GroupedPhotosOfSubjectQuery,
+  GroupedPhotosOfSubjectQueryVariables
 > = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allPhotosOfSubject" },
+      name: { kind: "Name", value: "groupedPhotosOfSubject" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -2597,7 +2381,7 @@ export const AllPhotosOfSubjectDocument: DocumentNode<
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosOfSubjectInput" },
+              name: { kind: "Name", value: "GroupedPhotosOfSubjectInput" },
             },
           },
           directives: [],
@@ -2609,9 +2393,6 @@ export const AllPhotosOfSubjectDocument: DocumentNode<
         selections: [
           {
             kind: "Field",
-<<<<<<< Updated upstream
-            name: { kind: "Name", value: "allPhotosOfSubject" },
-=======
             name: { kind: "Name", value: "groupedPhotosOfSubject" },
             arguments: [
               {
@@ -2744,7 +2525,6 @@ export const PaginatedPhotosOfSubjectDocument: DocumentNode<
           {
             kind: "Field",
             name: { kind: "Name", value: "paginatedPhotosOfSubject" },
->>>>>>> Stashed changes
             arguments: [
               {
                 kind: "Argument",
@@ -2871,140 +2651,6 @@ export const PaginatedPhotosOfSubjectDocument: DocumentNode<
     ...PhotoInfoFragmentDoc.definitions,
   ],
 };
-export const AllPhotosWithTagDocument: DocumentNode<
-  AllPhotosWithTagQuery,
-  AllPhotosWithTagQueryVariables
-> = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "allPhotosWithTag" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "input" },
-          },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosWithTagInput" },
-            },
-          },
-          directives: [],
-        },
-      ],
-      directives: [],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-<<<<<<< Updated upstream
-            name: { kind: "Name", value: "allPhotosWithTag" },
-=======
-            name: { kind: "Name", value: "groupedPhotosWithTag" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "input" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
-            ],
-            directives: [],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "tagInfo" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "id" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "name" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "coverImage" },
-                        arguments: [],
-                        directives: [],
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "FragmentSpread",
-                              name: { kind: "Name", value: "ImageInfo" },
-                              directives: [],
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "createdAt" },
-                        arguments: [],
-                        directives: [],
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "updatedAt" },
-                        arguments: [],
-                        directives: [],
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "photos" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                        directives: [],
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
-};
 export const PaginatedPhotosWithTagDocument: DocumentNode<
   PaginatedPhotosWithTagQuery,
   PaginatedPhotosWithTagQueryVariables
@@ -3039,7 +2685,6 @@ export const PaginatedPhotosWithTagDocument: DocumentNode<
           {
             kind: "Field",
             name: { kind: "Name", value: "paginatedPhotosWithTag" },
->>>>>>> Stashed changes
             arguments: [
               {
                 kind: "Argument",
@@ -3258,8 +2903,6 @@ export const AddPhotoToFavoritesDocument: DocumentNode<
                 },
               },
             ],
-<<<<<<< Updated upstream
-=======
             directives: [],
             selectionSet: {
               kind: "SelectionSet",
@@ -3284,7 +2927,6 @@ export const AddPhotoToFavoritesDocument: DocumentNode<
                 },
               ],
             },
->>>>>>> Stashed changes
           },
         ],
       },
@@ -3332,8 +2974,6 @@ export const RemovePhotoFromFavoritesDocument: DocumentNode<
                 },
               },
             ],
-<<<<<<< Updated upstream
-=======
             directives: [],
             selectionSet: {
               kind: "SelectionSet",
@@ -3358,7 +2998,6 @@ export const RemovePhotoFromFavoritesDocument: DocumentNode<
                 },
               ],
             },
->>>>>>> Stashed changes
           },
         ],
       },
@@ -3406,8 +3045,6 @@ export const AddPhotoToShoppingBagDocument: DocumentNode<
                 },
               },
             ],
-<<<<<<< Updated upstream
-=======
             directives: [],
             selectionSet: {
               kind: "SelectionSet",
@@ -3432,7 +3069,6 @@ export const AddPhotoToShoppingBagDocument: DocumentNode<
                 },
               ],
             },
->>>>>>> Stashed changes
           },
         ],
       },
@@ -3480,8 +3116,6 @@ export const RemovePhotoFromShoppingBagDocument: DocumentNode<
                 },
               },
             ],
-<<<<<<< Updated upstream
-=======
             directives: [],
             selectionSet: {
               kind: "SelectionSet",
@@ -3506,7 +3140,6 @@ export const RemovePhotoFromShoppingBagDocument: DocumentNode<
                 },
               ],
             },
->>>>>>> Stashed changes
           },
         ],
       },
@@ -3537,10 +3170,6 @@ export const FavoritesDocument: DocumentNode<
               kind: "SelectionSet",
               selections: [
                 {
-<<<<<<< Updated upstream
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "PhotoInfo" },
-=======
                   kind: "Field",
                   name: { kind: "Name", value: "photoList" },
                   arguments: [],
@@ -3555,7 +3184,6 @@ export const FavoritesDocument: DocumentNode<
                       },
                     ],
                   },
->>>>>>> Stashed changes
                 },
               ],
             },
@@ -3590,10 +3218,6 @@ export const ShoppingBagItemsDocument: DocumentNode<
               kind: "SelectionSet",
               selections: [
                 {
-<<<<<<< Updated upstream
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "PhotoInfo" },
-=======
                   kind: "Field",
                   name: { kind: "Name", value: "photoList" },
                   arguments: [],
@@ -3608,93 +3232,6 @@ export const ShoppingBagItemsDocument: DocumentNode<
                       },
                     ],
                   },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
-};
-export const GetUserPreferencesDocument: DocumentNode<
-  GetUserPreferencesQuery,
-  GetUserPreferencesQueryVariables
-> = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "getUserPreferences" },
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "getUserPreferences" },
-            arguments: [],
-            directives: [],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "favorites" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "photo" },
-                        arguments: [],
-                        directives: [],
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "FragmentSpread",
-                              name: { kind: "Name", value: "PhotoInfo" },
-                              directives: [],
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "shoppingBagItems" },
-                  arguments: [],
-                  directives: [],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "photo" },
-                        arguments: [],
-                        directives: [],
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "FragmentSpread",
-                              name: { kind: "Name", value: "PhotoInfo" },
-                              directives: [],
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
->>>>>>> Stashed changes
                 },
               ],
             },

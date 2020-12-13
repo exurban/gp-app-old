@@ -1,40 +1,48 @@
+import React, { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
-import { useMutation } from "@apollo/client";
+import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useSession } from "next-auth/client";
 import { DropdownMenu, DropdownMenuGroup, Text, Icon, Button, applyTheme, useToasts } from "bumbag";
-import { AddPhotoToFavoritesDocument, PhotoInfoFragment } from "../graphql-operations";
+import {
+  FavoritesDocument,
+  AddPhotoToFavoritesDocument,
+  RemovePhotoFromFavoritesDocument,
+  PhotoInfoFragment,
+  ShoppingBagItemsDocument,
+  AddPhotoToShoppingBagDocument,
+  RemovePhotoFromShoppingBagDocument
+} from "../graphql-operations";
 
 type Props = {
-  setShowInfo: any;
+  setShowInfo: Dispatch<SetStateAction<boolean>>;
   photo: PhotoInfoFragment;
 };
 
 const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   const [session] = useSession();
   const router = useRouter();
+  const client = useApolloClient();
   const toasts = useToasts();
-  const [addToFavorites, { data }] = useMutation(AddPhotoToFavoritesDocument);
+  const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
+  const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
+  const [addToShoppingBag] = useMutation(AddPhotoToShoppingBagDocument);
+  const [removeFromShoppingBag] = useMutation(RemovePhotoFromShoppingBagDocument);
+
+  const signinFirst = () => {
+    localStorage.setItem("lastUrl", router.pathname);
+    localStorage.setItem("favPhoto", photo.id);
+    router.push("/auth/signin");
+  };
 
   const addPhotoToFavorites = () => {
-<<<<<<< Updated upstream
-    console.log(`looking for session's api token`);
-    if (!session) {
-      localStorage.setItem("lastUrl", router.pathname);
-      localStorage.setItem("cursor", photo.id);
-      router.push(`/auth/signin`);
-    } else {
-      addToFavorites({ variables: { photoId: parseInt(photo.id) } });
-
-      if (data) {
-        console.log(`Added to favorites: ${JSON.stringify(data, null, 2)}`);
-        toasts.add({
-          title: "Added to Favorites",
-          message: `${photo.title} was added to your favorites.`
-=======
+    console.log(`adding to favorites.`);
     if (!session) {
       signinFirst();
       return;
     }
+
+    let success;
+    let msg;
 
     addToFavorites({
       variables: { photoId: parseInt(photo.id) },
@@ -47,16 +55,14 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
           __typename: "AddPhotoToFavoritesResponse"
         }
       },
-      update: (cache, { data: { ...newFavoriteResponse } }) => {
+      update: (cache, { data: { ...newPhotoResponse } }) => {
         const { ...existing } = cache.readQuery({
           query: FavoritesDocument
         });
 
-        // * check to make sure photoId returned from mutation === photo.id, throw error if it doesn't.
-        const newFavorite = newFavoriteResponse.addPhotoToFavorites.addedPhotoWithId;
-        if (newFavorite != photo.id) {
-          console.error(`photo ID returned from server ${newFavorite} does not match photo's ID.`);
-        }
+        const response = newPhotoResponse.addPhotoToFavorites;
+        success = response.success;
+        msg = response.message;
 
         const existingPhotos = existing.favorites?.photoList || [];
 
@@ -68,12 +74,32 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
               photoList: photo ? [photo, ...existingPhotos] : [...existingPhotos]
             }
           }
->>>>>>> Stashed changes
         });
       }
+    });
+    {
+      success
+        ? toasts.success({
+            title: "Added",
+            message: msg
+          })
+        : toasts.warning({
+            title: "Failed to add.",
+            message: msg
+          });
     }
-<<<<<<< Updated upstream
-=======
+  };
+
+  const removePhotoFromFavorites = () => {
+    console.log(`removing from favorites.`);
+    if (!session) {
+      signinFirst();
+      return;
+    }
+
+    let success;
+    let msg;
+
     removeFromFavorites({
       variables: { photoId: parseInt(photo.id) },
       optimisticResponse: {
@@ -89,10 +115,12 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
         const { ...existing } = cache.readQuery({
           query: FavoritesDocument
         });
-        const photoToRemove = removePhotoResponse.removePhotoFromFavorites.removedPhotoWithId;
-        if (photoToRemove != photo.id) {
-          console.error(`photoToRemoveId ${photoToRemove} does not match photo.id ${photo.id}`);
-        }
+
+        const response = removePhotoResponse.removePhotoFromFavorites;
+        const idOfPhotoToRemove = response.removedPhotoWithId;
+        success = response.success;
+        msg = response.message;
+
         const existingPhotos = existing.favorites?.photoList || [];
 
         cache.writeQuery({
@@ -100,25 +128,32 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
           data: {
             favorites: {
               __typename: "FavoritesResponse",
-              photoList: existingPhotos.filter(rec => rec.id != photoToRemove)
+              photoList: existingPhotos.filter(rec => rec.id != idOfPhotoToRemove)
             }
           }
         });
       }
     });
->>>>>>> Stashed changes
+    {
+      success
+        ? toasts.success({
+            title: "Removed",
+            message: msg
+          })
+        : toasts.warning({
+            title: "Failed to remove.",
+            message: msg
+          });
+    }
   };
 
   const addPhotoToShoppingBag = () => {
     if (!session) {
-<<<<<<< Updated upstream
-      router.push(`/auth/signin`);
-    } else {
-      console.log(`Add ${photo.id} to shopping bag.`);
-    }
-=======
       signinFirst();
     }
+
+    let success;
+    let msg;
 
     addToShoppingBag({
       variables: { photoId: parseInt(photo.id) },
@@ -126,7 +161,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
         __typename: "Mutation",
         addPhotoToShoppingBag: {
           success: true,
-          message: `Added ${photo.title} to your shopping bag.`,
+          message: `Successfully added ${photo.title} to your shopping bag.`,
           addedPhotoWithId: photo.id,
           __typename: "AddPhotoToShoppingBagResponse"
         }
@@ -136,10 +171,14 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
           query: ShoppingBagItemsDocument
         });
 
-        const newShoppingBagItem = newBagItemResponse.addPhotoToShoppingBag.addedPhotoWithId;
-        if (newShoppingBagItem != photo.id) {
-          console.error(
-            `photo ID returned from server ${newShoppingBagItem} does not match photo id ${photo.id}`
+        const response = newBagItemResponse.addPhotoToShoppingBag;
+        const newPhotoId = response.addedPhotoWithId;
+        success = response.success;
+        msg = response.message;
+
+        if (newPhotoId != photo.id) {
+          console.log(
+            `Incoming response from server with id ${newPhotoId} does not match added photo id ${photo.id}`
           );
         }
         const existingPhotos = existing.shoppingBagItems?.photoList || [];
@@ -155,6 +194,17 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
         });
       }
     });
+    {
+      success
+        ? toasts.success({
+            title: "Added",
+            message: msg
+          })
+        : toasts.warning({
+            title: "Failed to add.",
+            message: msg
+          });
+    }
   };
 
   const removePhotoFromShoppingBag = () => {
@@ -162,6 +212,10 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
       signinFirst();
       return;
     }
+
+    let success;
+    let msg;
+
     removeFromShoppingBag({
       variables: { photoId: parseInt(photo.id) },
       optimisticResponse: {
@@ -177,12 +231,18 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
         const { ...existing } = cache.readQuery({
           query: ShoppingBagItemsDocument
         });
-        const photoToRemove = removePhotoResponse.removePhotoFromShoppingBag.removedPhotoWithId;
-        if (photoToRemove != photo.id) {
-          console.error(
-            `Photo ID returned from server ${photoToRemove} does not match photo.id ${photo.id}`
+
+        const response = removePhotoResponse.removePhotoFromShoppingBag;
+        const idOfPhotoToRemove = response.removedPhotoWithId;
+        success = response.success;
+        msg = response.message;
+
+        if (idOfPhotoToRemove != photo.id) {
+          console.log(
+            `ID of photo to remove incoming from server ${idOfPhotoToRemove} does not match ID of photo to remove ${photo.id}`
           );
         }
+
         const existingPhotos = existing.shoppingBagItems?.photoList || [];
 
         cache.writeQuery({
@@ -190,13 +250,23 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
           data: {
             shoppingBagItems: {
               __typename: "ShoppingBagItemsResponse",
-              photoList: existingPhotos.filter(rec => rec.id != photoToRemove)
+              photoList: existingPhotos.filter(rec => rec.id != idOfPhotoToRemove)
             }
           }
         });
       }
     });
->>>>>>> Stashed changes
+    {
+      success
+        ? toasts.success({
+            title: "Removed",
+            message: msg
+          })
+        : toasts.warning({
+            title: "Failed to remove.",
+            message: msg
+          });
+    }
   };
 
   const sharePhotoOnTwitter = () => {
@@ -223,6 +293,50 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     }
   };
 
+  const inFavorites = (id: string): boolean => {
+    if (!session) {
+      return false;
+    }
+
+    // during development, could get in a situation where there was a session, but favorites hadn't been queried (session persisted when restarting server but favorites (cached on sign in) were purged). Instead of checking for this situation which should only occur in testing, Apollo 3.3 and up returns null if fields were missing
+    const { ...favs } = client.cache.readQuery({
+      query: FavoritesDocument
+    });
+
+    if (!favs) {
+      console.error(`There IS a session, but favorites have not been fetched.`);
+      useQuery(FavoritesDocument);
+    }
+
+    const photoList = favs.favorites?.photoList || [];
+
+    if (!photoList) {
+      return false;
+    }
+    const favIds = photoList.map(f => f.id);
+
+    return favIds.includes(id);
+  };
+
+  const inShoppingBag = (id: string): boolean => {
+    if (!session) {
+      return false;
+    }
+    const { ...bagItems } = client.cache.readQuery({
+      query: ShoppingBagItemsDocument
+    });
+
+    if (!bagItems) {
+      useQuery(ShoppingBagItemsDocument);
+    }
+
+    const photoList = bagItems.shoppingBagItems?.photoList || [];
+
+    const bagItemIds = photoList.map(f => f.id);
+
+    return bagItemIds.includes(id);
+  };
+
   const DDMenu = applyTheme(DropdownMenu, {
     Popover: {
       styles: {
@@ -242,6 +356,10 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     }
   });
 
+  if (typeof window === undefined) {
+    return <p>waiting</p>;
+  }
+
   return (
     <DDMenu
       menu={
@@ -252,14 +370,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
           <DropdownMenu.Item iconBefore="solid-expand">
             <Text>View Larger</Text>
           </DropdownMenu.Item>
-<<<<<<< Updated upstream
-          <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToFavorites()}>
-            <Text>Favorites</Text>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToShoppingBag()}>
-            <Text>Shopping Bag</Text>
-          </DropdownMenu.Item>
-=======
           {inFavorites(photo.id) ? (
             <DropdownMenu.Item iconBefore="solid-minus" onClick={() => removePhotoFromFavorites()}>
               <Text>Remove from Favorites</Text>
@@ -282,7 +392,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
             </DropdownMenu.Item>
           )}
 
->>>>>>> Stashed changes
           <DropdownMenu.Divider />
           <DropdownMenuGroup title="Share">
             <DropdownMenu.Item
