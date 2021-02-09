@@ -16,7 +16,7 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
   return (
     <>
       <Flex direction="row" width="100%" justifySelf="start" alignSelf="start">
-        <Card borderRadius="4" altitude="200">
+        <Card borderRadius="4" altitude="200" width="100%">
           <Heading use="h4" marginBottom="major-2">
             {photo.title}
           </Heading>

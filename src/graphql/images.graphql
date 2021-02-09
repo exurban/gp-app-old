@@ -1,10 +1,12 @@
 fragment ImageInfo on Image {
   id
+  imageName
+  fileExtension
   imageUrl
   altText
-  fileType
-  fileExtension
   size
   width
   height
+  isPortrait
+  isPanoramic
 }

@@ -1,3 +1,20 @@
+query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
+  allPhotosOfSubject(input: $input) {
+    total
+    subjectInfo {
+      id
+      name
+      description
+      coverImage {
+        ...ImageInfo
+      }
+    }
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
 query groupedPhotosOfSubject($input: GroupedPhotosOfSubjectInput!) {
   groupedPhotosOfSubject(input: $input) {
     subjectInfo {

@@ -5,8 +5,24 @@ import { Heading, Paragraph, Button, Flex, Stack } from "bumbag";
 const IndexPage: React.FC = () => {
   return (
     <>
-      <Flex alignX="center">
-        <Image src="/images/sdg1xl.webp" alt="Hero" width={1400} height={935} />
+      <Flex
+        alignX="center"
+        width="100vw"
+        height="40vh"
+        background="#569ad6"
+        position="relative"
+        overflow="hidden"
+        zIndex={-1}
+      >
+        <Image
+          // src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1090-1612563207994.webp"
+          // src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp"
+          src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1089-1612563104512.webp"
+          alt="Hero"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+        />
       </Flex>
 
       <Flex maxWidth="768px" width="90%" alignX="center" marginX="auto" marginY="40px">

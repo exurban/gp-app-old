@@ -1,8 +1,17 @@
-import React, { Dispatch, SetStateAction } from "react";
+/**
+ * Back to Gallery "G"
+ * Info "I"
+ * Next "->"
+ * Previous "<-"
+ * Add to Favorites "F"
+ * Add to Bag "B"
+ * Share (bring up share modal)
+ */
+
 import { useRouter } from "next/router";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useSession } from "next-auth/client";
-import { DropdownMenu, DropdownMenuGroup, Text, Icon, Button, applyTheme, useToasts } from "bumbag";
+import { DropdownMenu, Text, Icon, Button, applyTheme, useToasts } from "bumbag";
 import {
   FavoritesDocument,
   AddPhotoToFavoritesDocument,
@@ -12,13 +21,56 @@ import {
   AddPhotoToShoppingBagDocument,
   RemovePhotoFromShoppingBagDocument
 } from "../graphql-operations";
+import React from "react";
+import CarouselInfoModal from "./CarouselInfoModal";
+
+const MenuButton = applyTheme(Button, {
+  defaultProps: {
+    variant: "ghost",
+    background: "#1b1a1c",
+    color: "#babbba",
+    position: "absolute",
+    top: "6px",
+    right: "6px",
+    zIndex: "10",
+    _hover: {
+      color: "white"
+    },
+    _focus: {
+      boxShadow: "none"
+    }
+  }
+});
+
+const DDMenu = applyTheme(DropdownMenu, {
+  Popover: {
+    styles: {
+      base: {
+        altitude: 400,
+        color: "#babbba",
+        backgroundColor: "#2f2e30"
+      }
+    }
+  },
+  Item: {
+    styles: {
+      base: {
+        color: "#babbba",
+        backgroundColor: "2f2e30",
+        ":not(:disabled):hover": {
+          backgroundColor: "#434244",
+          color: "white"
+        }
+      }
+    }
+  }
+});
 
 type Props = {
-  setShowInfo: Dispatch<SetStateAction<boolean>>;
   photo: PhotoInfoFragment;
 };
 
-const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
+const CarouselMenu: React.FC<Props> = ({ photo }) => {
   const [session] = useSession();
   const router = useRouter();
   const client = useApolloClient();
@@ -34,9 +86,9 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     router.push("/auth/signin");
   };
 
-  // TODO: this should load the image in the carousel
-  const showLarger = () => {
-    router.push(`/image/${photo.sku}`);
+  const backToGallery = () => {
+    const { name } = router.query;
+    router.push(`/gallery/${name}`);
   };
 
   const addPhotoToFavorites = () => {
@@ -274,30 +326,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     }
   };
 
-  const sharePhotoOnTwitter = () => {
-    if (!session) {
-      router.push(`/auth/signin`);
-    } else {
-      console.log(`Share ${photo.id} on Twitter.`);
-    }
-  };
-
-  const sharePhotoOnFacebook = () => {
-    if (!session) {
-      router.push(`/auth/signin`);
-    } else {
-      console.log(`Share ${photo.id} on Facebook.`);
-    }
-  };
-
-  const sharePhotoViaEmail = () => {
-    if (!session) {
-      router.push(`/auth/signin`);
-    } else {
-      console.log(`Share ${photo.id} via email.`);
-    }
-  };
-
   const inFavorites = (id: string): boolean => {
     if (!session) {
       return false;
@@ -342,25 +370,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     return bagItemIds.includes(id);
   };
 
-  const DDMenu = applyTheme(DropdownMenu, {
-    Popover: {
-      styles: {
-        base: {
-          altitude: 400
-        }
-      },
-      modes: {
-        dark: {
-          styles: {
-            base: {
-              backgroundColor: "#2f3747"
-            }
-          }
-        }
-      }
-    }
-  });
-
   if (typeof window === undefined) {
     return <p>waiting</p>;
   }
@@ -369,12 +378,12 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     <DDMenu
       menu={
         <>
-          <DropdownMenu.Item iconBefore="solid-info-circle" onClick={() => setShowInfo(true)}>
-            <Text>Info</Text>
+          <DropdownMenu.Item iconBefore="solid-th" onClick={() => backToGallery()}>
+            <Text>Gallery</Text>
           </DropdownMenu.Item>
-          <DropdownMenu.Item iconBefore="solid-expand" onClick={() => showLarger()}>
-            <Text>View Larger</Text>
-          </DropdownMenu.Item>
+
+          <CarouselInfoModal photo={photo} />
+
           {inFavorites(photo.id) ? (
             <DropdownMenu.Item iconBefore="solid-minus" onClick={() => removePhotoFromFavorites()}>
               <Text>Remove from Favorites</Text>
@@ -396,43 +405,14 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
               <Text>Add to Shopping Bag</Text>
             </DropdownMenu.Item>
           )}
-
-          <DropdownMenu.Divider />
-          <DropdownMenuGroup title="Share">
-            <DropdownMenu.Item
-              iconBefore="brands-twitter"
-              color="#1da1f2"
-              onClick={() => sharePhotoOnTwitter()}
-            >
-              <Text color="text">Twitter</Text>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item
-              iconBefore="brands-facebook-f"
-              color="#4267b2"
-              onClick={() => sharePhotoOnFacebook()}
-            >
-              <Text color="text">Facebook</Text>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item
-              iconBefore="solid-at"
-              color="#4267b2"
-              onClick={() => sharePhotoViaEmail()}
-            >
-              <Text color="text">Email</Text>
-            </DropdownMenu.Item>
-          </DropdownMenuGroup>
         </>
       }
     >
-      <Button
-        variant="ghost"
-        marginTop={{ default: "major-1", "max-Tablet": "minor-1" }}
-        marginX="major-1"
-      >
+      <MenuButton>
         <Icon aria-label="options" icon="solid-ellipsis-v" fontSize="200" />
-      </Button>
+      </MenuButton>
     </DDMenu>
   );
 };
 
-export default SlideMenu;
+export default CarouselMenu;

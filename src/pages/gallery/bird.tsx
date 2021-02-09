@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import { initializeApollo } from "../../lib/apolloClient";
+import { addApolloState, initializeApollo } from "../../lib/apolloClient";
 import {
   PaginatedPhotosOfSubjectDocument,
   PaginatedPhotosOfSubjectInput
@@ -18,12 +18,12 @@ export const getStaticProps: GetStaticProps = async () => {
     variables: { input: input }
   });
 
-  return {
+  return addApolloState(apolloClient, {
     props: {
       initialApolloState: apolloClient.cache.extract()
     },
     revalidate: 1
-  };
+  });
 };
 
 export default BirdGallery;

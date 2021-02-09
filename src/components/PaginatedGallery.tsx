@@ -1,10 +1,12 @@
+import { useRouter } from "next/router";
 import { useQuery, NetworkStatus } from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
 import {
   PaginatedPhotosOfSubjectDocument,
   PaginatedPhotosOfSubjectInput
 } from "../graphql-operations";
-import { Flex, Grid, Icon, Heading, Text, Button } from "bumbag";
+import { Flex, Grid, Box, Icon, Heading, Text, Button, Tooltip } from "bumbag";
+import GalleryHeader from "./GalleryHeader";
 import Slide from "./Slide";
 import Loader from "./Loader";
 
@@ -13,11 +15,14 @@ type Props = {
 };
 
 const PaginatedGallery: React.FC<Props> = ({ input }) => {
+  const router = useRouter();
+
   const { loading, error, data, fetchMore, networkStatus } = useQuery(
     PaginatedPhotosOfSubjectDocument,
     {
       variables: { input: input },
-      notifyOnNetworkStatusChange: true
+      notifyOnNetworkStatusChange: true,
+      ssr: false
     }
   );
 
@@ -35,75 +40,60 @@ const PaginatedGallery: React.FC<Props> = ({ input }) => {
     const { subjectInfo, pageInfo, photos } = data.paginatedPhotosOfSubject;
     const hasMore = photos.length < pageInfo.total;
 
-    // return (
-    //   <Flex flexDirection="column" width="90%" maxWidth="800px" marginX="auto" marginY="30px">
-    //     <Heading>{subjectInfo.name.toUpperCase()}</Heading>
-    //     {photos.map((photo, idx) => (
-    //       <Flex key={photo.id} flexDirection="row">
-    //         <Text>
-    //           {idx + 1} - {photo.title}
-    //         </Text>
-    //       </Flex>
-    //     ))}
-    //     {hasMore && (
-    //       <Button
-    //         palette="primary"
-    //         width="200px"
-    //         marginY="30px"
-    //         onClick={() => {
-    //           fetchMore({
-    //             variables: {
-    //               input: {
-    //                 ...input,
-    //                 cursor: pageInfo.endCursor
-    //               }
-    //             }
-    //           });
-    //         }}
-    //       >
-    //         more
-    //       </Button>
-    //     )}
-    //   </Flex>
-    // );
-
     return (
       <>
-        <Flex
-          direction="row"
-          width="90%"
-          marginX="auto"
-          marginY="major-3"
-          justifyContent="space-between"
-          alignContent="center"
+        <Flex flexDirection="row" width="80vw" marginX="auto" marginTop="major-3">
+          <GalleryHeader
+            image={subjectInfo.coverImage}
+            title={subjectInfo.name}
+            description={subjectInfo.description}
+          />
+        </Flex>
+        <Box
+          width="100vw"
+          backgroundColor="default"
+          position="sticky"
+          top="80px"
+          paddingY="major-2"
+          zIndex="999"
         >
-          <Heading use="h3">{subjectInfo.name}</Heading>
-          <Flex>
-            <Heading use="h4" alignY="bottom" marginRight="major-4">
-              <Text>{photos.length} photos</Text>
+          <Flex justifyContent="flex-end" alignItems="flex-end" width="80vw" marginX="auto">
+            <Heading use="h4" marginRight="major-2">
+              {pageInfo.total} photos
             </Heading>
-            {hasMore && (
+            <Tooltip placement="bottom" content="View larger images in a carousel">
               <Button
                 palette="primary"
                 fontSize="500"
-                onClick={() => {
-                  fetchMore({
-                    variables: {
-                      input: {
-                        ...input,
-                        cursor: pageInfo.endCursor
-                      }
-                    }
-                  });
-                }}
+                onClick={() =>
+                  router.push(`/carousel/${encodeURIComponent(subjectInfo.name.toLowerCase())}`)
+                }
               >
                 <Icon icon="solid-expand" />
               </Button>
-            )}
+            </Tooltip>
           </Flex>
-        </Flex>
+        </Box>
+
+        {hasMore && (
+          <Button
+            onClick={() => {
+              fetchMore({
+                variables: {
+                  input: {
+                    ...input,
+                    cursor: pageInfo.endCursor
+                  }
+                }
+              });
+            }}
+          >
+            more
+          </Button>
+        )}
+
         <Grid
-          templateColumns="repeat(auto-fit, minmax(min(375px, 100%), max(700px)))"
+          templateColumns="repeat(auto-fit, minmax(500px, 1fr))"
           rowGap="5rem"
           columnGap="1rem"
           justifyContent="space-evenly"
@@ -111,7 +101,14 @@ const PaginatedGallery: React.FC<Props> = ({ input }) => {
           padding={{ default: "major-4", "max-tablet": "minor-1" }}
         >
           {photos.map(photo => (
-            <Slide key={photo.id} photo={photo} />
+            <Box
+              width="100%"
+              key={photo.id}
+              gridRow={photo.images[0].isPortrait ? "span 2 / auto" : "span 1"}
+              gridColumn={photo.images[0].isPanoramic ? "span 2 / auto" : "span 1"}
+            >
+              <Slide photo={photo} />
+            </Box>
           ))}
         </Grid>
       </>

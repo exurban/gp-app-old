@@ -15,8 +15,7 @@ import {
   SideNav,
   Icon,
   Divider,
-  Button,
-  Input
+  Button
 } from "bumbag";
 import ShoppingBagMenu from "./ShoppingBagMenu";
 
@@ -44,7 +43,7 @@ const Layout: React.FC<{ title?: string }> = ({
         <PageWithHeader
           sticky
           headerHeight="80px"
-          // maxHeight="800px"
+          backgroundColor="default"
           header={
             <>
               <TopNav
@@ -69,13 +68,6 @@ const Layout: React.FC<{ title?: string }> = ({
                       ))}
                 </TopNav.Section>
                 <TopNav.Section marginRight="major-4">
-                  <Hide below="desktop">
-                    <TopNav.Item>
-                      <Button variant="ghost">
-                        <Icon aria-label="Search" icon="solid-search" fontSize="300" />
-                      </Button>
-                    </TopNav.Item>
-                  </Hide>
                   <TopNav.Item>
                     <ShoppingBagMenu />
                   </TopNav.Item>
@@ -115,10 +107,6 @@ const Layout: React.FC<{ title?: string }> = ({
                     <Icon aria-label="light/dark" icon="solid-sun" alignY="center" />
                   </Button>
                 </Level>
-                <Divider />
-                <SideNav.Item navId="search" paddingY="major-2">
-                  <Input placeholder="Search" />
-                </SideNav.Item>
                 <Divider />
                 {menuItems.map(item => (
                   <Link href={`/gallery/${item.toLowerCase()}`} passHref={true} key={item}>

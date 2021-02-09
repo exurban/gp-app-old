@@ -12,13 +12,15 @@ fragment PhotoInfo on Photo {
   priceModifier
   images {
     id
+    imageName
+    fileExtension
     imageUrl
     altText
-    fileType
-    fileExtension
     size
     width
     height
+    isPortrait
+    isPanoramic
   }
   photographer {
     id
@@ -46,11 +48,12 @@ fragment PhotoInfo on Photo {
       name
     }
   }
-}
-
-query Photos {
-  photos {
-    ...PhotoInfo
+  finishesForPhoto {
+    finish {
+      id
+      name
+      finishSku
+    }
   }
 }
 
@@ -80,24 +83,8 @@ query paginatedFeaturedPhotos($input: PaginatedPhotosInput!) {
   }
 }
 
-mutation addPhoto($input: PhotoInput!) {
-  addPhoto(input: $input) {
-    id
-    title
-    description
-    isFeatured
-    isLimitedEdition
-    isDiscontinued
-    rating
-    basePrice
-    priceModifier
-    photographer {
-      id
-      name
-    }
-    location {
-      id
-      name
-    }
+query photoWithSku($sku: Int!) {
+  photoWithSku(sku: $sku) {
+    ...PhotoInfo
   }
 }
