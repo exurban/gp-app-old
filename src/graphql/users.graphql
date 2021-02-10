@@ -6,9 +6,7 @@ mutation addPhotoToFavorites($photoId: Float!) {
   addPhotoToFavorites(photoId: $photoId) {
     success
     message
-    addedPhoto {
-      ...PhotoInfo
-    }
+    addedPhotoWithId
   }
 }
 
@@ -16,9 +14,7 @@ mutation removePhotoFromFavorites($photoId: Float!) {
   removePhotoFromFavorites(photoId: $photoId) {
     success
     message
-    removedPhoto {
-      ...PhotoInfo
-    }
+    removedPhotoWithId
   }
 }
 
@@ -26,9 +22,7 @@ mutation addPhotoToShoppingBag($photoId: Float!) {
   addPhotoToShoppingBag(photoId: $photoId) {
     success
     message
-    addedPhoto {
-      ...PhotoInfo
-    }
+    addedPhotoWithId
   }
 }
 
@@ -36,9 +30,7 @@ mutation removePhotoFromShoppingBag($photoId: Float!) {
   removePhotoFromShoppingBag(photoId: $photoId) {
     success
     message
-    removedPhoto {
-      ...PhotoInfo
-    }
+    removedPhotoWithId
   }
 }
 

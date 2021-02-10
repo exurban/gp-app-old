@@ -16,7 +16,7 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
   return (
     <>
       <Flex direction="row" width="100%" justifySelf="start" alignSelf="start">
-        <Card borderRadius="4" altitude="200">
+        <Card borderRadius="4" altitude="200" width="100%">
           <Heading use="h4" marginBottom="major-2">
             {photo.title}
           </Heading>
@@ -47,7 +47,7 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
               </Text>
               {collections?.map(collection => (
                 <Link href={`/gallery/collection/${encodeURIComponent(collection.name)}`}>
-                  <BBLink>
+                  <BBLink key={collection.id}>
                     <p>{collection.name}</p>
                   </BBLink>
                 </Link>
@@ -58,7 +58,7 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
           <Divider marginY="major-2" />
           {subjects?.map(subject => (
             <Link href={`/gallery/${encodeURIComponent(subject.name)}`}>
-              <BBLink>
+              <BBLink key={subject.id}>
                 <Tag palette="primary" marginLeft="minor-1">
                   {subject.name}
                 </Tag>
@@ -67,7 +67,7 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
           ))}
           {tags?.map(tag => (
             <Link href={`/gallery/tag/${encodeURIComponent(tag.name)}`}>
-              <Tag palette="secondary" marginLeft="minor-1">
+              <Tag key={tag.id} palette="secondary" marginLeft="minor-1">
                 {tag.name}
               </Tag>
             </Link>

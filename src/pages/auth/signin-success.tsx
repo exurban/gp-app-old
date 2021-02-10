@@ -21,6 +21,7 @@ const SigninSuccess: React.FC = () => {
       addToFavorites({
         variables: { photoId: parseInt(newFav) }
       });
+      localStorage.removeItem("favPhoto");
     }
 
     const newBagItem = localStorage.getItem("bagPhoto");
@@ -28,6 +29,7 @@ const SigninSuccess: React.FC = () => {
       addToShoppingBag({
         variables: { photoId: parseInt(newBagItem) }
       });
+      localStorage.removeItem("bagPhoto");
     }
 
     useQuery(FavoritesDocument);

@@ -9,6 +9,7 @@ import * as gtag from "../utils/gtag";
 import { DefaultSeo } from "next-seo";
 import SEO from "../../next-seo.config";
 import Layout from "../components/Layout";
+import CarouselLayout from "../components/CarouselLayout";
 import gpTheme from "../gp-theme";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
@@ -30,11 +31,19 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     <ApolloProvider client={apolloClient}>
       <AuthProvider session={pageProps.session}>
         <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
-          <Layout>
-            <DefaultSeo {...SEO} />
-            <Component {...pageProps} />
-            <ToastManager />
-          </Layout>
+          {router.pathname.startsWith(`/carousel/`) ? (
+            <CarouselLayout>
+              <DefaultSeo {...SEO} />
+              <Component {...pageProps} />
+            </CarouselLayout>
+          ) : (
+            <Layout>
+              <DefaultSeo {...SEO} />
+              <Component {...pageProps} />
+            </Layout>
+          )}
+
+          <ToastManager />
         </BumbagProvider>
       </AuthProvider>
     </ApolloProvider>

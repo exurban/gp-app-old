@@ -38,6 +38,7 @@ export default class MyDocument extends Document {
           `
             }}
           />
+          <link href="/fonts/style.css" rel="stylesheet" />
         </Head>
         <body>
           <InitializeColorMode />

@@ -1,4 +1,9 @@
 import {
+  faChevronLeft,
+  faChevronRight,
+  faTh,
+  faTimes,
+  faShareAlt,
   faShoppingBag,
   faSearch,
   faMoon,
@@ -14,6 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
+  faImages,
   faStar,
   faUserCircle,
   faEye,
@@ -33,7 +39,8 @@ import { ThemeConfig } from "bumbag";
 const gpTheme: ThemeConfig = {
   fonts: {
     importUrls: [
-      "https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
+      "/fonts/style.css",
+      "https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap"
     ]
   },
 
@@ -60,13 +67,14 @@ const gpTheme: ThemeConfig = {
         navigationText: {
           styles: {
             base: {
-              fontFamily: "Raleway",
+              fontFamily: "Raleway, system-ui",
               fontSize: "32px",
               fontVariant: "small-caps",
               fontWeight: 700
             },
             focus: {
-              boxShadow: "inset 0 -2px 0 0"
+              // boxShadow: "inset 0 -2px 0 0"
+              boxShadow: "none"
             }
           }
         }
@@ -125,6 +133,11 @@ const gpTheme: ThemeConfig = {
     iconSets: [
       {
         icons: [
+          faChevronLeft,
+          faChevronRight,
+          faTh,
+          faTimes,
+          faShareAlt,
           faShoppingBag,
           faSearch,
           faSun,
@@ -142,7 +155,7 @@ const gpTheme: ThemeConfig = {
         type: "font-awesome"
       },
       {
-        icons: [faStar, faUserCircle, faEye, faEyeSlash, faTimesCircle],
+        icons: [faImages, faStar, faUserCircle, faEye, faEyeSlash, faTimesCircle],
         prefix: "regular-",
         type: "font-awesome"
       },

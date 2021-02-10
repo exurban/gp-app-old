@@ -1,11 +1,12 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import ErrorMessage from "../../../components/ErrorMessage";
+
 import { useQuery } from "@apollo/client";
 import { AllPhotosAtLocationDocument, AllPhotosAtLocationInput } from "../../../graphql-operations";
 import { Heading, Paragraph, Flex, Text, Grid, Button, Icon } from "bumbag";
 import Slide from "../../../components/Slide";
 import Loader from "../../../components/Loader";
+import ErrorMessage from "../../../components/ErrorMessage";
 
 const LocationGallery: React.FC = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const LocationGallery: React.FC = () => {
 
   if (data) {
     const location = data.allPhotosAtLocation.locationInfo;
-    const photos = data.allPhotosAtLocation.items;
+    const photos = data.allPhotosAtLocation.photos;
     const total = data.allPhotosAtLocation.total;
     // const cursor = data.allPhotosAtLocation.endCursor;
     const imgUrl = location.coverImage?.imageUrl as string;

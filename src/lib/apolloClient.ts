@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useMemo } from "react";
 import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
-import { concatPagination } from "@apollo/client/utilities";
 import merge from "deepmerge";
 import { setContext } from "@apollo/client/link/context";
 import { getSession } from "next-auth/client";
+import { TypedTypePolicies } from "../graphql-operations";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
@@ -32,19 +32,39 @@ const authLink = setContext(async (_, { headers }) => {
   return undefined;
 });
 
+const typePolicies: TypedTypePolicies = {
+  Query: {
+    fields: {
+      paginatedPhotosOfSubject: {
+        keyArgs: ["input", ["name"]],
+        read: function (existing) {
+          return existing;
+        },
+        merge: function (existing, incoming) {
+          return !existing
+            ? {
+                __typename: incoming.__typename,
+                photos: [...incoming.photos],
+                subjectInfo: incoming.subjectInfo,
+                pageInfo: incoming.pageInfo
+              }
+            : {
+                __typename: incoming.__typename,
+                photos: [...existing.photos, ...incoming.photos],
+                subjectInfo: incoming.subjectInfo,
+                pageInfo: incoming.pageInfo
+              };
+        }
+      }
+    }
+  }
+};
+
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            allPhotos: concatPagination()
-          }
-        }
-      }
-    })
+    cache: new InMemoryCache({ typePolicies })
   });
 }
 
@@ -58,6 +78,7 @@ export function initializeApollo(initialState = null): ApolloClient<NormalizedCa
     const existingCache = _apolloClient.extract();
 
     // Merge the existing cache into data passed from getStaticProps/getServerSideProps
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = merge(initialState as any, existingCache);
 
     // Restore the cache with the merged data
@@ -80,6 +101,7 @@ export function addApolloState(client: any, pageProps: any) {
   return pageProps;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useApollo(pageProps: any): ApolloClient<NormalizedCacheObject> {
   const state = pageProps[APOLLO_STATE_PROP_NAME];
   const store = useMemo(() => initializeApollo(state), [state]);

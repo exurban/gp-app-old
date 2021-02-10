@@ -1,21 +1,3 @@
-query groupedPhotosWithTag($input: GroupedPhotosWithTagInput!) {
-  groupedPhotosWithTag(input: $input) {
-    tagInfo {
-      id
-      name
-      description
-      coverImage {
-        ...ImageInfo
-      }
-      createdAt
-      updatedAt
-    }
-    photos {
-      ...PhotoInfo
-    }
-  }
-}
-
 query paginatedPhotosWithTag($input: PaginatedPhotosWithTagInput!) {
   paginatedPhotosWithTag(input: $input) {
     tagInfo {
@@ -28,11 +10,13 @@ query paginatedPhotosWithTag($input: PaginatedPhotosWithTagInput!) {
       createdAt
       updatedAt
     }
+    pageInfo {
+      startCursor
+      endCursor
+      total
+    }
     photos {
       ...PhotoInfo
     }
-    startCursor
-    endCursor
-    total
   }
 }

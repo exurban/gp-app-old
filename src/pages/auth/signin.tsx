@@ -29,11 +29,9 @@ const SignIn: React.FC = () => {
   // }
 
   // When rendering client side don't display anything until loading is complete
-  if (typeof window !== "undefined") {
-    if (session) {
-      // * redirect to sign-success to complete sign in process
-      router.push("/auth/signin-success");
-    }
+  if (typeof window !== "undefined" && session) {
+    // * redirect to sign-success to complete sign in process
+    router.push("/auth/signin-success");
   }
 
   if (loading) return <Heading>One moment please while we complete sign in.</Heading>;

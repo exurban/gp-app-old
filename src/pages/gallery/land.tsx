@@ -1,9 +1,9 @@
 import { GetStaticProps } from "next";
-import { initializeApollo } from "../../lib/apolloClient";
+import { initializeApollo, addApolloState } from "../../lib/apolloClient";
 import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../../graphql-operations";
 import Gallery from "../../components/Gallery";
 
-const input = { subject: "land", take: 10 } as AllPhotosOfSubjectInput;
+const input = { name: "land" } as AllPhotosOfSubjectInput;
 
 const LandGallery: React.FC = () => <Gallery input={input} />;
 
@@ -15,12 +15,12 @@ export const getStaticProps: GetStaticProps = async () => {
     variables: { input: input }
   });
 
-  return {
+  return addApolloState(apolloClient, {
     props: {
       initialApolloState: apolloClient.cache.extract()
     },
     revalidate: 1
-  };
+  });
 };
 
 export default LandGallery;

@@ -1,21 +1,4 @@
-query GroupedPhotosAtLocation($input: GroupedPhotosAtLocationInput!) {
-  groupedPhotosAtLocation(input: $input) {
-    locationInfo {
-      id
-      name
-      tag
-      description
-      coverImage {
-        ...ImageInfo
-      }
-    }
-    photos {
-      ...PhotoInfo
-    }
-  }
-}
-
-query PaginatedPhotosAtLocation($input: PaginatedPhotosAtLocationInput!) {
+query paginatedPhotosAtLocation($input: PaginatedPhotosAtLocationInput!) {
   paginatedPhotosAtLocation(input: $input) {
     locationInfo {
       id
@@ -26,11 +9,13 @@ query PaginatedPhotosAtLocation($input: PaginatedPhotosAtLocationInput!) {
         ...ImageInfo
       }
     }
+    pageInfo {
+      startCursor
+      endCursor
+      total
+    }
     photos {
       ...PhotoInfo
     }
-    startCursor
-    endCursor
-    total
   }
 }

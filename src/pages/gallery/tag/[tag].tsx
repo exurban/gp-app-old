@@ -22,7 +22,7 @@ const TagGallery: React.FC = () => {
 
   if (data) {
     const tag = data.allPhotosWithTag.tagInfo;
-    const photos = data.allPhotosWithTag.items;
+    const photos = data.allPhotosWithTag.photos;
     const total = data.allPhotosWithTag.total;
     // const cursor = data.allPhotosWithTag.endCursor;
 

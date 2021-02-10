@@ -1,3 +1,20 @@
+query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
+  allPhotosOfSubject(input: $input) {
+    total
+    subjectInfo {
+      id
+      name
+      description
+      coverImage {
+        ...ImageInfo
+      }
+    }
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
 query groupedPhotosOfSubject($input: GroupedPhotosOfSubjectInput!) {
   groupedPhotosOfSubject(input: $input) {
     subjectInfo {
@@ -16,7 +33,7 @@ query groupedPhotosOfSubject($input: GroupedPhotosOfSubjectInput!) {
   }
 }
 
-query PaginatedPhotosOfSubject($input: PaginatedPhotosOfSubjectInput!) {
+query paginatedPhotosOfSubject($input: PaginatedPhotosOfSubjectInput!) {
   paginatedPhotosOfSubject(input: $input) {
     subjectInfo {
       id
@@ -28,11 +45,13 @@ query PaginatedPhotosOfSubject($input: PaginatedPhotosOfSubjectInput!) {
       createdAt
       updatedAt
     }
+    pageInfo {
+      startCursor
+      endCursor
+      total
+    }
     photos {
       ...PhotoInfo
     }
-    startCursor
-    endCursor
-    total
   }
 }

@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
-import { AllFeaturedPhotosDocument, AllFeaturedPhotosInput } from "../graphql-operations";
+import { PaginatedFeaturedPhotosDocument, PaginatedPhotosInput } from "../graphql-operations";
 import { Stack, Heading, Text, Grid, Button, Icon } from "bumbag";
 import Slide from "./Slide";
 import Loader from "./Loader";
 
-const FeaturedPhotosGallery: React.FC<{ input: AllFeaturedPhotosInput }> = ({ input }) => {
-  const { loading, error, data } = useQuery(AllFeaturedPhotosDocument, {
+const FeaturedPhotosGallery: React.FC<{ input: PaginatedPhotosInput }> = ({ input }) => {
+  const { loading, error, data } = useQuery(PaginatedFeaturedPhotosDocument, {
     variables: { input: input }
   });
 
@@ -15,7 +15,7 @@ const FeaturedPhotosGallery: React.FC<{ input: AllFeaturedPhotosInput }> = ({ in
   if (loading) return <Loader />;
 
   if (data) {
-    const photos = data.allFeaturedPhotos.items;
+    const photos = data.paginatedFeaturedPhotos.photos;
 
     // return <pre>{JSON.stringify(photos, null, 2)}</pre>;
 
@@ -23,7 +23,7 @@ const FeaturedPhotosGallery: React.FC<{ input: AllFeaturedPhotosInput }> = ({ in
       <>
         <Stack orientation="horizontal" marginY="major-4" alignX="right" width="90%">
           <Heading use="h4" alignY="bottom">
-            <Text>{data.allFeaturedPhotos.total} photos</Text>
+            <Text>{data.paginatedFeaturedPhotos.pageInfo.total} photos</Text>
           </Heading>
           <Button palette="primary" fontSize="500">
             <Icon icon="solid-expand" />
