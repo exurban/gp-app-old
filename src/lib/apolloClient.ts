@@ -58,13 +58,6 @@ const typePolicies: TypedTypePolicies = {
       }
     }
   }
-  // Photo: {
-  //   fields: {
-  //     subjectsInPhoto: {
-  //       keyArgs: ["subject"]
-  //     }
-  //   }
-  // }
 };
 
 function createApolloClient() {

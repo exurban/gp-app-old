@@ -1,45 +1,42 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Flex, styled } from "bumbag";
+import { Flex, Box, styled } from "bumbag";
 import SlideInfo from "./SlideInfo";
 import SlideMenu from "./SlideMenu";
 import { PhotoInfoFragment } from "../graphql-operations";
 
-const StyledImage = styled(Image)`
-  border-radius: 6px;
+const ImageContainer = styled(Box)`
+  width: 100%;
+  position: relative;
 `;
 
 const Slide: React.FC<{ photo: PhotoInfoFragment }> = ({ photo }) => {
   const [showInfo, setShowInfo] = useState(false);
   const router = useRouter();
 
-  let img;
-  if (photo.images !== undefined && photo.images !== null) {
-    img = photo.images[0];
+  if (photo.images === undefined || photo.images === null) {
+    return null;
   }
+
+  const img = photo.images[0];
 
   return (
     <>
       {showInfo ? (
         <SlideInfo photo={photo} setShowInfo={setShowInfo} />
       ) : (
-        <Flex
-          className="image+button"
-          direction="row"
-          justifySelf="start"
-          alignSelf="start"
-          onDoubleClick={() => router.push(`/image/${photo.sku}`)}
-        >
-          {img ? (
-            <StyledImage
+        <Flex className="image+button" onDoubleClick={() => router.push(`/image/${photo.sku}`)}>
+          <ImageContainer borderRadius="6px" overflow="hidden" altitude="400">
+            <Image
               src={img.imageUrl}
               alt={img.altText}
+              layout="responsive"
               width={img.width}
               height={img.height}
-              layout="intrinsic"
+              sizes="(max-width: 700px) 100vw, 1400px"
             />
-          ) : null}
+          </ImageContainer>
           <SlideMenu photo={photo} setShowInfo={setShowInfo} />
         </Flex>
       )}

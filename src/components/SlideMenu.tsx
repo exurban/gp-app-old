@@ -426,8 +426,8 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     >
       <Button
         variant="ghost"
-        marginTop={{ default: "major-1", "max-Tablet": "minor-1" }}
-        marginX="major-1"
+        margin={{ default: "major-1", "max-Tablet": "minor-1" }}
+        // marginX="major-1"
       >
         <Icon aria-label="options" icon="solid-ellipsis-v" fontSize="200" />
       </Button>

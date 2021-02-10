@@ -15,7 +15,7 @@ interface CarouselRef {
   showSlideAtIndex: (arg0: number) => void;
 }
 
-const PhotoCarousel = () => {
+const PhotoCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const carouselRef = useRef<CarouselRef>();
@@ -63,10 +63,6 @@ const PhotoCarousel = () => {
     }
   }, [activeIndex, setActiveIndex]);
 
-  const skipToStart = () => {
-    carouselRef.current?.showSlideAtIndex(0);
-  };
-
   const router = useRouter();
   const { name } = router.query;
 
@@ -81,7 +77,7 @@ const PhotoCarousel = () => {
 
   if (!data) return null;
 
-  const { subjectInfo, total, photos } = data.allPhotosOfSubject;
+  const { total, photos } = data.allPhotosOfSubject;
 
   const items = photos.map((photo, idx) => <CarouselItem photo={photo} idx={idx} />);
 

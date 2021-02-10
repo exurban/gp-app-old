@@ -1,18 +1,11 @@
 import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
-import {
-  FieldPolicy,
-  FieldReadFunction,
-  TypePolicies,
-  TypePolicy,
-} from "@apollo/client/cache";
+import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from "@apollo/client/cache";
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -21,7 +14,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: any;
+  DateTime: string;
 };
 
 export type Image = {
@@ -334,6 +327,13 @@ export type SearchLocationsResponse = {
 export type LocationsResponse = {
   __typename?: "LocationsResponse";
   locations: Array<Location>;
+};
+
+export type AllPhotosAtLocationResponse = {
+  __typename?: "AllPhotosAtLocationResponse";
+  locationInfo: Location;
+  total: Scalars["Int"];
+  photos: Array<Photo>;
 };
 
 export type GroupedPhotosAtLocationResponse = {
@@ -751,8 +751,13 @@ export type LocationSearchSortInput = {
 /** Sort direction */
 export enum SortDirection {
   Asc = "ASC",
-  Desc = "DESC",
+  Desc = "DESC"
 }
+
+export type AllPhotosAtLocationInput = {
+  name?: Maybe<Scalars["String"]>;
+  id?: Maybe<Scalars["Float"]>;
+};
 
 export type GroupedPhotosAtLocationInput = {
   name?: Maybe<Scalars["String"]>;
@@ -985,6 +990,7 @@ export type Query = {
   locationWithName?: Maybe<Location>;
   groupedPhotosAtLocation: GroupedPhotosAtLocationResponse;
   paginatedPhotosAtLocation: PaginatedPhotosAtLocationResponse;
+  allPhotosAtLocation: AllPhotosAtLocationResponse;
   photoCountBySubject: ItemCountList;
   photoCountByTag: ItemCountList;
   photoCountByCollection: ItemCountList;
@@ -1090,6 +1096,10 @@ export type QueryGroupedPhotosAtLocationArgs = {
 
 export type QueryPaginatedPhotosAtLocationArgs = {
   input: PaginatedPhotosAtLocationInput;
+};
+
+export type QueryAllPhotosAtLocationArgs = {
+  input: AllPhotosAtLocationInput;
 };
 
 export type QuerySearchPhotographersArgs = {
@@ -1471,12 +1481,8 @@ export type PhotoInfoFragment = { __typename?: "Photo" } & Pick<
         | "isPanoramic"
       >
     >;
-    photographer?: Maybe<
-      { __typename?: "Photographer" } & Pick<Photographer, "id" | "name">
-    >;
-    location?: Maybe<
-      { __typename?: "Location" } & Pick<Location, "id" | "name">
-    >;
+    photographer?: Maybe<{ __typename?: "Photographer" } & Pick<Photographer, "id" | "name">>;
+    location?: Maybe<{ __typename?: "Location" } & Pick<Location, "id" | "name">>;
     subjectsInPhoto?: Maybe<
       Array<
         { __typename?: "PhotoSubject" } & {
@@ -1494,20 +1500,14 @@ export type PhotoInfoFragment = { __typename?: "Photo" } & Pick<
     collectionsForPhoto?: Maybe<
       Array<
         { __typename?: "PhotoCollection" } & {
-          collection: { __typename?: "Collection" } & Pick<
-            Collection,
-            "id" | "name"
-          >;
+          collection: { __typename?: "Collection" } & Pick<Collection, "id" | "name">;
         }
       >
     >;
     finishesForPhoto?: Maybe<
       Array<
         { __typename?: "PhotoFinish" } & {
-          finish: { __typename?: "Finish" } & Pick<
-            Finish,
-            "id" | "name" | "finishSku"
-          >;
+          finish: { __typename?: "Finish" } & Pick<Finish, "id" | "name" | "finishSku">;
         }
       >
     >;
@@ -1560,10 +1560,9 @@ export type AllPhotosOfSubjectQuery = { __typename?: "Query" } & {
     AllPhotosOfSubjectResponse,
     "total"
   > & {
-      subjectInfo: { __typename?: "Subject" } & Pick<
-        Subject,
-        "id" | "name" | "description"
-      > & { coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment> };
+      subjectInfo: { __typename?: "Subject" } & Pick<Subject, "id" | "name" | "description"> & {
+          coverImage?: Maybe<{ __typename?: "Image" } & ImageInfoFragment>;
+        };
       photos: Array<{ __typename?: "Photo" } & PhotoInfoFragment>;
     };
 };
@@ -1624,10 +1623,7 @@ export type GetApiTokenMutationVariables = Exact<{
   input: GetApiTokenInput;
 }>;
 
-export type GetApiTokenMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "getApiToken"
->;
+export type GetApiTokenMutation = { __typename?: "Mutation" } & Pick<Mutation, "getApiToken">;
 
 export type AddPhotoToFavoritesMutationVariables = Exact<{
   photoId: Scalars["Float"];
@@ -1647,10 +1643,7 @@ export type RemovePhotoFromFavoritesMutationVariables = Exact<{
 export type RemovePhotoFromFavoritesMutation = { __typename?: "Mutation" } & {
   removePhotoFromFavorites: {
     __typename?: "RemovePhotoFromFavoritesResponse";
-  } & Pick<
-    RemovePhotoFromFavoritesResponse,
-    "success" | "message" | "removedPhotoWithId"
-  >;
+  } & Pick<RemovePhotoFromFavoritesResponse, "success" | "message" | "removedPhotoWithId">;
 };
 
 export type AddPhotoToShoppingBagMutationVariables = Exact<{
@@ -1660,10 +1653,7 @@ export type AddPhotoToShoppingBagMutationVariables = Exact<{
 export type AddPhotoToShoppingBagMutation = { __typename?: "Mutation" } & {
   addPhotoToShoppingBag: {
     __typename?: "AddPhotoToShoppingBagResponse";
-  } & Pick<
-    AddPhotoToShoppingBagResponse,
-    "success" | "message" | "addedPhotoWithId"
-  >;
+  } & Pick<AddPhotoToShoppingBagResponse, "success" | "message" | "addedPhotoWithId">;
 };
 
 export type RemovePhotoFromShoppingBagMutationVariables = Exact<{
@@ -1673,10 +1663,7 @@ export type RemovePhotoFromShoppingBagMutationVariables = Exact<{
 export type RemovePhotoFromShoppingBagMutation = { __typename?: "Mutation" } & {
   removePhotoFromShoppingBag: {
     __typename?: "RemovePhotoFromShoppingBagResponse";
-  } & Pick<
-    RemovePhotoFromShoppingBagResponse,
-    "success" | "message" | "removedPhotoWithId"
-  >;
+  } & Pick<RemovePhotoFromShoppingBagResponse, "success" | "message" | "removedPhotoWithId">;
 };
 
 export type FavoritesQueryVariables = Exact<{ [key: string]: never }>;
@@ -1703,7 +1690,7 @@ export const ImageInfoFragmentDoc: DocumentNode<ImageInfoFragment, unknown> = {
       name: { kind: "Name", value: "ImageInfo" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "Image" },
+        name: { kind: "Name", value: "Image" }
       },
       selectionSet: {
         kind: "SelectionSet",
@@ -1717,16 +1704,13 @@ export const ImageInfoFragmentDoc: DocumentNode<ImageInfoFragment, unknown> = {
           { kind: "Field", name: { kind: "Name", value: "width" } },
           { kind: "Field", name: { kind: "Name", value: "height" } },
           { kind: "Field", name: { kind: "Name", value: "isPortrait" } },
-          { kind: "Field", name: { kind: "Name", value: "isPanoramic" } },
-        ],
-      },
-    },
-  ],
+          { kind: "Field", name: { kind: "Name", value: "isPanoramic" } }
+        ]
+      }
+    }
+  ]
 };
-export const PhotographerInfoFragmentDoc: DocumentNode<
-  PhotographerInfoFragment,
-  unknown
-> = {
+export const PhotographerInfoFragmentDoc: DocumentNode<PhotographerInfoFragment, unknown> = {
   kind: "Document",
   definitions: [
     {
@@ -1734,7 +1718,7 @@ export const PhotographerInfoFragmentDoc: DocumentNode<
       name: { kind: "Name", value: "PhotographerInfo" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "Photographer" },
+        name: { kind: "Name", value: "Photographer" }
       },
       selectionSet: {
         kind: "SelectionSet",
@@ -1753,16 +1737,16 @@ export const PhotographerInfoFragmentDoc: DocumentNode<
               selections: [
                 {
                   kind: "FragmentSpread",
-                  name: { kind: "Name", value: "ImageInfo" },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                  name: { kind: "Name", value: "ImageInfo" }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
-    ...ImageInfoFragmentDoc.definitions,
-  ],
+    ...ImageInfoFragmentDoc.definitions
+  ]
 };
 export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
   kind: "Document",
@@ -1772,7 +1756,7 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
       name: { kind: "Name", value: "PhotoInfo" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "Photo" },
+        name: { kind: "Name", value: "Photo" }
       },
       selectionSet: {
         kind: "SelectionSet",
@@ -1798,7 +1782,7 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
                 { kind: "Field", name: { kind: "Name", value: "imageName" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "fileExtension" },
+                  name: { kind: "Name", value: "fileExtension" }
                 },
                 { kind: "Field", name: { kind: "Name", value: "imageUrl" } },
                 { kind: "Field", name: { kind: "Name", value: "altText" } },
@@ -1806,9 +1790,9 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
                 { kind: "Field", name: { kind: "Name", value: "width" } },
                 { kind: "Field", name: { kind: "Name", value: "height" } },
                 { kind: "Field", name: { kind: "Name", value: "isPortrait" } },
-                { kind: "Field", name: { kind: "Name", value: "isPanoramic" } },
-              ],
-            },
+                { kind: "Field", name: { kind: "Name", value: "isPanoramic" } }
+              ]
+            }
           },
           {
             kind: "Field",
@@ -1817,9 +1801,9 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
               kind: "SelectionSet",
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-              ],
-            },
+                { kind: "Field", name: { kind: "Name", value: "name" } }
+              ]
+            }
           },
           {
             kind: "Field",
@@ -1828,9 +1812,9 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
               kind: "SelectionSet",
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-              ],
-            },
+                { kind: "Field", name: { kind: "Name", value: "name" } }
+              ]
+            }
           },
           {
             kind: "Field",
@@ -1845,12 +1829,12 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                    ],
-                  },
-                },
-              ],
-            },
+                      { kind: "Field", name: { kind: "Name", value: "name" } }
+                    ]
+                  }
+                }
+              ]
+            }
           },
           {
             kind: "Field",
@@ -1865,12 +1849,12 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                    ],
-                  },
-                },
-              ],
-            },
+                      { kind: "Field", name: { kind: "Name", value: "name" } }
+                    ]
+                  }
+                }
+              ]
+            }
           },
           {
             kind: "Field",
@@ -1885,12 +1869,12 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                    ],
-                  },
-                },
-              ],
-            },
+                      { kind: "Field", name: { kind: "Name", value: "name" } }
+                    ]
+                  }
+                }
+              ]
+            }
           },
           {
             kind: "Field",
@@ -1908,18 +1892,18 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
                       { kind: "Field", name: { kind: "Name", value: "name" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "finishSku" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
+                        name: { kind: "Name", value: "finishSku" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
 };
 export const PaginatedPhotosAtLocationDocument: DocumentNode<
   PaginatedPhotosAtLocationQuery,
@@ -1936,16 +1920,16 @@ export const PaginatedPhotosAtLocationDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "PaginatedPhotosAtLocationInput" },
-            },
-          },
-        },
+              name: { kind: "Name", value: "PaginatedPhotosAtLocationInput" }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -1959,9 +1943,9 @@ export const PaginatedPhotosAtLocationDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
+                  name: { kind: "Name", value: "input" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -1977,7 +1961,7 @@ export const PaginatedPhotosAtLocationDocument: DocumentNode<
                       { kind: "Field", name: { kind: "Name", value: "tag" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        name: { kind: "Name", value: "description" }
                       },
                       {
                         kind: "Field",
@@ -1987,13 +1971,13 @@ export const PaginatedPhotosAtLocationDocument: DocumentNode<
                           selections: [
                             {
                               kind: "FragmentSpread",
-                              name: { kind: "Name", value: "ImageInfo" },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
+                              name: { kind: "Name", value: "ImageInfo" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2003,15 +1987,15 @@ export const PaginatedPhotosAtLocationDocument: DocumentNode<
                     selections: [
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "startCursor" },
+                        name: { kind: "Name", value: "startCursor" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "endCursor" },
+                        name: { kind: "Name", value: "endCursor" }
                       },
-                      { kind: "Field", name: { kind: "Name", value: "total" } },
-                    ],
-                  },
+                      { kind: "Field", name: { kind: "Name", value: "total" } }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2021,20 +2005,20 @@ export const PaginatedPhotosAtLocationDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const PaginatedPhotosByPhotographerDocument: DocumentNode<
   PaginatedPhotosByPhotographerQuery,
@@ -2051,7 +2035,7 @@ export const PaginatedPhotosByPhotographerDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
@@ -2059,11 +2043,11 @@ export const PaginatedPhotosByPhotographerDocument: DocumentNode<
               kind: "NamedType",
               name: {
                 kind: "Name",
-                value: "PaginatedPhotosByPhotographerInput",
-              },
-            },
-          },
-        },
+                value: "PaginatedPhotosByPhotographerInput"
+              }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2077,9 +2061,9 @@ export const PaginatedPhotosByPhotographerDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
+                  name: { kind: "Name", value: "input" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2092,10 +2076,10 @@ export const PaginatedPhotosByPhotographerDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotographerInfo" },
-                      },
-                    ],
-                  },
+                        name: { kind: "Name", value: "PhotographerInfo" }
+                      }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2105,15 +2089,15 @@ export const PaginatedPhotosByPhotographerDocument: DocumentNode<
                     selections: [
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "startCursor" },
+                        name: { kind: "Name", value: "startCursor" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "endCursor" },
+                        name: { kind: "Name", value: "endCursor" }
                       },
-                      { kind: "Field", name: { kind: "Name", value: "total" } },
-                    ],
-                  },
+                      { kind: "Field", name: { kind: "Name", value: "total" } }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2123,20 +2107,20 @@ export const PaginatedPhotosByPhotographerDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     ...PhotographerInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const PaginatedPhotosDocument: DocumentNode<
   PaginatedPhotosQuery,
@@ -2153,16 +2137,16 @@ export const PaginatedPhotosDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "PaginatedPhotosInput" },
-            },
-          },
-        },
+              name: { kind: "Name", value: "PaginatedPhotosInput" }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2176,9 +2160,9 @@ export const PaginatedPhotosDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
+                  name: { kind: "Name", value: "input" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2191,15 +2175,15 @@ export const PaginatedPhotosDocument: DocumentNode<
                     selections: [
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "startCursor" },
+                        name: { kind: "Name", value: "startCursor" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "endCursor" },
+                        name: { kind: "Name", value: "endCursor" }
                       },
-                      { kind: "Field", name: { kind: "Name", value: "total" } },
-                    ],
-                  },
+                      { kind: "Field", name: { kind: "Name", value: "total" } }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2209,19 +2193,19 @@ export const PaginatedPhotosDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const PaginatedFeaturedPhotosDocument: DocumentNode<
   PaginatedFeaturedPhotosQuery,
@@ -2238,16 +2222,16 @@ export const PaginatedFeaturedPhotosDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "PaginatedPhotosInput" },
-            },
-          },
-        },
+              name: { kind: "Name", value: "PaginatedPhotosInput" }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2261,9 +2245,9 @@ export const PaginatedFeaturedPhotosDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
+                  name: { kind: "Name", value: "input" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2276,15 +2260,15 @@ export const PaginatedFeaturedPhotosDocument: DocumentNode<
                     selections: [
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "startCursor" },
+                        name: { kind: "Name", value: "startCursor" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "endCursor" },
+                        name: { kind: "Name", value: "endCursor" }
                       },
-                      { kind: "Field", name: { kind: "Name", value: "total" } },
-                    ],
-                  },
+                      { kind: "Field", name: { kind: "Name", value: "total" } }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2294,24 +2278,21 @@ export const PaginatedFeaturedPhotosDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
-export const PhotoWithSkuDocument: DocumentNode<
-  PhotoWithSkuQuery,
-  PhotoWithSkuQueryVariables
-> = {
+export const PhotoWithSkuDocument: DocumentNode<PhotoWithSkuQuery, PhotoWithSkuQueryVariables> = {
   kind: "Document",
   definitions: [
     {
@@ -2324,9 +2305,9 @@ export const PhotoWithSkuDocument: DocumentNode<
           variable: { kind: "Variable", name: { kind: "Name", value: "sku" } },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
-          },
-        },
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2340,25 +2321,25 @@ export const PhotoWithSkuDocument: DocumentNode<
                 name: { kind: "Name", value: "sku" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "sku" },
-                },
-              },
+                  name: { kind: "Name", value: "sku" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
               selections: [
                 {
                   kind: "FragmentSpread",
-                  name: { kind: "Name", value: "PhotoInfo" },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                  name: { kind: "Name", value: "PhotoInfo" }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const AllPhotosOfSubjectDocument: DocumentNode<
   AllPhotosOfSubjectQuery,
@@ -2375,16 +2356,16 @@ export const AllPhotosOfSubjectDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AllPhotosOfSubjectInput" },
-            },
-          },
-        },
+              name: { kind: "Name", value: "AllPhotosOfSubjectInput" }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2398,9 +2379,9 @@ export const AllPhotosOfSubjectDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
+                  name: { kind: "Name", value: "input" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2416,7 +2397,7 @@ export const AllPhotosOfSubjectDocument: DocumentNode<
                       { kind: "Field", name: { kind: "Name", value: "name" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        name: { kind: "Name", value: "description" }
                       },
                       {
                         kind: "Field",
@@ -2426,13 +2407,13 @@ export const AllPhotosOfSubjectDocument: DocumentNode<
                           selections: [
                             {
                               kind: "FragmentSpread",
-                              name: { kind: "Name", value: "ImageInfo" },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
+                              name: { kind: "Name", value: "ImageInfo" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2442,20 +2423,20 @@ export const AllPhotosOfSubjectDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const GroupedPhotosOfSubjectDocument: DocumentNode<
   GroupedPhotosOfSubjectQuery,
@@ -2472,16 +2453,16 @@ export const GroupedPhotosOfSubjectDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "GroupedPhotosOfSubjectInput" },
-            },
-          },
-        },
+              name: { kind: "Name", value: "GroupedPhotosOfSubjectInput" }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2495,9 +2476,9 @@ export const GroupedPhotosOfSubjectDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
+                  name: { kind: "Name", value: "input" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2512,7 +2493,7 @@ export const GroupedPhotosOfSubjectDocument: DocumentNode<
                       { kind: "Field", name: { kind: "Name", value: "name" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        name: { kind: "Name", value: "description" }
                       },
                       {
                         kind: "Field",
@@ -2522,21 +2503,21 @@ export const GroupedPhotosOfSubjectDocument: DocumentNode<
                           selections: [
                             {
                               kind: "FragmentSpread",
-                              name: { kind: "Name", value: "ImageInfo" },
-                            },
-                          ],
-                        },
+                              name: { kind: "Name", value: "ImageInfo" }
+                            }
+                          ]
+                        }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "createdAt" },
+                        name: { kind: "Name", value: "createdAt" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "updatedAt" },
-                      },
-                    ],
-                  },
+                        name: { kind: "Name", value: "updatedAt" }
+                      }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2546,20 +2527,20 @@ export const GroupedPhotosOfSubjectDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const PaginatedPhotosOfSubjectDocument: DocumentNode<
   PaginatedPhotosOfSubjectQuery,
@@ -2576,16 +2557,16 @@ export const PaginatedPhotosOfSubjectDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "PaginatedPhotosOfSubjectInput" },
-            },
-          },
-        },
+              name: { kind: "Name", value: "PaginatedPhotosOfSubjectInput" }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2599,9 +2580,9 @@ export const PaginatedPhotosOfSubjectDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
+                  name: { kind: "Name", value: "input" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2616,7 +2597,7 @@ export const PaginatedPhotosOfSubjectDocument: DocumentNode<
                       { kind: "Field", name: { kind: "Name", value: "name" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        name: { kind: "Name", value: "description" }
                       },
                       {
                         kind: "Field",
@@ -2626,21 +2607,21 @@ export const PaginatedPhotosOfSubjectDocument: DocumentNode<
                           selections: [
                             {
                               kind: "FragmentSpread",
-                              name: { kind: "Name", value: "ImageInfo" },
-                            },
-                          ],
-                        },
+                              name: { kind: "Name", value: "ImageInfo" }
+                            }
+                          ]
+                        }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "createdAt" },
+                        name: { kind: "Name", value: "createdAt" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "updatedAt" },
-                      },
-                    ],
-                  },
+                        name: { kind: "Name", value: "updatedAt" }
+                      }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2650,15 +2631,15 @@ export const PaginatedPhotosOfSubjectDocument: DocumentNode<
                     selections: [
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "startCursor" },
+                        name: { kind: "Name", value: "startCursor" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "endCursor" },
+                        name: { kind: "Name", value: "endCursor" }
                       },
-                      { kind: "Field", name: { kind: "Name", value: "total" } },
-                    ],
-                  },
+                      { kind: "Field", name: { kind: "Name", value: "total" } }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2668,20 +2649,20 @@ export const PaginatedPhotosOfSubjectDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const PaginatedPhotosWithTagDocument: DocumentNode<
   PaginatedPhotosWithTagQuery,
@@ -2698,16 +2679,16 @@ export const PaginatedPhotosWithTagDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "PaginatedPhotosWithTagInput" },
-            },
-          },
-        },
+              name: { kind: "Name", value: "PaginatedPhotosWithTagInput" }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2721,9 +2702,9 @@ export const PaginatedPhotosWithTagDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
+                  name: { kind: "Name", value: "input" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2738,7 +2719,7 @@ export const PaginatedPhotosWithTagDocument: DocumentNode<
                       { kind: "Field", name: { kind: "Name", value: "name" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        name: { kind: "Name", value: "description" }
                       },
                       {
                         kind: "Field",
@@ -2748,21 +2729,21 @@ export const PaginatedPhotosWithTagDocument: DocumentNode<
                           selections: [
                             {
                               kind: "FragmentSpread",
-                              name: { kind: "Name", value: "ImageInfo" },
-                            },
-                          ],
-                        },
+                              name: { kind: "Name", value: "ImageInfo" }
+                            }
+                          ]
+                        }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "createdAt" },
+                        name: { kind: "Name", value: "createdAt" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "updatedAt" },
-                      },
-                    ],
-                  },
+                        name: { kind: "Name", value: "updatedAt" }
+                      }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2772,15 +2753,15 @@ export const PaginatedPhotosWithTagDocument: DocumentNode<
                     selections: [
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "startCursor" },
+                        name: { kind: "Name", value: "startCursor" }
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "endCursor" },
+                        name: { kind: "Name", value: "endCursor" }
                       },
-                      { kind: "Field", name: { kind: "Name", value: "total" } },
-                    ],
-                  },
+                      { kind: "Field", name: { kind: "Name", value: "total" } }
+                    ]
+                  }
                 },
                 {
                   kind: "Field",
@@ -2790,20 +2771,20 @@ export const PaginatedPhotosWithTagDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     ...ImageInfoFragmentDoc.definitions,
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const GetApiTokenDocument: DocumentNode<
   GetApiTokenMutation,
@@ -2820,16 +2801,16 @@ export const GetApiTokenDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "input" },
+            name: { kind: "Name", value: "input" }
           },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "GetApiTokenInput" },
-            },
-          },
-        },
+              name: { kind: "Name", value: "GetApiTokenInput" }
+            }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2843,15 +2824,15 @@ export const GetApiTokenDocument: DocumentNode<
                 name: { kind: "Name", value: "input" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
-            ],
-          },
-        ],
-      },
-    },
-  ],
+                  name: { kind: "Name", value: "input" }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 };
 export const AddPhotoToFavoritesDocument: DocumentNode<
   AddPhotoToFavoritesMutation,
@@ -2868,13 +2849,13 @@ export const AddPhotoToFavoritesDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "photoId" },
+            name: { kind: "Name", value: "photoId" }
           },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
-          },
-        },
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2888,9 +2869,9 @@ export const AddPhotoToFavoritesDocument: DocumentNode<
                 name: { kind: "Name", value: "photoId" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "photoId" },
-                },
-              },
+                  name: { kind: "Name", value: "photoId" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2899,15 +2880,15 @@ export const AddPhotoToFavoritesDocument: DocumentNode<
                 { kind: "Field", name: { kind: "Name", value: "message" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "addedPhotoWithId" },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
+                  name: { kind: "Name", value: "addedPhotoWithId" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
 };
 export const RemovePhotoFromFavoritesDocument: DocumentNode<
   RemovePhotoFromFavoritesMutation,
@@ -2924,13 +2905,13 @@ export const RemovePhotoFromFavoritesDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "photoId" },
+            name: { kind: "Name", value: "photoId" }
           },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
-          },
-        },
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -2944,9 +2925,9 @@ export const RemovePhotoFromFavoritesDocument: DocumentNode<
                 name: { kind: "Name", value: "photoId" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "photoId" },
-                },
-              },
+                  name: { kind: "Name", value: "photoId" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -2955,15 +2936,15 @@ export const RemovePhotoFromFavoritesDocument: DocumentNode<
                 { kind: "Field", name: { kind: "Name", value: "message" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "removedPhotoWithId" },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
+                  name: { kind: "Name", value: "removedPhotoWithId" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
 };
 export const AddPhotoToShoppingBagDocument: DocumentNode<
   AddPhotoToShoppingBagMutation,
@@ -2980,13 +2961,13 @@ export const AddPhotoToShoppingBagDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "photoId" },
+            name: { kind: "Name", value: "photoId" }
           },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
-          },
-        },
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -3000,9 +2981,9 @@ export const AddPhotoToShoppingBagDocument: DocumentNode<
                 name: { kind: "Name", value: "photoId" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "photoId" },
-                },
-              },
+                  name: { kind: "Name", value: "photoId" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -3011,15 +2992,15 @@ export const AddPhotoToShoppingBagDocument: DocumentNode<
                 { kind: "Field", name: { kind: "Name", value: "message" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "addedPhotoWithId" },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
+                  name: { kind: "Name", value: "addedPhotoWithId" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
 };
 export const RemovePhotoFromShoppingBagDocument: DocumentNode<
   RemovePhotoFromShoppingBagMutation,
@@ -3036,13 +3017,13 @@ export const RemovePhotoFromShoppingBagDocument: DocumentNode<
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "photoId" },
+            name: { kind: "Name", value: "photoId" }
           },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
-          },
-        },
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } }
+          }
+        }
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -3056,9 +3037,9 @@ export const RemovePhotoFromShoppingBagDocument: DocumentNode<
                 name: { kind: "Name", value: "photoId" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "photoId" },
-                },
-              },
+                  name: { kind: "Name", value: "photoId" }
+                }
+              }
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -3067,20 +3048,17 @@ export const RemovePhotoFromShoppingBagDocument: DocumentNode<
                 { kind: "Field", name: { kind: "Name", value: "message" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "removedPhotoWithId" },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
+                  name: { kind: "Name", value: "removedPhotoWithId" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
 };
-export const FavoritesDocument: DocumentNode<
-  FavoritesQuery,
-  FavoritesQueryVariables
-> = {
+export const FavoritesDocument: DocumentNode<FavoritesQuery, FavoritesQueryVariables> = {
   kind: "Document",
   definitions: [
     {
@@ -3104,19 +3082,19 @@ export const FavoritesDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export const ShoppingBagItemsDocument: DocumentNode<
   ShoppingBagItemsQuery,
@@ -3145,19 +3123,19 @@ export const ShoppingBagItemsDocument: DocumentNode<
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "PhotoInfo" },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+                        name: { kind: "Name", value: "PhotoInfo" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
-    ...PhotoInfoFragmentDoc.definitions,
-  ],
+    ...PhotoInfoFragmentDoc.definitions
+  ]
 };
 export type ImageKeySpecifier = (
   | "id"
@@ -3331,13 +3309,7 @@ export type TagFieldPolicy = {
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type PhotoTagKeySpecifier = (
-  | "tagId"
-  | "tag"
-  | "photoId"
-  | "photo"
-  | PhotoTagKeySpecifier
-)[];
+export type PhotoTagKeySpecifier = ("tagId" | "tag" | "photoId" | "photo" | PhotoTagKeySpecifier)[];
 export type PhotoTagFieldPolicy = {
   tagId?: FieldPolicy<any> | FieldReadFunction<any>;
   tag?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -3627,12 +3599,20 @@ export type SearchLocationsResponseKeySpecifier = (
 export type SearchLocationsResponseFieldPolicy = {
   datalist?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type LocationsResponseKeySpecifier = (
-  | "locations"
-  | LocationsResponseKeySpecifier
-)[];
+export type LocationsResponseKeySpecifier = ("locations" | LocationsResponseKeySpecifier)[];
 export type LocationsResponseFieldPolicy = {
   locations?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type AllPhotosAtLocationResponseKeySpecifier = (
+  | "locationInfo"
+  | "total"
+  | "photos"
+  | AllPhotosAtLocationResponseKeySpecifier
+)[];
+export type AllPhotosAtLocationResponseFieldPolicy = {
+  locationInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+  total?: FieldPolicy<any> | FieldReadFunction<any>;
+  photos?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type GroupedPhotosAtLocationResponseKeySpecifier = (
   | "photos"
@@ -3676,18 +3656,11 @@ export type UpdateLocationResponseFieldPolicy = {
   message?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedLocation?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type ItemCountListKeySpecifier = (
-  | "itemCountList"
-  | ItemCountListKeySpecifier
-)[];
+export type ItemCountListKeySpecifier = ("itemCountList" | ItemCountListKeySpecifier)[];
 export type ItemCountListFieldPolicy = {
   itemCountList?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type ItemCountKeySpecifier = (
-  | "name"
-  | "count"
-  | ItemCountKeySpecifier
-)[];
+export type ItemCountKeySpecifier = ("name" | "count" | ItemCountKeySpecifier)[];
 export type ItemCountFieldPolicy = {
   name?: FieldPolicy<any> | FieldReadFunction<any>;
   count?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -3748,19 +3721,12 @@ export type UpdatePhotographerResponseFieldPolicy = {
   message?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedPhotographer?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type SelectionOptionKeySpecifier = (
-  | "id"
-  | "name"
-  | SelectionOptionKeySpecifier
-)[];
+export type SelectionOptionKeySpecifier = ("id" | "name" | SelectionOptionKeySpecifier)[];
 export type SelectionOptionFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   name?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type PhotosResponseKeySpecifier = (
-  | "photos"
-  | PhotosResponseKeySpecifier
-)[];
+export type PhotosResponseKeySpecifier = ("photos" | PhotosResponseKeySpecifier)[];
 export type PhotosResponseFieldPolicy = {
   photos?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -3791,11 +3757,7 @@ export type SubjectSelectionOptionFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   name?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type TagSelectionOptionKeySpecifier = (
-  | "id"
-  | "name"
-  | TagSelectionOptionKeySpecifier
-)[];
+export type TagSelectionOptionKeySpecifier = ("id" | "name" | TagSelectionOptionKeySpecifier)[];
 export type TagSelectionOptionFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   name?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -3835,10 +3797,7 @@ export type PhotoEditSelectionOptionsFieldPolicy = {
   collections?: FieldPolicy<any> | FieldReadFunction<any>;
   finishes?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type SearchPhotosResponseKeySpecifier = (
-  | "datalist"
-  | SearchPhotosResponseKeySpecifier
-)[];
+export type SearchPhotosResponseKeySpecifier = ("datalist" | SearchPhotosResponseKeySpecifier)[];
 export type SearchPhotosResponseFieldPolicy = {
   datalist?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -3882,10 +3841,7 @@ export type UpdatePhotoResponseFieldPolicy = {
   message?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedPhoto?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type SubjectsResponseKeySpecifier = (
-  | "subjects"
-  | SubjectsResponseKeySpecifier
-)[];
+export type SubjectsResponseKeySpecifier = ("subjects" | SubjectsResponseKeySpecifier)[];
 export type SubjectsResponseFieldPolicy = {
   subjects?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -3949,10 +3905,7 @@ export type UpdateSubjectResponseFieldPolicy = {
   message?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedSubject?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type SearchTagsResponseKeySpecifier = (
-  | "datalist"
-  | SearchTagsResponseKeySpecifier
-)[];
+export type SearchTagsResponseKeySpecifier = ("datalist" | SearchTagsResponseKeySpecifier)[];
 export type SearchTagsResponseFieldPolicy = {
   datalist?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -3998,10 +3951,7 @@ export type UpdateTagResponseFieldPolicy = {
   message?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedTag?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type FavoritesResponseKeySpecifier = (
-  | "photoList"
-  | FavoritesResponseKeySpecifier
-)[];
+export type FavoritesResponseKeySpecifier = ("photoList" | FavoritesResponseKeySpecifier)[];
 export type FavoritesResponseFieldPolicy = {
   photoList?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -4082,6 +4032,7 @@ export type QueryKeySpecifier = (
   | "locationWithName"
   | "groupedPhotosAtLocation"
   | "paginatedPhotosAtLocation"
+  | "allPhotosAtLocation"
   | "photoCountBySubject"
   | "photoCountByTag"
   | "photoCountByCollection"
@@ -4139,6 +4090,7 @@ export type QueryFieldPolicy = {
   locationWithName?: FieldPolicy<any> | FieldReadFunction<any>;
   groupedPhotosAtLocation?: FieldPolicy<any> | FieldReadFunction<any>;
   paginatedPhotosAtLocation?: FieldPolicy<any> | FieldReadFunction<any>;
+  allPhotosAtLocation?: FieldPolicy<any> | FieldReadFunction<any>;
   photoCountBySubject?: FieldPolicy<any> | FieldReadFunction<any>;
   photoCountByTag?: FieldPolicy<any> | FieldReadFunction<any>;
   photoCountByCollection?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -4257,24 +4209,15 @@ export type MutationFieldPolicy = {
 };
 export type TypedTypePolicies = TypePolicies & {
   Image?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | ImageKeySpecifier
-      | (() => undefined | ImageKeySpecifier);
+    keyFields?: false | ImageKeySpecifier | (() => undefined | ImageKeySpecifier);
     fields?: ImageFieldPolicy;
   };
   Location?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | LocationKeySpecifier
-      | (() => undefined | LocationKeySpecifier);
+    keyFields?: false | LocationKeySpecifier | (() => undefined | LocationKeySpecifier);
     fields?: LocationFieldPolicy;
   };
   Collection?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | CollectionKeySpecifier
-      | (() => undefined | CollectionKeySpecifier);
+    keyFields?: false | CollectionKeySpecifier | (() => undefined | CollectionKeySpecifier);
     fields?: CollectionFieldPolicy;
   };
   PhotoCollection?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -4285,24 +4228,15 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: PhotoCollectionFieldPolicy;
   };
   Photographer?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | PhotographerKeySpecifier
-      | (() => undefined | PhotographerKeySpecifier);
+    keyFields?: false | PhotographerKeySpecifier | (() => undefined | PhotographerKeySpecifier);
     fields?: PhotographerFieldPolicy;
   };
   Subject?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | SubjectKeySpecifier
-      | (() => undefined | SubjectKeySpecifier);
+    keyFields?: false | SubjectKeySpecifier | (() => undefined | SubjectKeySpecifier);
     fields?: SubjectFieldPolicy;
   };
   PhotoSubject?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | PhotoSubjectKeySpecifier
-      | (() => undefined | PhotoSubjectKeySpecifier);
+    keyFields?: false | PhotoSubjectKeySpecifier | (() => undefined | PhotoSubjectKeySpecifier);
     fields?: PhotoSubjectFieldPolicy;
   };
   Tag?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -4310,10 +4244,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: TagFieldPolicy;
   };
   PhotoTag?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | PhotoTagKeySpecifier
-      | (() => undefined | PhotoTagKeySpecifier);
+    keyFields?: false | PhotoTagKeySpecifier | (() => undefined | PhotoTagKeySpecifier);
     fields?: PhotoTagFieldPolicy;
   };
   UserShoppingBagItem?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -4324,31 +4255,19 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: UserShoppingBagItemFieldPolicy;
   };
   Finish?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | FinishKeySpecifier
-      | (() => undefined | FinishKeySpecifier);
+    keyFields?: false | FinishKeySpecifier | (() => undefined | FinishKeySpecifier);
     fields?: FinishFieldPolicy;
   };
   PhotoFinish?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | PhotoFinishKeySpecifier
-      | (() => undefined | PhotoFinishKeySpecifier);
+    keyFields?: false | PhotoFinishKeySpecifier | (() => undefined | PhotoFinishKeySpecifier);
     fields?: PhotoFinishFieldPolicy;
   };
   Photo?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | PhotoKeySpecifier
-      | (() => undefined | PhotoKeySpecifier);
+    keyFields?: false | PhotoKeySpecifier | (() => undefined | PhotoKeySpecifier);
     fields?: PhotoFieldPolicy;
   };
   UserFavorite?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | UserFavoriteKeySpecifier
-      | (() => undefined | UserFavoriteKeySpecifier);
+    keyFields?: false | UserFavoriteKeySpecifier | (() => undefined | UserFavoriteKeySpecifier);
     fields?: UserFavoriteFieldPolicy;
   };
   User?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -4404,10 +4323,7 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | GroupedPhotosWithFinishResponseKeySpecifier);
     fields?: GroupedPhotosWithFinishResponseFieldPolicy;
   };
-  PaginatedPhotosWithFinishResponse?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  PaginatedPhotosWithFinishResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | PaginatedPhotosWithFinishResponseKeySpecifier
@@ -4456,6 +4372,13 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | LocationsResponseKeySpecifier);
     fields?: LocationsResponseFieldPolicy;
   };
+  AllPhotosAtLocationResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | AllPhotosAtLocationResponseKeySpecifier
+      | (() => undefined | AllPhotosAtLocationResponseKeySpecifier);
+    fields?: AllPhotosAtLocationResponseFieldPolicy;
+  };
   GroupedPhotosAtLocationResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
@@ -4463,10 +4386,7 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | GroupedPhotosAtLocationResponseKeySpecifier);
     fields?: GroupedPhotosAtLocationResponseFieldPolicy;
   };
-  PaginatedPhotosAtLocationResponse?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  PaginatedPhotosAtLocationResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | PaginatedPhotosAtLocationResponseKeySpecifier
@@ -4488,17 +4408,11 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: UpdateLocationResponseFieldPolicy;
   };
   ItemCountList?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | ItemCountListKeySpecifier
-      | (() => undefined | ItemCountListKeySpecifier);
+    keyFields?: false | ItemCountListKeySpecifier | (() => undefined | ItemCountListKeySpecifier);
     fields?: ItemCountListFieldPolicy;
   };
   ItemCount?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | ItemCountKeySpecifier
-      | (() => undefined | ItemCountKeySpecifier);
+    keyFields?: false | ItemCountKeySpecifier | (() => undefined | ItemCountKeySpecifier);
     fields?: ItemCountFieldPolicy;
   };
   SearchPhotographersResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -4515,20 +4429,14 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | PhotographersResponseKeySpecifier);
     fields?: PhotographersResponseFieldPolicy;
   };
-  GroupedPhotosByPhotographerResponse?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  GroupedPhotosByPhotographerResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | GroupedPhotosByPhotographerResponseKeySpecifier
       | (() => undefined | GroupedPhotosByPhotographerResponseKeySpecifier);
     fields?: GroupedPhotosByPhotographerResponseFieldPolicy;
   };
-  PaginatedPhotosByPhotographerResponse?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  PaginatedPhotosByPhotographerResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | PaginatedPhotosByPhotographerResponseKeySpecifier
@@ -4557,10 +4465,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: SelectionOptionFieldPolicy;
   };
   PhotosResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | PhotosResponseKeySpecifier
-      | (() => undefined | PhotosResponseKeySpecifier);
+    keyFields?: false | PhotosResponseKeySpecifier | (() => undefined | PhotosResponseKeySpecifier);
     fields?: PhotosResponseFieldPolicy;
   };
   PhotographerSelectionOption?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -4675,10 +4580,7 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | GroupedPhotosOfSubjectResponseKeySpecifier);
     fields?: GroupedPhotosOfSubjectResponseFieldPolicy;
   };
-  PaginatedPhotosOfSubjectResponse?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  PaginatedPhotosOfSubjectResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | PaginatedPhotosOfSubjectResponseKeySpecifier
@@ -4721,10 +4623,7 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: PaginatedPhotosWithTagResponseFieldPolicy;
   };
   AddTagResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | AddTagResponseKeySpecifier
-      | (() => undefined | AddTagResponseKeySpecifier);
+    keyFields?: false | AddTagResponseKeySpecifier | (() => undefined | AddTagResponseKeySpecifier);
     fields?: AddTagResponseFieldPolicy;
   };
   UpdateTagResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -4748,10 +4647,7 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | AddPhotoToFavoritesResponseKeySpecifier);
     fields?: AddPhotoToFavoritesResponseFieldPolicy;
   };
-  RemovePhotoFromFavoritesResponse?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  RemovePhotoFromFavoritesResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | RemovePhotoFromFavoritesResponseKeySpecifier
@@ -4772,10 +4668,7 @@ export type TypedTypePolicies = TypePolicies & {
       | (() => undefined | AddPhotoToShoppingBagResponseKeySpecifier);
     fields?: AddPhotoToShoppingBagResponseFieldPolicy;
   };
-  RemovePhotoFromShoppingBagResponse?: Omit<
-    TypePolicy,
-    "fields" | "keyFields"
-  > & {
+  RemovePhotoFromShoppingBagResponse?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | RemovePhotoFromShoppingBagResponseKeySpecifier
@@ -4790,17 +4683,11 @@ export type TypedTypePolicies = TypePolicies & {
     fields?: UserPreferencesResponseFieldPolicy;
   };
   Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | QueryKeySpecifier
-      | (() => undefined | QueryKeySpecifier);
+    keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier);
     fields?: QueryFieldPolicy;
   };
   Mutation?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | MutationKeySpecifier
-      | (() => undefined | MutationKeySpecifier);
+    keyFields?: false | MutationKeySpecifier | (() => undefined | MutationKeySpecifier);
     fields?: MutationFieldPolicy;
   };
 };
