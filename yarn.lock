@@ -1345,6 +1345,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/lodash@^4.14.168":
+  version "4.14.168"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
+  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
+
 "@types/next-auth@^3.1.15":
   version "3.1.18"
   resolved "https://registry.yarnpkg.com/@types/next-auth/-/next-auth-3.1.18.tgz#be359638fc978800b2c1474a7b805bb523f323f4"
