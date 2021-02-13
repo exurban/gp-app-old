@@ -8,7 +8,7 @@ import {
 } from "../../graphql-operations";
 import Loader from "../../components/Loader";
 import ErrorMessage from "../../components/ErrorMessage";
-import { Box, Flex, Heading, applyTheme, Text, Button, Icon, styled } from "bumbag";
+import { Flex, applyTheme, Text, Button, Icon, styled } from "bumbag";
 import { NextSeo } from "next-seo";
 
 const Photo: React.FC = () => {

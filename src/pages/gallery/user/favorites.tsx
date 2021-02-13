@@ -56,8 +56,8 @@ const FavoritesGallery: React.FC = () => {
           justifyItems="center"
           padding={{ default: "major-4", "max-tablet": "minor-1" }}
         >
-          {photos?.map(photo => (
-            <Slide key={photo.id} photo={photo} />
+          {photos?.map((photo, idx) => (
+            <Slide key={photo.id} photo={photo} priority={idx < 10} />
           ))}
         </Grid>
       </>

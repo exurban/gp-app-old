@@ -99,6 +99,8 @@ const PhotoCarousel: React.FC = () => {
         <Icon aria-label="previous" icon="solid-chevron-left" />
       </PrevButton>
       <Carousel
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         items={items}
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}

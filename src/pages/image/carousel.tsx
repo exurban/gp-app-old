@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
-import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../../graphql-operations";
+import { AllPhotosOfSubjectDocument } from "../../graphql-operations";
 
 import Loader from "../../components/Loader";
 import ErrorMessage from "../../components/ErrorMessage";
-import { Box, Flex, Heading, Text, Button, Icon, applyTheme } from "bumbag";
+import { Box, Flex, Text, Button, Icon, applyTheme } from "bumbag";
 import Image from "next/image";
 
 const Carousel: React.FC = () => {
@@ -55,7 +55,7 @@ const Carousel: React.FC = () => {
 
   if (!data) return null;
 
-  const { subjectInfo, total, photos } = data.allPhotosOfSubject;
+  const { total, photos } = data.allPhotosOfSubject;
 
   const photo = photos[currentPhoto];
 

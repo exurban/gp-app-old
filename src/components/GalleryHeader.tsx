@@ -1,4 +1,4 @@
-import { Flex, Box, Heading, Text, Group, Button, Icon } from "bumbag";
+import { Flex, Heading, Text } from "bumbag";
 import { ImageInfoFragment } from "../graphql-operations";
 
 type Props = {

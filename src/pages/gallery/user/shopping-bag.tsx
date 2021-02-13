@@ -3,19 +3,7 @@ import { useSession } from "next-auth/client";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { useQuery } from "@apollo/client";
 import { ShoppingBagItemsDocument } from "../../../graphql-operations";
-import {
-  Heading,
-  Flex,
-  Text,
-  Grid,
-  Button,
-  Icon,
-  Divider,
-  Radio,
-  RadioGroup,
-  Label,
-  applyTheme
-} from "bumbag";
+import { Heading, Flex, Text, Icon, Divider, RadioGroup } from "bumbag";
 import Loader from "../../../components/Loader";
 
 const ShoppingBagGallery: React.FC = () => {
@@ -35,9 +23,7 @@ const ShoppingBagGallery: React.FC = () => {
   if (loading) return <Loader />;
 
   if (data) {
-    <pre>{JSON.stringify(data, null, 2)}</pre>;
-    const photos = data.shoppingBagItems;
-    console.log(`${photos?.length} photos in shopping bag.`);
+    const photos = data.shoppingBagItems.photoList;
     if (photos !== null && photos !== undefined && photos.length == 0) {
       return (
         <Flex
