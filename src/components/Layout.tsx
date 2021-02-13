@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Footer from "./Footer";
-// import { useSession } from "next-auth/client";
+import { useRouter } from "next/router";
 import {
   useColorMode,
   usePage,
@@ -23,7 +23,8 @@ const Layout: React.FC<{ title?: string }> = ({
   children,
   title = "Gallery - Gibbs Photography"
 }) => {
-  const [selectedId, setSelectedId] = React.useState("home");
+  const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined);
+  const router = useRouter();
 
   const { colorMode, setColorMode } = useColorMode();
   const page = usePage();
@@ -31,6 +32,13 @@ const Layout: React.FC<{ title?: string }> = ({
   const isDesktopAndOver = useBreakpoint("max-desktop");
 
   const menuItems = ["Featured", "Bloom", "Bird", "Beast", "Land", "Water", "Sky"];
+  const navItems = ["featured", "bloom", "bird", "beast", "land", "water", "sky"];
+
+  const sbj = router.pathname.split("/")[2];
+
+  if (sbj && sbj in navItems) {
+    setSelectedId(sbj);
+  }
 
   if (typeof window !== "undefined") {
     return (
@@ -49,7 +57,7 @@ const Layout: React.FC<{ title?: string }> = ({
               <TopNav
                 backgroundColor="rgba(0, 0, 0, 0)"
                 selectedId={selectedId}
-                onChange={(id: React.SetStateAction<string>) => setSelectedId(id)}
+                onChange={(id: React.SetStateAction<string | undefined>) => setSelectedId(id)}
               >
                 <TopNav.Section>
                   <Link href="/">

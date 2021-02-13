@@ -1,18 +1,18 @@
-import { useState, useImperativeHandle, forwardRef, Dispatch, SetStateAction } from "react";
+import { useImperativeHandle, forwardRef, Dispatch, SetStateAction } from "react";
+
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 
 type Props = {
-  items;
+  items: Element[];
   activeIndex: number;
   setActiveIndex: Dispatch<SetStateAction<number>>;
 };
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 const Carousel: React.FC<Props> = forwardRef(({ items, activeIndex, setActiveIndex }, ref) => {
-  // const [activeIndex, setActiveIndex] = useState(0);
-
-  const slidePrev = () => setActiveIndex(activeIndex - 1);
-  const slideNext = () => setActiveIndex(activeIndex + 1);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const onSlideChanged = ({ item }) => setActiveIndex(item);
 
   useImperativeHandle(ref, () => ({
@@ -29,7 +29,6 @@ const Carousel: React.FC<Props> = forwardRef(({ items, activeIndex, setActiveInd
 
   return [
     <AliceCarousel
-      mouseTracking
       disableDotsControls
       disableButtonsControls
       infinite

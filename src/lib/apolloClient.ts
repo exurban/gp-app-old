@@ -4,7 +4,7 @@ import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } fr
 import merge from "deepmerge";
 import { setContext } from "@apollo/client/link/context";
 import { getSession } from "next-auth/client";
-import { TypedTypePolicies } from "../graphql-operations";
+import isEqual from "lodash/isEqual";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
@@ -32,39 +32,11 @@ const authLink = setContext(async (_, { headers }) => {
   return undefined;
 });
 
-const typePolicies: TypedTypePolicies = {
-  Query: {
-    fields: {
-      paginatedPhotosOfSubject: {
-        keyArgs: ["input", ["name"]],
-        read: function (existing) {
-          return existing;
-        },
-        merge: function (existing, incoming) {
-          return !existing
-            ? {
-                __typename: incoming.__typename,
-                photos: [...incoming.photos],
-                subjectInfo: incoming.subjectInfo,
-                pageInfo: incoming.pageInfo
-              }
-            : {
-                __typename: incoming.__typename,
-                photos: [...existing.photos, ...incoming.photos],
-                subjectInfo: incoming.subjectInfo,
-                pageInfo: incoming.pageInfo
-              };
-        }
-      }
-    }
-  }
-};
-
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache({ typePolicies })
+    cache: new InMemoryCache()
   });
 }
 
@@ -79,7 +51,18 @@ export function initializeApollo(initialState = null): ApolloClient<NormalizedCa
 
     // Merge the existing cache into data passed from getStaticProps/getServerSideProps
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data = merge(initialState as any, existingCache);
+    // const data = merge(initialState as any, existingCache);
+
+    // Merge the existing cache into data passed from getStaticProps/getServerSideProps
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const data = merge(initialState, existingCache, {
+      // combine arrays using object equality (like in sets)
+      arrayMerge: (destinationArray, sourceArray) => [
+        ...sourceArray,
+        ...destinationArray.filter(d => sourceArray.every(s => !isEqual(d, s)))
+      ]
+    });
 
     // Restore the cache with the merged data
     _apolloClient.cache.restore(data);

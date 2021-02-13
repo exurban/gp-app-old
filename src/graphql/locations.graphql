@@ -1,3 +1,20 @@
+query allPhotosAtLocation($input: AllPhotosAtLocationInput!) {
+  allPhotosAtLocation(input: $input) {
+    locationInfo {
+      id
+      name
+      description
+      coverImage {
+        ...ImageInfo
+      }
+    }
+    total
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
 query paginatedPhotosAtLocation($input: PaginatedPhotosAtLocationInput!) {
   paginatedPhotosAtLocation(input: $input) {
     locationInfo {

@@ -46,7 +46,9 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
                 Collections:
               </Text>
               {collections?.map(collection => (
-                <Link href={`/gallery/collection/${encodeURIComponent(collection.name)}`}>
+                <Link
+                  href={`/gallery/collection/${encodeURIComponent(collection.name.toLowerCase())}`}
+                >
                   <BBLink key={collection.id}>
                     <p>{collection.name}</p>
                   </BBLink>
@@ -57,7 +59,7 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
 
           <Divider marginY="major-2" />
           {subjects?.map(subject => (
-            <Link href={`/gallery/${encodeURIComponent(subject.name)}`}>
+            <Link href={`/gallery/${encodeURIComponent(subject.name.toLowerCase())}`}>
               <BBLink key={subject.id}>
                 <Tag palette="primary" marginLeft="minor-1">
                   {subject.name}
@@ -66,12 +68,15 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
             </Link>
           ))}
           {tags?.map(tag => (
-            <Link href={`/gallery/tag/${encodeURIComponent(tag.name)}`}>
+            <Link href={`/gallery/tag/${encodeURIComponent(tag.name.toLowerCase())}`}>
               <Tag key={tag.id} palette="secondary" marginLeft="minor-1">
                 {tag.name}
               </Tag>
             </Link>
           ))}
+          <Text.Block fontSize="100" textAlign="right" width="100%">
+            {photo.sku}
+          </Text.Block>
         </Card>
         <Button
           variant="ghost"

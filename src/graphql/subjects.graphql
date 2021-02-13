@@ -1,6 +1,5 @@
 query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
   allPhotosOfSubject(input: $input) {
-    total
     subjectInfo {
       id
       name
@@ -9,6 +8,7 @@ query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
         ...ImageInfo
       }
     }
+    total
     photos {
       ...PhotoInfo
     }

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
-import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../../graphql-operations";
-import Loader from "../../components/Loader";
-import ErrorMessage from "../../components/ErrorMessage";
-import Carousel from "../../components/Carousel";
-import CarouselItem from "../../components/CarouselItem";
-import CarouselMenu from "../../components/CarouselMenu";
+import { AllPhotosWithTagDocument, AllPhotosWithTagInput } from "../../../graphql-operations";
+import Loader from "../../../components/Loader";
+import ErrorMessage from "../../../components/ErrorMessage";
+import Carousel from "../../../components/Carousel";
+import CarouselItem from "../../../components/CarouselItem";
+import CarouselMenu from "../../../components/CarouselMenu";
 import { Text, Button, Icon, styled } from "bumbag";
 
 interface CarouselRef {
@@ -72,8 +72,8 @@ const PhotoCarousel: React.FC = () => {
   console.log(`name: ${name}`);
 
   // * fetch all photos in section
-  const input = { name: name } as AllPhotosOfSubjectInput;
-  const { loading, error, data } = useQuery(AllPhotosOfSubjectDocument, {
+  const input = { name: name } as AllPhotosWithTagInput;
+  const { loading, error, data } = useQuery(AllPhotosWithTagDocument, {
     variables: { input: input }
   });
 
@@ -83,9 +83,11 @@ const PhotoCarousel: React.FC = () => {
 
   if (!data) return null;
 
-  const { total, photos } = data.allPhotosOfSubject;
+  const { total, photos } = data.allPhotosWithTag;
 
-  const items = photos.map((photo, idx) => <CarouselItem photo={photo} idx={idx} />);
+  const items = photos.map((photo, idx) => (
+    <CarouselItem key={`${photo.sku}-${idx}`} photo={photo} idx={idx} />
+  ));
 
   // * if sku was passed, find index of photo with sku and show that photo
 

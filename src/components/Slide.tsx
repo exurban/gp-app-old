@@ -11,7 +11,7 @@ const ImageContainer = styled(Box)`
   position: relative;
 `;
 
-const Slide: React.FC<{ photo: PhotoInfoFragment }> = ({ photo }) => {
+const Slide: React.FC<{ photo: PhotoInfoFragment; priority: boolean }> = ({ photo, priority }) => {
   const [showInfo, setShowInfo] = useState(false);
   const router = useRouter();
 
@@ -34,6 +34,7 @@ const Slide: React.FC<{ photo: PhotoInfoFragment }> = ({ photo }) => {
               layout="responsive"
               width={img.width}
               height={img.height}
+              priority={priority}
               sizes="(max-width: 700px) 100vw, 1400px"
             />
           </ImageContainer>

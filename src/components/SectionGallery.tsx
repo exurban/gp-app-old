@@ -1,41 +1,25 @@
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
-import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../graphql-operations";
-import { Flex, Grid, Box, Icon, Heading, Button, Tooltip } from "bumbag";
-import Loader from "./Loader";
-import ErrorMessage from "./ErrorMessage";
+import { Heading, Flex, Box, Tooltip, Grid, Button, Icon } from "bumbag";
+import { ImageInfoFragment, PhotoInfoFragment } from "../graphql-operations";
 import GalleryHeader from "./GalleryHeader";
 import Slide from "./Slide";
 
 type Props = {
-  input: AllPhotosOfSubjectInput;
+  coverImage: ImageInfoFragment | null | undefined;
+  name: string;
+  description: string;
+  total: number;
+  photos: Array<PhotoInfoFragment>;
 };
 
-const Gallery: React.FC<Props> = ({ input }) => {
+const SectionGallery: React.FC<Props> = ({ coverImage, name, description, total, photos }) => {
   const router = useRouter();
-
-  const { loading, error, data } = useQuery(AllPhotosOfSubjectDocument, {
-    variables: {
-      input: input
-    }
-  });
-
-  if (error) return <ErrorMessage message="Error loading photos." />;
-
-  if (loading) return <Loader />;
-
-  if (!data) return null;
-
-  const { subjectInfo, total, photos } = data.allPhotosOfSubject;
+  const section = router.pathname.split("/")[2];
 
   return (
     <>
       <Flex flexDirection="row" width="80vw" marginX="auto" marginTop="major-3">
-        <GalleryHeader
-          image={subjectInfo.coverImage}
-          title={subjectInfo.name}
-          description={subjectInfo.description}
-        />
+        <GalleryHeader image={coverImage} title={name} description={description} />
       </Flex>
       <Box
         width="100vw"
@@ -54,7 +38,7 @@ const Gallery: React.FC<Props> = ({ input }) => {
               palette="primary"
               fontSize="500"
               onClick={() =>
-                router.push(`/carousel/${encodeURIComponent(subjectInfo.name.toLowerCase())}`)
+                router.push(`/carousel/${section}/${encodeURIComponent(name.toLowerCase())}`)
               }
             >
               <Icon icon="solid-expand" />
@@ -90,4 +74,4 @@ const Gallery: React.FC<Props> = ({ input }) => {
   );
 };
 
-export default Gallery;
+export default SectionGallery;

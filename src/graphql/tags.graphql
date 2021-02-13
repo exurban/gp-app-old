@@ -1,3 +1,20 @@
+query allPhotosWithTag($input: AllPhotosWithTagInput!) {
+  allPhotosWithTag(input: $input) {
+    tagInfo {
+      id
+      name
+      description
+      coverImage {
+        ...ImageInfo
+      }
+    }
+    total
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
 query paginatedPhotosWithTag($input: PaginatedPhotosWithTagInput!) {
   paginatedPhotosWithTag(input: $input) {
     tagInfo {

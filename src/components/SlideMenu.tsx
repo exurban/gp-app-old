@@ -36,7 +36,32 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
 
   // TODO: this should load the image in the carousel
   const showLarger = () => {
-    router.push(`/image/${photo.sku}`);
+    let { pathname } = router;
+    console.log(pathname);
+    if (!pathname || typeof pathname !== "string") {
+      return;
+    }
+
+    if (pathname.includes(`gallery`)) {
+      pathname = pathname.replace(`gallery`, `carousel`);
+    }
+
+    console.log(pathname);
+
+    if (pathname.includes(`/[name]`)) {
+      pathname = pathname.replace(`/[name]`, "");
+      const { name } = router.query;
+
+      router.push({
+        pathname: `${pathname}/${name}`,
+        query: { sku: photo?.sku }
+      });
+    } else {
+      router.push({
+        pathname: `${pathname}/`,
+        query: { sku: photo?.sku }
+      });
+    }
   };
 
   const addPhotoToFavorites = () => {

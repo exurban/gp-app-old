@@ -83,6 +83,15 @@ query paginatedFeaturedPhotos($input: PaginatedPhotosInput!) {
   }
 }
 
+query allFeaturedPhotos {
+  allFeaturedPhotos {
+    total
+    photos {
+      ...PhotoInfo
+    }
+  }
+}
+
 query photoWithSku($sku: Int!) {
   photoWithSku(sku: $sku) {
     ...PhotoInfo
