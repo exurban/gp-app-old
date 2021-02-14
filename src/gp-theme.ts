@@ -44,20 +44,10 @@ const gpTheme: ThemeConfig = {
     ]
   },
 
-  // Label: {
+  // Button: {
   //   styles: {
-  //     base: {
-  //       fontSize: "100",
-  //       fontColor: "blue"
-  //     }
-  //   }
-  // },
-  // Radio: {
-  //   Icon: {
-  //     styles: {
-  //       base: {
-  //         fontSize: "100"
-  //       }
+  //     focus: {
+  //       boxShadow: "none"
   //     }
   //   }
   // },
@@ -70,11 +60,15 @@ const gpTheme: ThemeConfig = {
               fontFamily: "Raleway, system-ui",
               fontSize: "32px",
               fontVariant: "small-caps",
-              fontWeight: 700
+              fontWeight: 700,
+
+              active: {
+                color: "#ff0000"
+              }
             },
             focus: {
-              // boxShadow: "inset 0 -2px 0 0"
-              boxShadow: "none"
+              boxShadow: "inset 0 -2px 0 0"
+              // boxShadow: "none"
             }
           }
         }

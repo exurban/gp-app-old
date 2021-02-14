@@ -6,6 +6,7 @@ const ShoppingBagMenu: React.FC = () => {
   const [session] = useSession();
   return (
     <DropdownMenu
+      zIndex="100"
       menu={
         <>
           {session ? (

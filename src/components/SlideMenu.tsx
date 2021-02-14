@@ -2,7 +2,16 @@ import React, { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useSession } from "next-auth/client";
-import { DropdownMenu, DropdownMenuGroup, Text, Icon, Button, applyTheme, useToasts } from "bumbag";
+import {
+  DropdownMenu,
+  DropdownMenuGroup,
+  Text,
+  Icon,
+  Button,
+  applyTheme,
+  useToasts,
+  useBreakpointValue
+} from "bumbag";
 import {
   FavoritesDocument,
   AddPhotoToFavoritesDocument,
@@ -34,7 +43,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     router.push("/auth/signin");
   };
 
-  // TODO: this should load the image in the carousel
   const showLarger = () => {
     let { pathname } = router;
     console.log(pathname);
@@ -407,6 +415,16 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     return bagItemIds.includes(id);
   };
 
+  const size = useBreakpointValue({
+    default: "default",
+    "max-tablet": "small"
+  });
+
+  const spacing = useBreakpointValue({
+    default: "major-1",
+    "max-tablet": "minor-1"
+  });
+
   const DDMenu = applyTheme(DropdownMenu, {
     Popover: {
       styles: {
@@ -491,8 +509,10 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     >
       <Button
         variant="ghost"
-        margin={{ default: "major-1", "max-Tablet": "minor-1" }}
-        // marginX="major-1"
+        fontSize={{ default: "500", "max-tablet": "200" }}
+        size={size}
+        margin={spacing}
+        border="none"
       >
         <Icon aria-label="options" icon="solid-ellipsis-v" fontSize="200" />
       </Button>

@@ -40,7 +40,7 @@ const IndexPage: React.FC = () => {
             vitae, fringilla tortor in consectetur et nisi. Donec aliquam ac.
           </Paragraph>
           <Link href="/gallery/featured" passHref={true}>
-            <Button size="large" palette="secondary" marginBottom="60px">
+            <Button size="large" palette="info500" color="white" altitude="200" marginBottom="60px">
               Enter the Gallery
             </Button>
           </Link>

@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Footer from "./Footer";
-import { useRouter } from "next/router";
 import {
   useColorMode,
   usePage,
@@ -15,30 +14,28 @@ import {
   SideNav,
   Icon,
   Divider,
-  Button
+  Button,
+  styled,
+  palette
 } from "bumbag";
 import ShoppingBagMenu from "./ShoppingBagMenu";
+import ActiveLink from "./ActiveLink";
 
 const Layout: React.FC<{ title?: string }> = ({
   children,
   title = "Gallery - Gibbs Photography"
 }) => {
-  const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined);
-  const router = useRouter();
-
   const { colorMode, setColorMode } = useColorMode();
   const page = usePage();
   const isDesktopAndUnder = useBreakpoint("max-desktop");
   const isDesktopAndOver = useBreakpoint("max-desktop");
 
-  const menuItems = ["Featured", "Bloom", "Bird", "Beast", "Land", "Water", "Sky"];
-  const navItems = ["featured", "bloom", "bird", "beast", "land", "water", "sky"];
-
-  const sbj = router.pathname.split("/")[2];
-
-  if (sbj && sbj in navItems) {
-    setSelectedId(sbj);
-  }
+  const StyledItem = styled(TopNav.Item)`
+    &.active {
+      color: ${palette("primary300")};
+      box-shadow: inset 0 -2px 0 0;
+    }
+  `;
 
   if (typeof window !== "undefined") {
     return (
@@ -54,26 +51,57 @@ const Layout: React.FC<{ title?: string }> = ({
           backgroundColor="default"
           header={
             <>
-              <TopNav
-                backgroundColor="rgba(0, 0, 0, 0)"
-                selectedId={selectedId}
-                onChange={(id: React.SetStateAction<string | undefined>) => setSelectedId(id)}
-              >
+              <TopNav>
                 <TopNav.Section>
                   <Link href="/">
                     <TopNav.Item navId="home">
                       <Icon icon="gpLogo" fontSize="900" marginLeft="major-2" />
                     </TopNav.Item>
                   </Link>
-                  {isDesktopAndUnder
-                    ? null
-                    : menuItems.map(item => (
-                        <Link href={`/gallery/${item.toLowerCase()}`} passHref={true} key={item}>
-                          <TopNav.Item variant="navigationText" navId={item.toLowerCase()}>
-                            {item}
-                          </TopNav.Item>
-                        </Link>
-                      ))}
+                  {isDesktopAndUnder ? null : (
+                    <>
+                      <ActiveLink
+                        className="link"
+                        activeClassName="active"
+                        href={`/gallery/featured`}
+                        passHref={true}
+                      >
+                        <StyledItem className="nav-link" variant="navigationText">
+                          Featured
+                        </StyledItem>
+                      </ActiveLink>
+                      <ActiveLink activeClassName="active" href={`/gallery/bloom`} passHref={true}>
+                        <StyledItem className="nav-link" variant="navigationText">
+                          Bloom
+                        </StyledItem>
+                      </ActiveLink>
+                      <ActiveLink activeClassName="active" href={`/gallery/bird`} passHref={true}>
+                        <StyledItem className="nav-link" variant="navigationText">
+                          Bird
+                        </StyledItem>
+                      </ActiveLink>
+                      <ActiveLink activeClassName="active" href={`/gallery/beast`} passHref={true}>
+                        <StyledItem className="nav-link" variant="navigationText">
+                          Beast
+                        </StyledItem>
+                      </ActiveLink>
+                      <ActiveLink activeClassName="active" href={`/gallery/land`} passHref={true}>
+                        <StyledItem className="nav-link" variant="navigationText">
+                          Land
+                        </StyledItem>
+                      </ActiveLink>
+                      <ActiveLink activeClassName="active" href={`/gallery/water`} passHref={true}>
+                        <StyledItem className="nav-link" variant="navigationText">
+                          Water
+                        </StyledItem>
+                      </ActiveLink>
+                      <ActiveLink activeClassName="active" href={`/gallery/sky`} passHref={true}>
+                        <StyledItem className="nav-link" variant="navigationText">
+                          Sky
+                        </StyledItem>
+                      </ActiveLink>
+                    </>
+                  )}
                 </TopNav.Section>
                 <TopNav.Section marginRight="major-4">
                   <TopNav.Item>
@@ -116,18 +144,45 @@ const Layout: React.FC<{ title?: string }> = ({
                   </Button>
                 </Level>
                 <Divider />
-                {menuItems.map(item => (
-                  <Link href={`/gallery/${item.toLowerCase()}`} passHref={true} key={item}>
-                    <SideNav.Item
-                      key={item}
-                      variant="navigationText"
-                      navId={item.toLowerCase()}
-                      onClick={page.sidebar.close}
-                    >
-                      {item}
-                    </SideNav.Item>
-                  </Link>
-                ))}
+                <Link href={`/gallery/featured`} passHref={true}>
+                  <SideNav.Item
+                    variant="navigationText"
+                    navId="featured"
+                    onClick={page.sidebar.close}
+                  >
+                    Featured
+                  </SideNav.Item>
+                </Link>
+                <Link href={`/gallery/bloom`} passHref={true}>
+                  <SideNav.Item variant="navigationText" navId="bloom" onClick={page.sidebar.close}>
+                    Bloom
+                  </SideNav.Item>
+                </Link>
+                <Link href={`/gallery/bird`} passHref={true}>
+                  <SideNav.Item variant="navigationText" navId="bird" onClick={page.sidebar.close}>
+                    Bird
+                  </SideNav.Item>
+                </Link>
+                <Link href={`/gallery/beast`} passHref={true}>
+                  <SideNav.Item variant="navigationText" navId="beast" onClick={page.sidebar.close}>
+                    Beast
+                  </SideNav.Item>
+                </Link>
+                <Link href={`/gallery/land`} passHref={true}>
+                  <SideNav.Item variant="navigationText" navId="land" onClick={page.sidebar.close}>
+                    Land
+                  </SideNav.Item>
+                </Link>
+                <Link href={`/gallery/water`} passHref={true}>
+                  <SideNav.Item variant="navigationText" navId="water" onClick={page.sidebar.close}>
+                    Water
+                  </SideNav.Item>
+                </Link>
+                <Link href={`/gallery/sky`} passHref={true}>
+                  <SideNav.Item variant="navigationText" navId="sky" onClick={page.sidebar.close}>
+                    Sky
+                  </SideNav.Item>
+                </Link>
               </SideNav.Level>
             }
           >

@@ -15,6 +15,35 @@ const Slide: React.FC<{ photo: PhotoInfoFragment; priority: boolean }> = ({ phot
   const [showInfo, setShowInfo] = useState(false);
   const router = useRouter();
 
+  const showLarger = () => {
+    let { pathname } = router;
+    console.log(pathname);
+    if (!pathname || typeof pathname !== "string") {
+      return;
+    }
+
+    if (pathname.includes(`gallery`)) {
+      pathname = pathname.replace(`gallery`, `carousel`);
+    }
+
+    console.log(pathname);
+
+    if (pathname.includes(`/[name]`)) {
+      pathname = pathname.replace(`/[name]`, "");
+      const { name } = router.query;
+
+      router.push({
+        pathname: `${pathname}/${name}`,
+        query: { sku: photo?.sku }
+      });
+    } else {
+      router.push({
+        pathname: `${pathname}/`,
+        query: { sku: photo?.sku }
+      });
+    }
+  };
+
   if (photo.images === undefined || photo.images === null) {
     return null;
   }
@@ -26,7 +55,7 @@ const Slide: React.FC<{ photo: PhotoInfoFragment; priority: boolean }> = ({ phot
       {showInfo ? (
         <SlideInfo photo={photo} setShowInfo={setShowInfo} />
       ) : (
-        <Flex className="image+button" onDoubleClick={() => router.push(`/image/${photo.sku}`)}>
+        <Flex className="image+button" onDoubleClick={() => showLarger()}>
           <ImageContainer borderRadius="6px" overflow="hidden" altitude="400">
             <Image
               src={img.imageUrl}
