@@ -2,38 +2,52 @@ import React from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Footer from "./Footer";
+import { useSession } from "next-auth/client";
 import {
-  useColorMode,
   usePage,
   PageWithHeader,
   PageWithSidebar,
-  useBreakpoint,
   Hide,
   Level,
   TopNav,
   SideNav,
   Icon,
+  Box,
   Divider,
   Button,
   styled,
-  palette
+  palette,
+  useBreakpoint,
+  Badge
 } from "bumbag";
-import ShoppingBagMenu from "./ShoppingBagMenu";
+import ShoppingBagItem from "./ShoppingBagItem";
+import FavoritesItem from "./FavoritesItem";
+import SignInItem from "./SignInItem";
+import SignOutItem from "./SignOutItem";
+import ColorModeItem from "./ColorModeItem";
 import ActiveLink from "./ActiveLink";
 
 const Layout: React.FC<{ title?: string }> = ({
   children,
   title = "Gallery - Gibbs Photography"
 }) => {
-  const { colorMode, setColorMode } = useColorMode();
   const page = usePage();
-  const isDesktopAndUnder = useBreakpoint("max-desktop");
-  const isDesktopAndOver = useBreakpoint("max-desktop");
+  const isMinDesktopAndOver = useBreakpoint("min-desktop");
+  const isMaxWidescreenAndUnder = useBreakpoint("max-widescreen");
+  const [session] = useSession();
 
   const StyledItem = styled(TopNav.Item)`
     &.active {
       color: ${palette("primary300")};
       box-shadow: inset 0 -2px 0 0;
+    }
+  `;
+
+  const StyledSideNavItem = styled(SideNav.Item)`
+    &.active {
+      color: ${palette("primary300")};
+      background-color: ${palette("primaryShade")};
+      box-shadow: inset 3px 0 0 0 ${palette("primary")};
     }
   `;
 
@@ -53,12 +67,16 @@ const Layout: React.FC<{ title?: string }> = ({
             <>
               <TopNav>
                 <TopNav.Section>
-                  <Link href="/">
-                    <TopNav.Item navId="home">
-                      <Icon icon="gpLogo" fontSize="900" marginLeft="major-2" />
-                    </TopNav.Item>
-                  </Link>
-                  {isDesktopAndUnder ? null : (
+                  <ActiveLink activeClassName="active" href={`/`} passHref={true}>
+                    <StyledItem
+                      className="nav-link"
+                      fontSize={{ default: "60px", "max-fullHD": "40px" }}
+                      fontWeight={{ default: "800", "max-fullHD": "700" }}
+                    >
+                      <Icon icon="gpLogo" marginLeft="major-2" />
+                    </StyledItem>
+                  </ActiveLink>
+                  {isMaxWidescreenAndUnder ? null : (
                     <>
                       <ActiveLink
                         className="link"
@@ -66,37 +84,72 @@ const Layout: React.FC<{ title?: string }> = ({
                         href={`/gallery/featured`}
                         passHref={true}
                       >
-                        <StyledItem className="nav-link" variant="navigationText">
+                        <StyledItem
+                          className="nav-link"
+                          variant="navigationText"
+                          fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                          fontWeight={{ default: "700", "max-fullHD": "600" }}
+                        >
                           Featured
                         </StyledItem>
                       </ActiveLink>
                       <ActiveLink activeClassName="active" href={`/gallery/bloom`} passHref={true}>
-                        <StyledItem className="nav-link" variant="navigationText">
+                        <StyledItem
+                          className="nav-link"
+                          variant="navigationText"
+                          fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                          fontWeight={{ default: "700", "max-fullHD": "600" }}
+                        >
                           Bloom
                         </StyledItem>
                       </ActiveLink>
                       <ActiveLink activeClassName="active" href={`/gallery/bird`} passHref={true}>
-                        <StyledItem className="nav-link" variant="navigationText">
+                        <StyledItem
+                          className="nav-link"
+                          variant="navigationText"
+                          fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                          fontWeight={{ default: "700", "max-fullHD": "600" }}
+                        >
                           Bird
                         </StyledItem>
                       </ActiveLink>
                       <ActiveLink activeClassName="active" href={`/gallery/beast`} passHref={true}>
-                        <StyledItem className="nav-link" variant="navigationText">
+                        <StyledItem
+                          className="nav-link"
+                          variant="navigationText"
+                          fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                          fontWeight={{ default: "700", "max-fullHD": "600" }}
+                        >
                           Beast
                         </StyledItem>
                       </ActiveLink>
                       <ActiveLink activeClassName="active" href={`/gallery/land`} passHref={true}>
-                        <StyledItem className="nav-link" variant="navigationText">
+                        <StyledItem
+                          className="nav-link"
+                          variant="navigationText"
+                          fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                          fontWeight={{ default: "700", "max-fullHD": "600" }}
+                        >
                           Land
                         </StyledItem>
                       </ActiveLink>
                       <ActiveLink activeClassName="active" href={`/gallery/water`} passHref={true}>
-                        <StyledItem className="nav-link" variant="navigationText">
+                        <StyledItem
+                          className="nav-link"
+                          variant="navigationText"
+                          fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                          fontWeight={{ default: "700", "max-fullHD": "600" }}
+                        >
                           Water
                         </StyledItem>
                       </ActiveLink>
                       <ActiveLink activeClassName="active" href={`/gallery/sky`} passHref={true}>
-                        <StyledItem className="nav-link" variant="navigationText">
+                        <StyledItem
+                          className="nav-link"
+                          variant="navigationText"
+                          fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                          fontWeight={{ default: "700", "max-fullHD": "600" }}
+                        >
                           Sky
                         </StyledItem>
                       </ActiveLink>
@@ -104,22 +157,60 @@ const Layout: React.FC<{ title?: string }> = ({
                   )}
                 </TopNav.Section>
                 <TopNav.Section marginRight="major-4">
-                  <TopNav.Item>
-                    <ShoppingBagMenu />
-                  </TopNav.Item>
-                  <TopNav.Item>
-                    <Button
-                      variant="ghost"
-                      onClick={() => setColorMode(colorMode != "default" ? "default" : "dark")}
-                    >
-                      {colorMode == "default" ? (
-                        <Icon color="#dbe29c" icon="solid-moon" fontSize="300" />
-                      ) : (
-                        <Icon color="#fee61e" icon="solid-sun" fontSize="300" />
+                  {session ? (
+                    <>
+                      {isMinDesktopAndOver && (
+                        <ActiveLink activeClassName="active" href={`/auth/signout`} passHref={true}>
+                          <StyledItem
+                            className="nav-link"
+                            variant="rightNavText"
+                            justifyContent={isMaxWidescreenAndUnder ? "flex-end" : "center"}
+                          >
+                            <SignOutItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                          </StyledItem>
+                        </ActiveLink>
                       )}
-                    </Button>
-                  </TopNav.Item>
-                  <Hide above="desktop">
+                      {isMinDesktopAndOver && (
+                        <ActiveLink
+                          activeClassName="active"
+                          href={`/gallery/user/favorites`}
+                          passHref={true}
+                        >
+                          <StyledItem className="nav-link" variant="rightNavText">
+                            <FavoritesItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                          </StyledItem>
+                        </ActiveLink>
+                      )}
+                      {isMinDesktopAndOver && (
+                        <ActiveLink
+                          activeClassName="active"
+                          href={`/gallery/user/shopping-bag`}
+                          passHref={true}
+                        >
+                          <StyledItem className="nav-link" variant="rightNavText">
+                            <ShoppingBagItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                          </StyledItem>
+                        </ActiveLink>
+                      )}
+                    </>
+                  ) : (
+                    <ActiveLink activeClassName="active" href={`/auth/signin`} passHref={true}>
+                      <StyledItem className="nav-link" variant="rightNavText">
+                        <SignInItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                      </StyledItem>
+                    </ActiveLink>
+                  )}
+                  <StyledItem className="nav-link" variant="rightNavText">
+                    <Box
+                      height="100%"
+                      paddingX="0.8rem"
+                      marginBottom={isMaxWidescreenAndUnder ? "0px" : "0.5rem"}
+                    >
+                      <ColorModeItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                    </Box>
+                  </StyledItem>
+
+                  <Hide above="widescreen">
                     <TopNav.Item>
                       <Button variant="ghost" onClick={page.sidebar.toggle}>
                         <Icon aria-label="Mobile Menu" icon="solid-bars" />
@@ -131,56 +222,124 @@ const Layout: React.FC<{ title?: string }> = ({
             </>
           }
         >
-          {isDesktopAndOver ? page.sidebar.close : null}
+          {isMaxWidescreenAndUnder ? page.sidebar.close : null}
           <PageWithSidebar
             defaultIsVisible={false}
             minHeight="calc(100vh - 180px)"
             sidebar={
               <SideNav.Level>
-                <Level paddingX="major-2">
-                  <Icon aria-label="logo" icon="gpLogo" fontSize="800" />
-                  <Button variant="ghost">
-                    <Icon aria-label="light/dark" icon="solid-sun" alignY="center" />
-                  </Button>
+                <Level height="80px" alignX="left" alignY="center">
+                  <Icon aria-label="logo" icon="gpLogo" fontSize="700" margin="major-1" />
                 </Level>
                 <Divider />
-                <Link href={`/gallery/featured`} passHref={true}>
-                  <SideNav.Item
+                <ActiveLink href={`/gallery/featured`} activeClassName="active" passHref={true}>
+                  <StyledSideNavItem
+                    className="nav-link"
                     variant="navigationText"
                     navId="featured"
                     onClick={page.sidebar.close}
                   >
                     Featured
-                  </SideNav.Item>
-                </Link>
-                <Link href={`/gallery/bloom`} passHref={true}>
-                  <SideNav.Item variant="navigationText" navId="bloom" onClick={page.sidebar.close}>
+                  </StyledSideNavItem>
+                </ActiveLink>
+                <ActiveLink href={`/gallery/bloom`} activeClassName="active" passHref={true}>
+                  <StyledSideNavItem
+                    className="nav-link"
+                    variant="navigationText"
+                    navId="bloom"
+                    onClick={page.sidebar.close}
+                  >
                     Bloom
-                  </SideNav.Item>
-                </Link>
-                <Link href={`/gallery/bird`} passHref={true}>
-                  <SideNav.Item variant="navigationText" navId="bird" onClick={page.sidebar.close}>
+                  </StyledSideNavItem>
+                </ActiveLink>
+                <ActiveLink href={`/gallery/bird`} activeClassName="active" passHref={true}>
+                  <StyledSideNavItem
+                    className="nav-link"
+                    variant="navigationText"
+                    navId="bird"
+                    onClick={page.sidebar.close}
+                  >
                     Bird
-                  </SideNav.Item>
-                </Link>
-                <Link href={`/gallery/beast`} passHref={true}>
-                  <SideNav.Item variant="navigationText" navId="beast" onClick={page.sidebar.close}>
+                  </StyledSideNavItem>
+                </ActiveLink>
+                <ActiveLink href={`/gallery/beast`} activeClassName="active" passHref={true}>
+                  <StyledSideNavItem
+                    className="nav-link"
+                    variant="navigationText"
+                    navId="beast"
+                    onClick={page.sidebar.close}
+                  >
                     Beast
-                  </SideNav.Item>
-                </Link>
-                <Link href={`/gallery/land`} passHref={true}>
-                  <SideNav.Item variant="navigationText" navId="land" onClick={page.sidebar.close}>
+                  </StyledSideNavItem>
+                </ActiveLink>
+                <ActiveLink href={`/gallery/land`} activeClassName="active" passHref={true}>
+                  <StyledSideNavItem
+                    className="nav-link"
+                    variant="navigationText"
+                    navId="land"
+                    onClick={page.sidebar.close}
+                  >
                     Land
-                  </SideNav.Item>
-                </Link>
-                <Link href={`/gallery/water`} passHref={true}>
-                  <SideNav.Item variant="navigationText" navId="water" onClick={page.sidebar.close}>
+                  </StyledSideNavItem>
+                </ActiveLink>
+                <ActiveLink href={`/gallery/water`} activeClassName="active" passHref={true}>
+                  <StyledSideNavItem
+                    className="nav-link"
+                    variant="navigationText"
+                    navId="water"
+                    onClick={page.sidebar.close}
+                  >
                     Water
+                  </StyledSideNavItem>
+                </ActiveLink>
+                <ActiveLink href={`/gallery/sky`} activeClassName="active" passHref={true}>
+                  <StyledSideNavItem
+                    className="nav-link"
+                    variant="navigationText"
+                    navId="sky"
+                    onClick={page.sidebar.close}
+                  >
+                    Sky
+                  </StyledSideNavItem>
+                </ActiveLink>
+                <Divider />
+                <ActiveLink href={`/auth/signin`} activeClassName="active" passHref={true}>
+                  <StyledSideNavItem
+                    className="nav-link"
+                    variant="navigationText"
+                    navId="signin"
+                    onClick={page.sidebar.close}
+                  >
+                    Sign In
+                  </StyledSideNavItem>
+                </ActiveLink>
+                <Link href={`/user/favorites`} passHref={true}>
+                  <SideNav.Item
+                    variant="navigationText"
+                    navId="favorites"
+                    onClick={page.sidebar.close}
+                  >
+                    Favorites
+                    <Badge marginLeft="major-1">1</Badge>
                   </SideNav.Item>
                 </Link>
-                <Link href={`/gallery/sky`} passHref={true}>
-                  <SideNav.Item variant="navigationText" navId="sky" onClick={page.sidebar.close}>
-                    Sky
+                <Link href={`/user/shopping-bag`} passHref={true}>
+                  <SideNav.Item
+                    variant="navigationText"
+                    navId="shopping-bag"
+                    onClick={page.sidebar.close}
+                  >
+                    Shopping Bag
+                    <Badge marginLeft="major-1">2</Badge>
+                  </SideNav.Item>
+                </Link>
+                <Link href={`/user/shopping-bag`} passHref={true}>
+                  <SideNav.Item
+                    variant="navigationText"
+                    navId="color-mode"
+                    onClick={page.sidebar.close}
+                  >
+                    Light Mode
                   </SideNav.Item>
                 </Link>
               </SideNav.Level>

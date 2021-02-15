@@ -58,17 +58,22 @@ const gpTheme: ThemeConfig = {
           styles: {
             base: {
               fontFamily: "Raleway, system-ui",
-              fontSize: "32px",
-              fontVariant: "small-caps",
-              fontWeight: 700,
-
-              active: {
-                color: "#ff0000"
-              }
+              fontVariant: "small-caps"
             },
             focus: {
               boxShadow: "inset 0 -2px 0 0"
               // boxShadow: "none"
+            }
+          }
+        },
+        rightNavText: {
+          styles: {
+            base: {
+              fontSize: "16px",
+              fontWeight: 200
+            },
+            focus: {
+              boxShadow: "inset 0 -2px 0 0"
             }
           }
         }
@@ -81,8 +86,8 @@ const gpTheme: ThemeConfig = {
         navigationText: {
           styles: {
             base: {
-              font: "Raleway",
-              fontSize: "18px",
+              font: "Raleway, system-ui",
+              fontSize: "20px",
               fontVariant: "small-caps",
               fontWeight: "bold"
             },

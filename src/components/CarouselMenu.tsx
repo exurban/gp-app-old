@@ -7,9 +7,9 @@
  * Add to Bag "B"
  * Share (bring up share modal)
  */
-
-import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/client";
 import { DropdownMenu, Text, Icon, Button, applyTheme, useToasts } from "bumbag";
 import {
@@ -27,7 +27,7 @@ import CarouselInfoModal from "./CarouselInfoModal";
 const MenuButton = applyTheme(Button, {
   defaultProps: {
     variant: "ghost",
-    background: "#1b1a1c",
+    background: "rgba(27, 26, 28, 0.7)",
     color: "#babbba",
     position: "absolute",
     top: "6px",
@@ -326,30 +326,36 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
     }
   };
 
-  const inFavorites = (id: string): boolean => {
-    if (!session) {
-      return false;
-    }
+  const { data: favs } = useQuery(FavoritesDocument);
+  const inFavorites = useMemo(() => {
+    const favIds = favs?.favorites?.photoList?.map(f => f.id);
+    return favIds ? favIds.includes(photo.id) : false;
+  }, [favs]);
 
-    // during development, could get in a situation where there was a session, but favorites hadn't been queried (session persisted when restarting server but favorites (cached on sign in) were purged). Instead of checking for this situation which should only occur in testing, Apollo 3.3 and up returns null if fields were missing
-    const { ...favs } = client.cache.readQuery({
-      query: FavoritesDocument
-    });
+  // const inFavorites = (id: string): boolean => {
+  //   if (!session) {
+  //     return false;
+  //   }
 
-    if (!favs) {
-      console.error(`There IS a session, but favorites have not been fetched.`);
-      useQuery(FavoritesDocument);
-    }
+  //   // during development, could get in a situation where there was a session, but favorites hadn't been queried (session persisted when restarting server but favorites (cached on sign in) were purged). Instead of checking for this situation which should only occur in testing, Apollo 3.3 and up returns null if fields were missing
+  //   const { ...favs } = client.cache.readQuery({
+  //     query: FavoritesDocument
+  //   });
 
-    const photoList = favs.favorites?.photoList || [];
+  //   if (!favs) {
+  //     console.error(`There IS a session, but favorites have not been fetched.`);
+  //     useQuery(FavoritesDocument);
+  //   }
 
-    if (!photoList) {
-      return false;
-    }
-    const favIds = photoList.map(f => f.id);
+  //   const photoList = favs.favorites?.photoList || [];
 
-    return favIds.includes(id);
-  };
+  //   if (!photoList) {
+  //     return false;
+  //   }
+  //   const favIds = photoList.map(f => f.id);
+
+  //   return favIds.includes(id);
+  // };
 
   const inShoppingBag = (id: string): boolean => {
     if (!session) {
@@ -384,7 +390,7 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
 
           <CarouselInfoModal photo={photo} />
 
-          {inFavorites(photo.id) ? (
+          {inFavorites ? (
             <DropdownMenu.Item iconBefore="solid-minus" onClick={() => removePhotoFromFavorites()}>
               <Text>Remove from Favorites</Text>
             </DropdownMenu.Item>
