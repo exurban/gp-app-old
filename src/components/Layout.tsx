@@ -87,6 +87,7 @@ const Layout: React.FC<{ title?: string }> = ({
                       <ActiveLink
                         className="link"
                         activeClassName="active"
+                        aria-label="Featured gallery"
                         href={`/gallery/featured`}
                         passHref={true}
                       >
@@ -99,7 +100,12 @@ const Layout: React.FC<{ title?: string }> = ({
                           Featured
                         </StyledItem>
                       </ActiveLink>
-                      <ActiveLink activeClassName="active" href={`/gallery/bloom`} passHref={true}>
+                      <ActiveLink
+                        activeClassName="active"
+                        aria-label="Bloom gallery"
+                        href={`/gallery/bloom`}
+                        passHref={true}
+                      >
                         <StyledItem
                           className="nav-link"
                           variant="navigationText"
@@ -109,7 +115,12 @@ const Layout: React.FC<{ title?: string }> = ({
                           Bloom
                         </StyledItem>
                       </ActiveLink>
-                      <ActiveLink activeClassName="active" href={`/gallery/bird`} passHref={true}>
+                      <ActiveLink
+                        activeClassName="active"
+                        aria-label="Bird gallery"
+                        href={`/gallery/bird`}
+                        passHref={true}
+                      >
                         <StyledItem
                           className="nav-link"
                           variant="navigationText"
@@ -119,7 +130,12 @@ const Layout: React.FC<{ title?: string }> = ({
                           Bird
                         </StyledItem>
                       </ActiveLink>
-                      <ActiveLink activeClassName="active" href={`/gallery/beast`} passHref={true}>
+                      <ActiveLink
+                        activeClassName="active"
+                        aria-label="Beast gallery"
+                        href={`/gallery/beast`}
+                        passHref={true}
+                      >
                         <StyledItem
                           className="nav-link"
                           variant="navigationText"
@@ -129,7 +145,12 @@ const Layout: React.FC<{ title?: string }> = ({
                           Beast
                         </StyledItem>
                       </ActiveLink>
-                      <ActiveLink activeClassName="active" href={`/gallery/land`} passHref={true}>
+                      <ActiveLink
+                        activeClassName="active"
+                        aria-label="Land gallery"
+                        href={`/gallery/land`}
+                        passHref={true}
+                      >
                         <StyledItem
                           className="nav-link"
                           variant="navigationText"
@@ -139,7 +160,12 @@ const Layout: React.FC<{ title?: string }> = ({
                           Land
                         </StyledItem>
                       </ActiveLink>
-                      <ActiveLink activeClassName="active" href={`/gallery/water`} passHref={true}>
+                      <ActiveLink
+                        activeClassName="active"
+                        aria-label="Water gallery"
+                        href={`/gallery/water`}
+                        passHref={true}
+                      >
                         <StyledItem
                           className="nav-link"
                           variant="navigationText"
@@ -149,7 +175,12 @@ const Layout: React.FC<{ title?: string }> = ({
                           Water
                         </StyledItem>
                       </ActiveLink>
-                      <ActiveLink activeClassName="active" href={`/gallery/sky`} passHref={true}>
+                      <ActiveLink
+                        activeClassName="active"
+                        aria-label="Sky gallery"
+                        href={`/gallery/sky`}
+                        passHref={true}
+                      >
                         <StyledItem
                           className="nav-link"
                           variant="navigationText"
@@ -166,7 +197,12 @@ const Layout: React.FC<{ title?: string }> = ({
                   {session ? (
                     <>
                       {isMinDesktopAndOver && (
-                        <ActiveLink activeClassName="active" href={`/auth/signout`} passHref={true}>
+                        <ActiveLink
+                          activeClassName="active"
+                          aria-label="Sign out"
+                          href={`/auth/signout`}
+                          passHref={true}
+                        >
                           <StyledItem className="nav-link" variant="rightNavText">
                             <SignOutItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
                           </StyledItem>
@@ -175,6 +211,7 @@ const Layout: React.FC<{ title?: string }> = ({
                       {isMinDesktopAndOver && (
                         <ActiveLink
                           activeClassName="active"
+                          aria-label="Favorites Gallery"
                           href={`/gallery/user/favorites`}
                           passHref={true}
                         >
@@ -186,6 +223,7 @@ const Layout: React.FC<{ title?: string }> = ({
                       {isMinDesktopAndOver && (
                         <ActiveLink
                           activeClassName="active"
+                          aria-label="Shopping Bag"
                           href={`/gallery/user/shopping-bag`}
                           passHref={true}
                         >
@@ -198,7 +236,12 @@ const Layout: React.FC<{ title?: string }> = ({
                   ) : (
                     <>
                       {isMinDesktopAndOver && (
-                        <ActiveLink activeClassName="active" href={`/auth/signin`} passHref={true}>
+                        <ActiveLink
+                          activeClassName="active"
+                          aria-label="Sign in"
+                          href={`/auth/signin`}
+                          passHref={true}
+                        >
                           <StyledItem className="nav-link" variant="rightNavText">
                             <SignInItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
                           </StyledItem>
@@ -233,7 +276,12 @@ const Layout: React.FC<{ title?: string }> = ({
                   <Icon aria-label="logo" icon="gpLogo" fontSize="700" margin="major-1" />
                 </Level>
                 <Divider />
-                <ActiveLink href={`/gallery/featured`} activeClassName="active" passHref={true}>
+                <ActiveLink
+                  href={`/gallery/featured`}
+                  activeClassName="active"
+                  aria-label="Featured gallery"
+                  passHref={true}
+                >
                   <StyledSideNavItem
                     className="nav-link"
                     variant="navigationText"
@@ -243,7 +291,12 @@ const Layout: React.FC<{ title?: string }> = ({
                     Featured
                   </StyledSideNavItem>
                 </ActiveLink>
-                <ActiveLink href={`/gallery/bloom`} activeClassName="active" passHref={true}>
+                <ActiveLink
+                  href={`/gallery/bloom`}
+                  activeClassName="active"
+                  aria-label="Bloom gallery"
+                  passHref={true}
+                >
                   <StyledSideNavItem
                     className="nav-link"
                     variant="navigationText"
@@ -253,7 +306,12 @@ const Layout: React.FC<{ title?: string }> = ({
                     Bloom
                   </StyledSideNavItem>
                 </ActiveLink>
-                <ActiveLink href={`/gallery/bird`} activeClassName="active" passHref={true}>
+                <ActiveLink
+                  href={`/gallery/bird`}
+                  activeClassName="active"
+                  aria-label="Bird gallery"
+                  passHref={true}
+                >
                   <StyledSideNavItem
                     className="nav-link"
                     variant="navigationText"
@@ -263,7 +321,12 @@ const Layout: React.FC<{ title?: string }> = ({
                     Bird
                   </StyledSideNavItem>
                 </ActiveLink>
-                <ActiveLink href={`/gallery/beast`} activeClassName="active" passHref={true}>
+                <ActiveLink
+                  href={`/gallery/beast`}
+                  activeClassName="active"
+                  aria-label="Beast gallery"
+                  passHref={true}
+                >
                   <StyledSideNavItem
                     className="nav-link"
                     variant="navigationText"
@@ -273,7 +336,12 @@ const Layout: React.FC<{ title?: string }> = ({
                     Beast
                   </StyledSideNavItem>
                 </ActiveLink>
-                <ActiveLink href={`/gallery/land`} activeClassName="active" passHref={true}>
+                <ActiveLink
+                  href={`/gallery/land`}
+                  activeClassName="active"
+                  aria-label="Land gallery"
+                  passHref={true}
+                >
                   <StyledSideNavItem
                     className="nav-link"
                     variant="navigationText"
@@ -283,7 +351,12 @@ const Layout: React.FC<{ title?: string }> = ({
                     Land
                   </StyledSideNavItem>
                 </ActiveLink>
-                <ActiveLink href={`/gallery/water`} activeClassName="active" passHref={true}>
+                <ActiveLink
+                  href={`/gallery/water`}
+                  activeClassName="active"
+                  aria-label="Water gallery"
+                  passHref={true}
+                >
                   <StyledSideNavItem
                     className="nav-link"
                     variant="navigationText"
@@ -293,7 +366,12 @@ const Layout: React.FC<{ title?: string }> = ({
                     Water
                   </StyledSideNavItem>
                 </ActiveLink>
-                <ActiveLink href={`/gallery/sky`} activeClassName="active" passHref={true}>
+                <ActiveLink
+                  href={`/gallery/sky`}
+                  activeClassName="active"
+                  aria-label="Sky gallery"
+                  passHref={true}
+                >
                   <StyledSideNavItem
                     className="nav-link"
                     variant="navigationText"
@@ -308,7 +386,12 @@ const Layout: React.FC<{ title?: string }> = ({
                     <Divider />
                     {session ? (
                       <>
-                        <ActiveLink href={`/auth/signout`} activeClassName="active" passHref={true}>
+                        <ActiveLink
+                          href={`/auth/signout`}
+                          activeClassName="active"
+                          aria-label="Sign in"
+                          passHref={true}
+                        >
                           <StyledSideNavItem
                             className="nav-link"
                             variant="navigationText"
@@ -321,6 +404,7 @@ const Layout: React.FC<{ title?: string }> = ({
                         <ActiveLink
                           href={`/gallery/user/favorites`}
                           activeClassName="active"
+                          aria-label="Favorites gallery"
                           passHref={true}
                         >
                           <SideNav.Item
@@ -334,6 +418,7 @@ const Layout: React.FC<{ title?: string }> = ({
                         <ActiveLink
                           href={`/gallery/user/shopping-bag`}
                           activeClassName="active"
+                          aria-label="Shopping Bag"
                           passHref={true}
                         >
                           <SideNav.Item
@@ -346,7 +431,12 @@ const Layout: React.FC<{ title?: string }> = ({
                         </ActiveLink>
                       </>
                     ) : (
-                      <ActiveLink href={`/auth/signin`} activeClassName="active" passHref={true}>
+                      <ActiveLink
+                        href={`/auth/signin`}
+                        activeClassName="active"
+                        aria-label="Sign in"
+                        passHref={true}
+                      >
                         <StyledSideNavItem
                           className="nav-link"
                           variant="navigationText"
