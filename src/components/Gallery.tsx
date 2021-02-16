@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../graphql-operations";
@@ -35,6 +36,10 @@ const Gallery: React.FC<Props> = ({ input }) => {
 
   return (
     <>
+      <Head>
+        <title>Gallery</title>
+        <meta name="description" content="Beautiful ducks!" />
+      </Head>
       <Flex flexDirection="row" width="80vw" marginX="auto" marginTop="major-3">
         <GalleryHeader
           image={subjectInfo.coverImage}

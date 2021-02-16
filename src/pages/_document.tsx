@@ -24,8 +24,10 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>Welcome to the jungle!</title>
-          <meta name="description" content="You're gonna die!" />
+          <meta
+            name="description"
+            content="Landscape and nature photography from photographers Boyd and Scott Gibbs."
+          />
 
           <meta property="og:url" content="https://gibbs-photography.com" />
           <meta property="og:type" content="website" />
