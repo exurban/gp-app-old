@@ -2,12 +2,14 @@ import React, { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useSession } from "next-auth/client";
+import { TwitterShareButton, TwitterIcon } from "react-share";
 import {
   DropdownMenu,
   DropdownMenuGroup,
   Text,
   Icon,
   Button,
+  Flex,
   applyTheme,
   useToasts,
   useBreakpointValue
@@ -45,7 +47,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
 
   const showLarger = () => {
     let { pathname } = router;
-    console.log(pathname);
+
     if (!pathname || typeof pathname !== "string") {
       return;
     }
@@ -53,8 +55,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     if (pathname.includes(`gallery`)) {
       pathname = pathname.replace(`gallery`, `carousel`);
     }
-
-    console.log(pathname);
 
     if (pathname.includes(`/[name]`)) {
       pathname = pathname.replace(`/[name]`, "");
@@ -347,13 +347,13 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     });
   };
 
-  const sharePhotoOnTwitter = () => {
-    if (!session) {
-      router.push(`/auth/signin`);
-    } else {
-      console.log(`Share ${photo.id} on Twitter.`);
-    }
-  };
+  // const sharePhotoOnTwitter = () => {
+  //   if (!session) {
+  //     router.push(`/auth/signin`);
+  //   } else {
+  //     console.log(`Share ${photo.id} on Twitter.`);
+  //   }
+  // };
 
   const sharePhotoOnFacebook = () => {
     if (!session) {
@@ -482,12 +482,25 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
 
           <DropdownMenu.Divider />
           <DropdownMenuGroup title="Share">
-            <DropdownMenu.Item
+            {/* <DropdownMenu.Item
               iconBefore="brands-twitter"
               color="#1da1f2"
               onClick={() => sharePhotoOnTwitter()}
             >
               <Text color="text">Twitter</Text>
+            </DropdownMenu.Item> */}
+            <DropdownMenu.Item>
+              <Flex flexDirection="row">
+                <TwitterShareButton
+                  url={"https://gibbs-photography.com"}
+                  title={"Explore your wild side"}
+                  hashtags={["wildside"]}
+                >
+                  <TwitterIcon size={24} style={{ borderRadius: "50%" }} />
+
+                  <Text.Block>Twitter</Text.Block>
+                </TwitterShareButton>
+              </Flex>
             </DropdownMenu.Item>
             <DropdownMenu.Item
               iconBefore="brands-facebook-f"

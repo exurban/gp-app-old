@@ -198,23 +198,19 @@ const Layout: React.FC<{ title?: string }> = ({
                   ) : (
                     <>
                       {isMinDesktopAndOver && (
-                        <ActiveLink
-                          activeClassName="active"
-                          href={`/gallery/user/shopping-bag`}
-                          passHref={true}
-                        >
+                        <ActiveLink activeClassName="active" href={`/auth/signin`} passHref={true}>
                           <StyledItem className="nav-link" variant="rightNavText">
                             <SignInItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
                           </StyledItem>
                         </ActiveLink>
                       )}
-                      <StyledItem className="nav-link" variant="rightNavText">
-                        <Flex height="100%" paddingX="0.8rem">
-                          <ColorModeItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
-                        </Flex>
-                      </StyledItem>
                     </>
                   )}
+                  <StyledItem className="nav-link" variant="rightNavText">
+                    <Flex height="100%" paddingX="0.8rem">
+                      <ColorModeItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                    </Flex>
+                  </StyledItem>
                   <Hide above="widescreen">
                     <TopNav.Item>
                       <Button variant="ghost" onClick={page.sidebar.toggle}>
@@ -317,7 +313,6 @@ const Layout: React.FC<{ title?: string }> = ({
                             className="nav-link"
                             variant="navigationText"
                             navId="signin"
-                            // onClick={page.sidebar.close}
                             onClick={() => signOutAndClose()}
                           >
                             Sign Out

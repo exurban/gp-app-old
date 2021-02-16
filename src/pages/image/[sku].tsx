@@ -10,6 +10,7 @@ import Loader from "../../components/Loader";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Flex, applyTheme, Text, Button, Icon, styled } from "bumbag";
 import { NextSeo } from "next-seo";
+import { TwitterShareButton, TwitterIcon } from "react-share";
 
 const Photo: React.FC = () => {
   const router = useRouter();
@@ -76,19 +77,6 @@ const Photo: React.FC = () => {
     }
   });
 
-  <NextSeo
-    title={photo.title}
-    description={photo.description}
-    canonical={`https://www.gibbs-photography.com/image/${photo.sku}`}
-    openGraph={{
-      url: `https://www.gibbs-photography.com/image/${photo.sku}`,
-      title: photo.title,
-      description: photo.description,
-      images: [{ url: photo.images?.[0].imageUrl }],
-      site_name: "Gibbs Photography"
-    }}
-  />;
-
   return (
     <>
       <Flex
@@ -101,6 +89,26 @@ const Photo: React.FC = () => {
         alignY="center"
       >
         <Flex flexDirection="row" width="98%" justifyContent="space-between">
+          <TwitterShareButton
+            url={"https://gibbs-photography.com"}
+            title={"Explore your wild side"}
+            hashtags={["wildside"]}
+          >
+            <TwitterIcon size={24} style={{ borderRadius: "50%" }} />
+            <NextSeo
+              title={photo.title}
+              description={photo.description}
+              canonical={`https://www.gibbs-photography.com/image/${photo.sku}`}
+              openGraph={{
+                url: `https://www.gibbs-photography.com/image/${photo.sku}`,
+                title: photo.title,
+                description: photo.description,
+                images: [{ url: photo.images?.[0].imageUrl }],
+                site_name: "Gibbs Photography"
+              }}
+            />
+            <Text.Block>Twitter</Text.Block>
+          </TwitterShareButton>
           <IconButton>
             <Icon aria-label="share" icon="solid-shareAlt" fontSize="300" onClick={() => share()} />
           </IconButton>
