@@ -38,10 +38,7 @@ import { ThemeConfig } from "bumbag";
 
 const gpTheme: ThemeConfig = {
   fonts: {
-    importUrls: [
-      "/fonts/style.css",
-      "https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap"
-    ]
+    importUrls: ["https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap"]
   },
 
   // Button: {

@@ -73,7 +73,7 @@ const Layout: React.FC<{ title?: string }> = ({
             <>
               <TopNav>
                 <TopNav.Section>
-                  <ActiveLink activeClassName="active" href={`/`} passHref={true}>
+                  <ActiveLink activeClassName="active" aria-label="home" href={`/`} passHref={true}>
                     <StyledItem
                       className="nav-link"
                       fontSize={{ default: "60px", "max-fullHD": "40px" }}

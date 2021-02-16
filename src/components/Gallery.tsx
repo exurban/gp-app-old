@@ -81,6 +81,7 @@ const Gallery: React.FC<Props> = ({ input }) => {
           <Tooltip placement="bottom" content="View larger images in a carousel">
             <Button
               palette="primary"
+              aria-label="view larger in carousel"
               size={size}
               fontSize={{ default: "500", "max-tablet": "300" }}
               onClick={() =>
