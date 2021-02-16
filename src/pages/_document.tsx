@@ -3,7 +3,7 @@ import { GA_TRACKING_ID } from "../utils/gtag";
 import { extractCritical } from "bumbag-server";
 import { InitializeColorMode } from "bumbag";
 import { DefaultSeo } from "next-seo";
-import SEO from "../../next-seo.config";
+// import SEO from "../../next-seo.config";
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
