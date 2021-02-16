@@ -79,6 +79,25 @@ const Photo: React.FC = () => {
 
   return (
     <>
+      <NextSeo
+        title={photo.title}
+        description={photo.description}
+        canonical={`https://www.gibbs-photography.com/image/${photo.sku}`}
+        openGraph={{
+          url: `https://www.gibbs-photography.com/image/${photo.sku}`,
+          title: photo.title,
+          description: photo.description,
+          images: [
+            {
+              url: photo.images?.[0].imageUrl,
+              width: photo.images?.[0].width,
+              height: photo.images?.[0].height,
+              alt: photo.images?.[0].altText
+            }
+          ],
+          site_name: "Gibbs Photography"
+        }}
+      />
       <Flex
         className="image-metadata-wrapper"
         flexDirection="column"

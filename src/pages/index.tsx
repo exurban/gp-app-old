@@ -1,10 +1,31 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Heading, Paragraph, Button, Flex, Text } from "bumbag";
+import { NextSeo } from "next-seo";
 
 const IndexPage: React.FC = () => {
   return (
     <>
+      <NextSeo
+        title="Welcome"
+        description="Subconsciously articulating"
+        canonical={`https://www.gibbs-photography.com`}
+        openGraph={{
+          url: `https://www.gibbs-photography.com`,
+          title: "Welcome",
+          description: "Subconsciously articulating",
+          images: [
+            {
+              url:
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp",
+              width: 1400,
+              height: 935,
+              alt: "welcome image"
+            }
+          ],
+          site_name: "Gibbs Photography"
+        }}
+      />
       <Flex
         alignX="center"
         width="100vw"
