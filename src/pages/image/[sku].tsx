@@ -103,7 +103,14 @@ const Photo: React.FC = () => {
                 url: `https://www.gibbs-photography.com/image/${photo.sku}`,
                 title: photo.title,
                 description: photo.description,
-                images: [{ url: photo.images?.[0].imageUrl }],
+                images: [
+                  {
+                    url: photo.images?.[0].imageUrl,
+                    width: photo.images?.[0].width,
+                    height: photo.images?.[0].height,
+                    alt: photo.images?.[0].altText
+                  }
+                ],
                 site_name: "Gibbs Photography"
               }}
             />
