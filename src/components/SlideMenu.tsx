@@ -391,7 +391,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
           .share({
             title: `${photo.title}`,
             text: "Awesome photo, man!",
-            url: "https://gibbs-photography.com/"
+            url: "https://gibbs-photography.com/image/1115"
           })
           .then(() => console.log("Successful share"))
           .catch(error => console.log("Error sharing", error));
