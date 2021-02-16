@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { PhotoInfoFragment } from "../graphql-operations";
 import Image from "next/image";
 import { Box, styled } from "bumbag";
@@ -13,15 +14,27 @@ type Props = {
 
 const CarouselItem: React.FC<Props> = ({ photo, idx }) => {
   return (
-    <Box className="item" data-value={idx} key={idx} height="100vh" alignX="center" alignY="center">
-      <StyledImage
-        alt="demo"
-        src={photo.images?.[0].imageUrl}
-        layout="fill"
-        objectFit="contain"
-        quality={80}
-      />
-    </Box>
+    <>
+      <Head>
+        <title>{photo.title}</title>
+      </Head>
+      <Box
+        className="item"
+        data-value={idx}
+        key={idx}
+        height="100vh"
+        alignX="center"
+        alignY="center"
+      >
+        <StyledImage
+          alt="demo"
+          src={photo.images?.[0].imageUrl}
+          layout="fill"
+          objectFit="contain"
+          quality={80}
+        />
+      </Box>
+    </>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useSession } from "next-auth/client";
-import { TwitterShareButton, TwitterIcon } from "react-share";
+import { TwitterShareButton, TwitterIcon, FacebookShareButton, FacebookIcon } from "react-share";
 import {
   DropdownMenu,
   DropdownMenuGroup,
@@ -355,13 +355,13 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   //   }
   // };
 
-  const sharePhotoOnFacebook = () => {
-    if (!session) {
-      router.push(`/auth/signin`);
-    } else {
-      console.log(`Share ${photo.id} on Facebook.`);
-    }
-  };
+  // const sharePhotoOnFacebook = () => {
+  //   if (!session) {
+  //     router.push(`/auth/signin`);
+  //   } else {
+  //     console.log(`Share ${photo.id} on Facebook.`);
+  //   }
+  // };
 
   const sharePhotoViaEmail = () => {
     if (!session) {
@@ -502,12 +502,21 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
                 </TwitterShareButton>
               </Flex>
             </DropdownMenu.Item>
-            <DropdownMenu.Item
+            {/* <DropdownMenu.Item
               iconBefore="brands-facebook-f"
               color="#4267b2"
               onClick={() => sharePhotoOnFacebook()}
             >
               <Text color="text">Facebook</Text>
+            </DropdownMenu.Item> */}
+            <DropdownMenu.Item>
+              <FacebookShareButton
+                url={"https://gibbs-photography.com"}
+                quote={"Explore your wild side"}
+                hashtag={"wildside"}
+              >
+                <FacebookIcon size={24} />
+              </FacebookShareButton>
             </DropdownMenu.Item>
             <DropdownMenu.Item
               iconBefore="solid-at"
