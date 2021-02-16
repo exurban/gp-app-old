@@ -39,6 +39,25 @@ const Gallery: React.FC<Props> = ({ input }) => {
       <Head>
         <title>Gallery</title>
         <meta name="description" content="Beautiful ducks!" />
+
+        <meta property="og:url" content="https://gibbs-photography.com" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Photo Gallery" />
+        <meta property="og:description" content="Grid view of photos" />
+        <meta
+          property="og:image"
+          content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1109-1612574261066.webp"
+        />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="gibbs-photography.com" />
+        <meta property="twitter:url" content="https://gibbs-photography.com" />
+        <meta name="twitter:title" content="Welcome" />
+        <meta name="twitter:description" content="to Gibbs Photography" />
+        <meta
+          name="twitter:image"
+          content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1195-1612573940876.webp"
+        />
       </Head>
       <Flex flexDirection="row" width="80vw" marginX="auto" marginTop="major-3">
         <GalleryHeader

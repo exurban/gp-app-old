@@ -41,7 +41,7 @@ export default class MyDocument extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <meta property="twitter:domain" content="gibbs-photography.com" />
           <meta property="twitter:url" content="https://gibbs-photography.com" />
-          <meta name="twitter:title" content="Welcom" />
+          <meta name="twitter:title" content="Welcome" />
           <meta name="twitter:description" content="to Gibbs Photography" />
           <meta
             name="twitter:image"

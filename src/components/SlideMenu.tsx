@@ -360,7 +360,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     } else if (navigator.share) {
       navigator
         .share({
-          url: "https://gibbs-photography.com/image/1115"
+          url: `${photo.images?.[0].imageUrl}`
         })
         .then(() => console.log("Successful share"))
         .catch(error => console.log("Error sharing", error));
