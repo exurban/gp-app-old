@@ -2,8 +2,6 @@ import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/do
 import { GA_TRACKING_ID } from "../utils/gtag";
 import { extractCritical } from "bumbag-server";
 import { InitializeColorMode } from "bumbag";
-import { DefaultSeo } from "next-seo";
-// import SEO from "../../next-seo.config";
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -26,7 +24,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          {/* <title>Welcome to the jungle!</title>
+          <title>Welcome to the jungle!</title>
           <meta name="description" content="You're gonna die!" />
 
           <meta property="og:url" content="https://gibbs-photography.com" />
@@ -46,20 +44,8 @@ export default class MyDocument extends Document {
           <meta
             name="twitter:image"
             content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/test-preview.jpg"
-          /> */}
-          <DefaultSeo
-            openGraph={{
-              type: "website",
-              locale: "en_US",
-              url: "https://www.gibbs-photography.com",
-              site_name: "Gibbs Photography"
-            }}
-            twitter={{
-              handle: "@gibbs_photog",
-              site: "https://gibbs-photography.com",
-              cardType: "summary_large_image"
-            }}
           />
+
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script
