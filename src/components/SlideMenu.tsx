@@ -2,21 +2,21 @@ import React, { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useSession } from "next-auth/client";
-import {
-  TwitterShareButton,
-  TwitterIcon
-  // FacebookShareButton,
-  // FacebookIcon,
-  // EmailShareButton,
-  // EmailIcon
-} from "react-share";
+// import {
+//   TwitterShareButton,
+//   TwitterIcon
+//   // FacebookShareButton,
+//   // FacebookIcon,
+//   // EmailShareButton,
+//   // EmailIcon
+// } from "react-share";
 import {
   DropdownMenu,
   DropdownMenuGroup,
   Text,
   Icon,
   Button,
-  Flex,
+  // Flex,
   applyTheme,
   useToasts,
   useBreakpointValue
@@ -354,21 +354,33 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     });
   };
 
-  // const sharePhotoOnTwitter = () => {
-  //   if (!session) {
-  //     router.push(`/auth/signin`);
-  //   } else {
-  //     console.log(`Share ${photo.id} on Twitter.`);
-  //   }
-  // };
+  const sharePhotoOnTwitter = () => {
+    if (!session) {
+      router.push(`/auth/signin`);
+    } else if (navigator.share) {
+      navigator
+        .share({
+          url: "https://gibbs-photography.com/image/1115"
+        })
+        .then(() => console.log("Successful share"))
+        .catch(error => console.log("Error sharing", error));
+    }
+  };
 
-  // const sharePhotoOnFacebook = () => {
-  //   if (!session) {
-  //     router.push(`/auth/signin`);
-  //   } else {
-  //     console.log(`Share ${photo.id} on Facebook.`);
-  //   }
-  // };
+  const sharePhotoOnFacebook = () => {
+    if (!session) {
+      router.push(`/auth/signin`);
+    } else if (navigator.share) {
+      navigator
+        .share({
+          title: `${photo.title}`,
+          text: "Awesome photo, man!",
+          url: "https://gibbs-photography.com/image/1115"
+        })
+        .then(() => console.log("Successful share"))
+        .catch(error => console.log("Error sharing", error));
+    }
+  };
 
   const sharePhotoViaEmail = () => {
     if (!session) {
@@ -378,7 +390,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
         navigator
           .share({
             title: `${photo.title}`,
-            text: `${photo.description}`,
+            text: "Awesome photo, man!",
             url: "https://gibbs-photography.com/"
           })
           .then(() => console.log("Successful share"))
@@ -498,14 +510,14 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
 
           <DropdownMenu.Divider />
           <DropdownMenuGroup title="Share">
-            {/* <DropdownMenu.Item
+            <DropdownMenu.Item
               iconBefore="brands-twitter"
               color="#1da1f2"
               onClick={() => sharePhotoOnTwitter()}
             >
               <Text color="text">Twitter</Text>
-            </DropdownMenu.Item> */}
-            <DropdownMenu.Item>
+            </DropdownMenu.Item>
+            {/* <DropdownMenu.Item>
               <Flex flexDirection="row">
                 <TwitterShareButton
                   url={"https://gibbs-photography.com"}
@@ -515,16 +527,16 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
                   <TwitterIcon size={24} style={{ borderRadius: "50%" }} />
 
                   <Text.Block>Twitter</Text.Block>
-                </TwitterShareButton>
-              </Flex>
-            </DropdownMenu.Item>
-            {/* <DropdownMenu.Item
+                </TwitterShareButton> */}
+            {/* </Flex>
+            </DropdownMenu.Item> */}
+            <DropdownMenu.Item
               iconBefore="brands-facebook-f"
               color="#4267b2"
               onClick={() => sharePhotoOnFacebook()}
             >
               <Text color="text">Facebook</Text>
-            </DropdownMenu.Item> */}
+            </DropdownMenu.Item>
             {/* <DropdownMenu.Item>
               <FacebookShareButton
                 url={"https://gibbs-photography.com"}
