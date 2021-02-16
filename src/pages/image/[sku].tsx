@@ -97,6 +97,11 @@ const Photo: React.FC = () => {
           ],
           site_name: "Gibbs Photography"
         }}
+        twitter={{
+          handle: "gibbs_photog",
+          site: `https://gibbs-photography.com/image/${photo.sku}`,
+          cardType: "summary_large_image"
+        }}
       />
       <Flex
         className="image-metadata-wrapper"
