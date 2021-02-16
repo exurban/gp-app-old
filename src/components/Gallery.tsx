@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../graphql-operations";
 import { Flex, Grid, Box, Icon, Heading, Button, Tooltip, useBreakpointValue } from "bumbag";
+import { NextSeo } from "next-seo";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
 import GalleryHeader from "./GalleryHeader";
@@ -34,6 +35,31 @@ const Gallery: React.FC<Props> = ({ input }) => {
 
   return (
     <>
+      <NextSeo
+        title="Welcome"
+        description="Subconsciously articulating"
+        canonical={`https://www.gibbs-photography.com`}
+        openGraph={{
+          url: `https://www.gibbs-photography.com`,
+          title: "Welcome",
+          description: "Subconsciously articulating",
+          images: [
+            {
+              url:
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp",
+              width: 1400,
+              height: 935,
+              alt: "welcome image"
+            }
+          ],
+          site_name: "Gibbs Photography"
+        }}
+        twitter={{
+          handle: "gibbs_photog",
+          site: "https://gibbs-photography.com",
+          cardType: "summary_large_image"
+        }}
+      />
       <Flex flexDirection="row" width="80vw" marginX="auto" marginTop="major-3">
         <GalleryHeader
           image={subjectInfo.coverImage}

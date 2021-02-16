@@ -8,8 +8,8 @@ const IndexPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title></title>
-        <meta name="description" content="" />
+        <title>Welcome to the jungle!</title>
+        <meta name="description" content="You're gonna die!" />
 
         <meta property="og:url" content="https://gibbs-photography.com" />
         <meta property="og:type" content="website" />
