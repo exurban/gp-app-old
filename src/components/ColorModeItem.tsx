@@ -11,11 +11,12 @@ const ColorModeItem: React.FC<Props> = ({ size }) => {
     return (
       <Flex
         cursor="pointer"
+        className="right-nav-item"
         flexDirection="column"
-        marginBottom={size === "large" ? "12px" : "0px"}
-        height="100%"
-        justifyContent={size === "small" ? "center" : "flex-end"}
+        marginBottom={size === "large" ? "minor-1" : "0px"}
+        paddingTop="minor-1"
         paddingX={size === "small" ? "major-1" : "0px"}
+        alignSelf={size === "large" ? "flex-end" : "center"}
         onClick={() => setColorMode("dark")}
       >
         <Icon
@@ -36,11 +37,12 @@ const ColorModeItem: React.FC<Props> = ({ size }) => {
     return (
       <Flex
         cursor="pointer"
+        className="right-nav-item"
         flexDirection="column"
-        marginBottom={size === "large" ? "12px" : "0px"}
-        height="100%"
-        justifyContent={size === "small" ? "center" : "flex-end"}
+        marginBottom={size === "large" ? "minor-1" : "0px"}
+        paddingTop="minor-1"
         paddingX={size === "small" ? "major-1" : "0px"}
+        alignSelf={size === "large" ? "flex-end" : "center"}
         onClick={() => setColorMode("default")}
       >
         <Icon

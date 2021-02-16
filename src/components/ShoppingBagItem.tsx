@@ -18,10 +18,10 @@ const ShoppingBagItem: React.FC<Props> = ({ size }) => {
     <Flex
       className="right-nav-item"
       flexDirection="column"
-      marginBottom={size === "large" ? "major-1" : "0px"}
-      height="100%"
-      justifyContent={size === "small" ? "center" : "flex-end"}
+      marginBottom={size === "large" ? "minor-1" : "0px"}
+      paddingTop="minor-1"
       paddingX={size === "small" ? "major-1" : "0px"}
+      alignSelf={size === "large" ? "flex-end" : "center"}
     >
       <Icon
         aria-label="shopping bag"
@@ -30,7 +30,13 @@ const ShoppingBagItem: React.FC<Props> = ({ size }) => {
         fontSize="1.25rem"
       />
       {size === "large" && (
-        <Text marginTop="minor-1" fontSize="0.875rem" fontWeight="200" marginX="auto">
+        <Text
+          marginTop="minor-1"
+          width="40px"
+          fontSize="0.875rem"
+          fontWeight="200"
+          textAlign="center"
+        >
           Bag
         </Text>
       )}

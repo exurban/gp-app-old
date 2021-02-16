@@ -9,12 +9,12 @@ type Props = {
 const AccountItem: React.FC<Props> = ({ size }) => {
   return (
     <Flex
-      flexDirection="column"
       className="right-nav-item"
-      marginBottom={size === "large" ? "major-1" : "0px"}
-      height="100%"
-      justifyContent={size === "small" ? "center" : "flex-end"}
+      flexDirection="column"
+      marginBottom={size === "large" ? "minor-1" : "0px"}
+      paddingTop="minor-1"
       paddingX={size === "small" ? "major-1" : "0px"}
+      alignSelf={size === "large" ? "flex-end" : "center"}
       onClick={e => {
         e.preventDefault();
         signOut();
@@ -24,7 +24,13 @@ const AccountItem: React.FC<Props> = ({ size }) => {
     >
       <Icon aria-label="sign out" icon="regular-user-circle" margin="0 auto" fontSize="1.25rem" />
       {size === "large" && (
-        <Text marginTop="minor-1" fontSize="0.875rem" fontWeight="200" marginX="auto">
+        <Text
+          marginTop="minor-1"
+          fontSize="0.875rem"
+          fontWeight="200"
+          marginX="auto"
+          textAlign="center"
+        >
           Sign out
         </Text>
       )}

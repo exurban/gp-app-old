@@ -1,5 +1,4 @@
 import { Flex, Icon, Text } from "bumbag";
-import React from "react";
 
 type Props = {
   size: string;
@@ -10,14 +9,20 @@ const AccountItem: React.FC<Props> = ({ size }) => {
     <Flex
       className="right-nav-item"
       flexDirection="column"
-      marginBottom={size === "large" ? "major-1" : "0px"}
-      height="100%"
-      justifyContent={size === "small" ? "center" : "flex-end"}
+      marginBottom={size === "large" ? "minor-1" : "0px"}
+      paddingTop="minor-1"
       paddingX={size === "small" ? "major-1" : "0px"}
+      alignSelf={size === "large" ? "flex-end" : "center"}
     >
       <Icon aria-label="sign in" icon="regular-user-circle" margin="0 auto" fontSize="1.25rem" />
       {size === "large" && (
-        <Text marginTop="minor-1" fontSize="0.875rem" fontWeight="200" marginX="auto">
+        <Text
+          marginTop="minor-1"
+          fontSize="0.875rem"
+          fontWeight="200"
+          marginX="auto"
+          textAlign="center"
+        >
           Sign in
         </Text>
       )}

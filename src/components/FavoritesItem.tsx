@@ -18,10 +18,10 @@ const FavoritesItem: React.FC<Props> = ({ size }) => {
     <Flex
       className="right-nav-item"
       flexDirection="column"
-      marginBottom={size === "large" ? "major-1" : "0px"}
-      height="100%"
-      justifyContent={size === "small" ? "center" : "flex-end"}
+      marginBottom={size === "large" ? "minor-1" : "0px"}
+      paddingTop="minor-1"
       paddingX={size === "small" ? "major-1" : "0px"}
+      alignSelf={size === "large" ? "flex-end" : "center"}
     >
       <Icon aria-label="favorites" icon="regular-star" margin="0 auto" fontSize="1.25rem" />
       {size === "large" && (

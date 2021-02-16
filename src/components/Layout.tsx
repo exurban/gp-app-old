@@ -1,8 +1,7 @@
 import React from "react";
-import Link from "next/link";
 import Head from "next/head";
 import Footer from "./Footer";
-import { useSession } from "next-auth/client";
+import { useSession, signOut } from "next-auth/client";
 import {
   usePage,
   PageWithHeader,
@@ -12,20 +11,21 @@ import {
   TopNav,
   SideNav,
   Icon,
-  Box,
+  Flex,
   Divider,
   Button,
   styled,
   palette,
-  useBreakpoint,
-  Badge
+  useBreakpoint
 } from "bumbag";
 import ShoppingBagItem from "./ShoppingBagItem";
 import FavoritesItem from "./FavoritesItem";
+import FavoritesSideNavItem from "./FavoritesSideNavItem";
 import SignInItem from "./SignInItem";
 import SignOutItem from "./SignOutItem";
 import ColorModeItem from "./ColorModeItem";
 import ActiveLink from "./ActiveLink";
+import ShoppingBagSideNavItem from "./ShoppingBagSideNavItem";
 
 const Layout: React.FC<{ title?: string }> = ({
   children,
@@ -33,6 +33,7 @@ const Layout: React.FC<{ title?: string }> = ({
 }) => {
   const page = usePage();
   const isMinDesktopAndOver = useBreakpoint("min-desktop");
+  const isMaxTabletAndUnder = useBreakpoint("max-tablet");
   const isMaxWidescreenAndUnder = useBreakpoint("max-widescreen");
   const [session] = useSession();
 
@@ -50,6 +51,11 @@ const Layout: React.FC<{ title?: string }> = ({
       box-shadow: inset 3px 0 0 0 ${palette("primary")};
     }
   `;
+
+  function signOutAndClose() {
+    signOut();
+    page.sidebar.close;
+  }
 
   if (typeof window !== "undefined") {
     return (
@@ -161,11 +167,7 @@ const Layout: React.FC<{ title?: string }> = ({
                     <>
                       {isMinDesktopAndOver && (
                         <ActiveLink activeClassName="active" href={`/auth/signout`} passHref={true}>
-                          <StyledItem
-                            className="nav-link"
-                            variant="rightNavText"
-                            justifyContent={isMaxWidescreenAndUnder ? "flex-end" : "center"}
-                          >
+                          <StyledItem className="nav-link" variant="rightNavText">
                             <SignOutItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
                           </StyledItem>
                         </ActiveLink>
@@ -194,22 +196,25 @@ const Layout: React.FC<{ title?: string }> = ({
                       )}
                     </>
                   ) : (
-                    <ActiveLink activeClassName="active" href={`/auth/signin`} passHref={true}>
+                    <>
+                      {isMinDesktopAndOver && (
+                        <ActiveLink
+                          activeClassName="active"
+                          href={`/gallery/user/shopping-bag`}
+                          passHref={true}
+                        >
+                          <StyledItem className="nav-link" variant="rightNavText">
+                            <SignInItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                          </StyledItem>
+                        </ActiveLink>
+                      )}
                       <StyledItem className="nav-link" variant="rightNavText">
-                        <SignInItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                        <Flex height="100%" paddingX="0.8rem">
+                          <ColorModeItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
+                        </Flex>
                       </StyledItem>
-                    </ActiveLink>
+                    </>
                   )}
-                  <StyledItem className="nav-link" variant="rightNavText">
-                    <Box
-                      height="100%"
-                      paddingX="0.8rem"
-                      marginBottom={isMaxWidescreenAndUnder ? "0px" : "0.5rem"}
-                    >
-                      <ColorModeItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
-                    </Box>
-                  </StyledItem>
-
                   <Hide above="widescreen">
                     <TopNav.Item>
                       <Button variant="ghost" onClick={page.sidebar.toggle}>
@@ -302,46 +307,63 @@ const Layout: React.FC<{ title?: string }> = ({
                     Sky
                   </StyledSideNavItem>
                 </ActiveLink>
-                <Divider />
-                <ActiveLink href={`/auth/signin`} activeClassName="active" passHref={true}>
-                  <StyledSideNavItem
-                    className="nav-link"
-                    variant="navigationText"
-                    navId="signin"
-                    onClick={page.sidebar.close}
-                  >
-                    Sign In
-                  </StyledSideNavItem>
-                </ActiveLink>
-                <Link href={`/user/favorites`} passHref={true}>
-                  <SideNav.Item
-                    variant="navigationText"
-                    navId="favorites"
-                    onClick={page.sidebar.close}
-                  >
-                    Favorites
-                    <Badge marginLeft="major-1">1</Badge>
-                  </SideNav.Item>
-                </Link>
-                <Link href={`/user/shopping-bag`} passHref={true}>
-                  <SideNav.Item
-                    variant="navigationText"
-                    navId="shopping-bag"
-                    onClick={page.sidebar.close}
-                  >
-                    Shopping Bag
-                    <Badge marginLeft="major-1">2</Badge>
-                  </SideNav.Item>
-                </Link>
-                <Link href={`/user/shopping-bag`} passHref={true}>
-                  <SideNav.Item
-                    variant="navigationText"
-                    navId="color-mode"
-                    onClick={page.sidebar.close}
-                  >
-                    Light Mode
-                  </SideNav.Item>
-                </Link>
+                {isMaxTabletAndUnder && (
+                  <>
+                    <Divider />
+                    {session ? (
+                      <>
+                        <ActiveLink href={`/auth/signout`} activeClassName="active" passHref={true}>
+                          <StyledSideNavItem
+                            className="nav-link"
+                            variant="navigationText"
+                            navId="signin"
+                            // onClick={page.sidebar.close}
+                            onClick={() => signOutAndClose()}
+                          >
+                            Sign Out
+                          </StyledSideNavItem>
+                        </ActiveLink>
+                        <ActiveLink
+                          href={`/gallery/user/favorites`}
+                          activeClassName="active"
+                          passHref={true}
+                        >
+                          <SideNav.Item
+                            variant="navigationText"
+                            navId="favorites"
+                            onClick={page.sidebar.close}
+                          >
+                            <FavoritesSideNavItem />
+                          </SideNav.Item>
+                        </ActiveLink>
+                        <ActiveLink
+                          href={`/gallery/user/shopping-bag`}
+                          activeClassName="active"
+                          passHref={true}
+                        >
+                          <SideNav.Item
+                            variant="navigationText"
+                            navId="shopping-bag"
+                            onClick={page.sidebar.close}
+                          >
+                            <ShoppingBagSideNavItem />
+                          </SideNav.Item>
+                        </ActiveLink>
+                      </>
+                    ) : (
+                      <ActiveLink href={`/auth/signin`} activeClassName="active" passHref={true}>
+                        <StyledSideNavItem
+                          className="nav-link"
+                          variant="navigationText"
+                          navId="signin"
+                          onClick={page.sidebar.close}
+                        >
+                          Sign In
+                        </StyledSideNavItem>
+                      </ActiveLink>
+                    )}
+                  </>
+                )}
               </SideNav.Level>
             }
           >
