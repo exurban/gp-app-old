@@ -30,15 +30,14 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <ApolloProvider client={apolloClient}>
       <AuthProvider session={pageProps.session}>
+        <DefaultSeo {...SEO} />
         <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
           {router.pathname.startsWith(`/carousel/`) ? (
             <CarouselLayout>
-              <DefaultSeo {...SEO} />
               <Component {...pageProps} />
             </CarouselLayout>
           ) : (
             <Layout>
-              <DefaultSeo {...SEO} />
               <Component {...pageProps} />
             </Layout>
           )}

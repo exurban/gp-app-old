@@ -7,34 +7,6 @@ import { Heading, Paragraph, Button, Flex, Text } from "bumbag";
 const IndexPage: React.FC = () => {
   return (
     <>
-      {/* <Head>
-
-      </Head>
-      <NextSeo
-        title="Welcome"
-        description="Subconsciously articulating"
-        canonical={`https://www.gibbs-photography.com`}
-        openGraph={{
-          url: `https://www.gibbs-photography.com`,
-          title: "Welcome",
-          description: "Subconsciously articulating",
-          images: [
-            {
-              url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/test-preview.jpg",
-              width: 1400,
-              height: 935,
-              alt: "welcome image"
-            }
-          ],
-          site_name: "Gibbs Photography"
-        }}
-        twitter={{
-          handle: "gibbs_photog",
-          site: "https://gibbs-photography.com",
-          cardType: "summary_large_image"
-        }}
-      /> */}
       <Flex
         alignX="center"
         width="100vw"
@@ -76,7 +48,7 @@ const IndexPage: React.FC = () => {
             size="large"
             palette="primary"
             color="white"
-            altitude="200"
+            altitude="300"
             marginY="60px"
             marginX="auto"
             width="60vw"

@@ -26,7 +26,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>Welcome to the jungle!</title>
+          {/* <title>Welcome to the jungle!</title>
           <meta name="description" content="You're gonna die!" />
 
           <meta property="og:url" content="https://gibbs-photography.com" />
@@ -46,7 +46,7 @@ export default class MyDocument extends Document {
           <meta
             name="twitter:image"
             content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/test-preview.jpg"
-          />
+          /> */}
           <DefaultSeo {...SEO} />
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
