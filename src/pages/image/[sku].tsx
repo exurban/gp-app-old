@@ -99,7 +99,7 @@ const Photo: React.FC = () => {
         }}
         twitter={{
           handle: "gibbs_photog",
-          site: `https://gibbs-photography.com/image/${photo.sku}`,
+          site: "https://gibbs-photography.com",
           cardType: "summary_large_image"
         }}
       />

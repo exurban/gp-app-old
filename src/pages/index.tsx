@@ -27,8 +27,7 @@ const IndexPage: React.FC = () => {
         }}
         twitter={{
           handle: "gibbs_photog",
-          site:
-            "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp",
+          site: "https://gibbs-photography.com",
           cardType: "summary_large_image"
         }}
       />
