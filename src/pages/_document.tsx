@@ -47,7 +47,19 @@ export default class MyDocument extends Document {
             name="twitter:image"
             content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/test-preview.jpg"
           /> */}
-          <DefaultSeo {...SEO} />
+          <DefaultSeo
+            openGraph={{
+              type: "website",
+              locale: "en_US",
+              url: "https://www.gibbs-photography.com",
+              site_name: "Gibbs Photography"
+            }}
+            twitter={{
+              handle: "@gibbs_photog",
+              site: "https://gibbs-photography.com",
+              cardType: "summary_large_image"
+            }}
+          />
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script
