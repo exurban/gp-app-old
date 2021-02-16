@@ -46,7 +46,7 @@ const Gallery: React.FC<Props> = ({ input }) => {
           images: [
             {
               url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp",
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/test-preview.jpg",
               width: 1400,
               height: 935,
               alt: "welcome image"

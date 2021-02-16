@@ -27,7 +27,7 @@ const IndexPage: React.FC = () => {
         <meta name="twitter:description" content="to Gibbs Photography" />
         <meta
           name="twitter:image"
-          content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp"
+          content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/test-preview.jpg"
         />
       </Head>
       <NextSeo
@@ -41,7 +41,7 @@ const IndexPage: React.FC = () => {
           images: [
             {
               url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp",
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/test-preview.jpg",
               width: 1400,
               height: 935,
               alt: "welcome image"
