@@ -25,6 +25,12 @@ const IndexPage: React.FC = () => {
           ],
           site_name: "Gibbs Photography"
         }}
+        twitter={{
+          handle: "gibbs_photog",
+          site:
+            "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp",
+          cardType: "summary_large_image"
+        }}
       />
       <Flex
         alignX="center"
