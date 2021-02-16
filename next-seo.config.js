@@ -6,8 +6,8 @@ export default {
     site_name: "Gibbs Photography"
   },
   twitter: {
-    handle: "gibbs_photog",
-    site: "@https://gibbs-photography.com",
+    handle: "@gibbs_photog",
+    site: "https://gibbs-photography.com",
     cardType: "summary_large_image"
   }
 };
