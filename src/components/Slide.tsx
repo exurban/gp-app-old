@@ -64,7 +64,8 @@ const Slide: React.FC<{ photo: PhotoInfoFragment; priority: boolean }> = ({ phot
               width={img.width}
               height={img.height}
               priority={priority}
-              sizes="(max-width: 700px) 100vw, 1400px"
+              // sizes="(max-width: 700px) 100vw, 1400px"
+              sizes="(max-width: 400px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 34vw, 25vw"
             />
           </ImageContainer>
           <SlideMenu photo={photo} setShowInfo={setShowInfo} />
