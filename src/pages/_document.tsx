@@ -2,6 +2,8 @@ import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/do
 import { GA_TRACKING_ID } from "../utils/gtag";
 import { extractCritical } from "bumbag-server";
 import { InitializeColorMode } from "bumbag";
+import { DefaultSeo } from "next-seo";
+import SEO from "../../next-seo.config";
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -24,6 +26,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <DefaultSeo {...SEO} />
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script
