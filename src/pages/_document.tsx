@@ -31,8 +31,11 @@ export default class MyDocument extends Document {
 
           <meta property="og:url" content="https://gibbs-photography.com" />
           <meta property="og:type" content="website" />
-          <meta property="og:title" content="Welcome" />
-          <meta property="og:description" content="to Gibbs Photography" />
+          <meta property="og:title" content="Gibbs Photography" />
+          <meta
+            property="og:description"
+            content="Stunning photography exposing the beauty of the natural world."
+          />
           <meta
             property="og:image"
             content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp"
