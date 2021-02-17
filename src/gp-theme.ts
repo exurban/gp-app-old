@@ -37,9 +37,9 @@ import {
 import { ThemeConfig } from "bumbag";
 
 const gpTheme: ThemeConfig = {
-  fonts: {
-    importUrls: ["https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap"]
-  },
+  // fonts: {
+  //   importUrls: ["https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap"]
+  // },
 
   // Button: {
   //   styles: {
@@ -54,7 +54,7 @@ const gpTheme: ThemeConfig = {
         navigationText: {
           styles: {
             base: {
-              fontFamily: "Raleway, system-ui",
+              // fontFamily: "Raleway, system-ui",
               fontVariant: "small-caps"
             },
             focus: {
