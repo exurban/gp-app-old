@@ -332,49 +332,11 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
     return favIds ? favIds.includes(photo.id) : false;
   }, [favs]);
 
-  // const inFavorites = (id: string): boolean => {
-  //   if (!session) {
-  //     return false;
-  //   }
-
-  //   // during development, could get in a situation where there was a session, but favorites hadn't been queried (session persisted when restarting server but favorites (cached on sign in) were purged). Instead of checking for this situation which should only occur in testing, Apollo 3.3 and up returns null if fields were missing
-  //   const { ...favs } = client.cache.readQuery({
-  //     query: FavoritesDocument
-  //   });
-
-  //   if (!favs) {
-  //     console.error(`There IS a session, but favorites have not been fetched.`);
-  //     useQuery(FavoritesDocument);
-  //   }
-
-  //   const photoList = favs.favorites?.photoList || [];
-
-  //   if (!photoList) {
-  //     return false;
-  //   }
-  //   const favIds = photoList.map(f => f.id);
-
-  //   return favIds.includes(id);
-  // };
-
-  const inShoppingBag = (id: string): boolean => {
-    if (!session) {
-      return false;
-    }
-    const { ...bagItems } = client.cache.readQuery({
-      query: ShoppingBagItemsDocument
-    });
-
-    if (!bagItems) {
-      useQuery(ShoppingBagItemsDocument);
-    }
-
-    const photoList = bagItems.shoppingBagItems?.photoList || [];
-
-    const bagItemIds = photoList.map(f => f.id);
-
-    return bagItemIds.includes(id);
-  };
+  const { data: bagItems } = useQuery(ShoppingBagItemsDocument);
+  const inShoppingBag = useMemo(() => {
+    const bagItemIds = bagItems?.shoppingBagItems?.photoList?.map(b => b.id);
+    return bagItemIds ? bagItemIds.includes(photo.id) : false;
+  }, [bagItems]);
 
   if (typeof window === undefined) {
     return <p>waiting</p>;
@@ -399,7 +361,7 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
               <Text>Add to Favorites</Text>
             </DropdownMenu.Item>
           )}
-          {inShoppingBag(photo.id) ? (
+          {inShoppingBag ? (
             <DropdownMenu.Item
               iconBefore="solid-minus"
               onClick={() => removePhotoFromShoppingBag()}

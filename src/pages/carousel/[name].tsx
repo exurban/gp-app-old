@@ -7,7 +7,8 @@ import ErrorMessage from "../../components/ErrorMessage";
 import Carousel from "../../components/Carousel";
 import CarouselItem from "../../components/CarouselItem";
 import CarouselMenu from "../../components/CarouselMenu";
-import { Text, Button, Icon, styled } from "bumbag";
+import { space, Text, Button, Icon, styled } from "bumbag";
+import { isMobile } from "react-device-detect";
 
 interface CarouselRef {
   prevSlide: () => void;
@@ -20,20 +21,15 @@ const PhotoCarousel: React.FC = () => {
 
   const carouselRef = useRef<CarouselRef>();
 
-  // const slidePrev = () => setActiveIndex(activeIndex - 1);
-  // const slideNext = () => setActiveIndex(activeIndex + 1);
-  // const onSlideChanged = ({ item }) => setActiveIndex(item);
   const handleKeyDown = (event: { keyCode: number }) => {
     switch (event.keyCode) {
       case 37:
       case 38: {
-        console.log(`previous`);
         carouselRef.current?.prevSlide();
         break;
       }
       case 39:
       case 40: {
-        console.log(`next`);
         carouselRef.current?.nextSlide();
         break;
       }
@@ -68,9 +64,6 @@ const PhotoCarousel: React.FC = () => {
   const router = useRouter();
   const { name, sku } = router.query;
 
-  console.log(`sku: ${sku}`);
-  console.log(`name: ${name}`);
-
   // * fetch all photos in section
   const input = { name: name } as AllPhotosOfSubjectInput;
   const { loading, error, data } = useQuery(AllPhotosOfSubjectDocument, {
@@ -89,13 +82,15 @@ const PhotoCarousel: React.FC = () => {
 
   return (
     <>
-      <Text.Block color="#babbba" position="absolute" top="24px" right="80px" zIndex="20">
+      <Counter>
         {activeIndex + 1} of {total}
-      </Text.Block>
+      </Counter>
       <CarouselMenu photo={photos[activeIndex]} />
-      <PrevButton variant="ghost" zIndex="20" onClick={() => carouselRef.current?.prevSlide()}>
-        <Icon aria-label="previous" icon="solid-chevron-left" />
-      </PrevButton>
+      {!isMobile && (
+        <PrevButton variant="ghost" zIndex="20" onClick={() => carouselRef.current?.prevSlide()}>
+          <Icon aria-label="previous" icon="solid-chevron-left" />
+        </PrevButton>
+      )}
       <Carousel
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -105,36 +100,55 @@ const PhotoCarousel: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         ref={carouselRef}
+        style={{ overflowY: "hidden", overscrollBehaviorY: "none" }}
       />
-      <NextButton variant="ghost" zIndex="20" onClick={() => carouselRef.current?.nextSlide()}>
-        <Icon aria-label="next" icon="solid-chevron-right" />
-      </NextButton>
+      {!isMobile && (
+        <NextButton variant="ghost" zIndex="20" onClick={() => carouselRef.current?.nextSlide()}>
+          <Icon aria-label="next" icon="solid-chevron-right" />
+        </NextButton>
+      )}
     </>
   );
 };
 
 export default PhotoCarousel;
 
-const PrevButton = styled(Button)`
+const Counter = styled(Text)`
   position: absolute;
-  top: 50vh;
-  left: 10px;
-  font-size: 60px;
-  color: #babbba;
-  transition: none;
+  top: 10px;
+  right: 60px;
+  z-index: 20;
+  padding: ${space(1, "major")}rem;
+  border-radius: 6px;
+  background-color: rgba(27, 26, 28, 0.4);
+  transition: all 0.25s ease;
+
   :hover {
     color: #fff;
+    background-color: rgba(27, 26, 28, 0.9);
   }
 `;
 
-const NextButton = styled(Button)`
+const ArrowButton = styled(Button)`
   position: absolute;
   top: 50vh;
-  right: 10px;
   font-size: 60px;
-  color: #babbba;
-  transition: none;
+  color: rgba(186, 187, 186, 0.4);
+  transition: color 0.25s ease;
+
   :hover {
     color: #fff;
   }
+
+  :focus {
+    box-shadow: none;
+  }
+`;
+
+const PrevButton = styled(ArrowButton)`
+  left: 10px;
+`;
+
+const NextButton = styled(ArrowButton)`
+  right: 10px;
 `;

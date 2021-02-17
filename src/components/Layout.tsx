@@ -39,7 +39,7 @@ const Layout: React.FC<{ title?: string }> = ({
 
   const StyledItem = styled(TopNav.Item)`
     &.active {
-      color: ${palette("primary")};
+      color: ${palette("primary300")};
       box-shadow: inset 0 -2px 0 0;
     }
   `;
