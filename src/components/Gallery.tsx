@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../graphql-operations";
-import { Flex, Grid, Box, Icon, Heading, Button, Tooltip, useBreakpointValue } from "bumbag";
+import { Flex, Box, Icon, Heading, Button, Tooltip, useBreakpointValue } from "bumbag";
 // import { NextSeo } from "next-seo";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
@@ -93,7 +93,8 @@ const Gallery: React.FC<Props> = ({ input }) => {
           </Tooltip>
         </Flex>
       </Box>
-      <Grid
+      <Box
+        display="grid"
         gridTemplateColumns={{
           default: "repeat(auto-fit, minmax(400px, 1fr))",
           "min-desktop": "repeat(auto-fit, minmax(500px, 2fr))",
@@ -123,7 +124,7 @@ const Gallery: React.FC<Props> = ({ input }) => {
             <Slide photo={photo} priority={idx < 10} />
           </Box>
         ))}
-      </Grid>
+      </Box>
     </>
   );
 };

@@ -39,14 +39,14 @@ const Layout: React.FC<{ title?: string }> = ({
 
   const StyledItem = styled(TopNav.Item)`
     &.active {
-      color: ${palette("primary300")};
+      color: ${palette("primary")};
       box-shadow: inset 0 -2px 0 0;
     }
   `;
 
   const StyledSideNavItem = styled(SideNav.Item)`
     &.active {
-      color: ${palette("primary300")};
+      color: ${palette("primary")};
       background-color: ${palette("primaryShade")};
       box-shadow: inset 3px 0 0 0 ${palette("primary")};
     }
