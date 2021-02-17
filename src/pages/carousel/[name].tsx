@@ -87,8 +87,6 @@ const PhotoCarousel: React.FC = () => {
 
   const items = photos.map((photo, idx) => <CarouselItem photo={photo} idx={idx} />);
 
-  // * if sku was passed, find index of photo with sku and show that photo
-
   return (
     <>
       <Text.Block color="#babbba" position="absolute" top="24px" right="80px" zIndex="20">

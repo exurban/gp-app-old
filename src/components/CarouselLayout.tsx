@@ -19,7 +19,16 @@ const SingleImageLayout: React.FC<{ title?: string }> = ({ children, title }) =>
         alignX="center"
         backgroundColor="#1b1c1a"
       >
-        {children}
+        <Box
+          className="carousel-wrapper"
+          width="90vw"
+          height="90vh"
+          alignX="center"
+          alignY="center"
+          backgroundColor="#1b1c1a"
+        >
+          {children}
+        </Box>
       </Box>
     </>
   );
