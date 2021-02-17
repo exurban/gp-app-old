@@ -8,7 +8,7 @@
  * Share (bring up share modal)
  */
 import { useMemo } from "react";
-import { useQuery, useMutation, useApolloClient } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/client";
 import { DropdownMenu, Text, Icon, Button, applyTheme, useToasts } from "bumbag";
@@ -73,7 +73,6 @@ type Props = {
 const CarouselMenu: React.FC<Props> = ({ photo }) => {
   const [session] = useSession();
   const router = useRouter();
-  const client = useApolloClient();
   const toasts = useToasts();
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
   const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);

@@ -1,22 +1,12 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useMemo } from "react";
 import { useRouter } from "next/router";
-import { useQuery, useMutation, useApolloClient } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useSession } from "next-auth/client";
-// import {
-//   TwitterShareButton,
-//   TwitterIcon
-//   // FacebookShareButton,
-//   // FacebookIcon,
-//   // EmailShareButton,
-//   // EmailIcon
-// } from "react-share";
 import {
   DropdownMenu,
-  DropdownMenuGroup,
   Text,
   Icon,
   Button,
-  // Flex,
   applyTheme,
   useToasts,
   useBreakpointValue
@@ -39,7 +29,6 @@ type Props = {
 const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   const [session] = useSession();
   const router = useRouter();
-  const client = useApolloClient();
   const toasts = useToasts();
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
   const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
@@ -354,96 +343,17 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     });
   };
 
-  const sharePhotoOnTwitter = () => {
-    if (!session) {
-      router.push(`/auth/signin`);
-    } else if (navigator.share) {
-      navigator
-        .share({
-          url: `${photo.images?.[0].imageUrl}`,
-          title: "Photo Title",
-          text: "Photo text"
-        })
-        .then(() => console.log("Successful share"))
-        .catch(error => console.log("Error sharing", error));
-    }
-  };
+  const { data: favs } = useQuery(FavoritesDocument);
+  const inFavorites = useMemo(() => {
+    const favIds = favs?.favorites?.photoList?.map(f => f.id);
+    return favIds ? favIds.includes(photo.id) : false;
+  }, [favs]);
 
-  const sharePhotoOnFacebook = () => {
-    if (!session) {
-      router.push(`/auth/signin`);
-    } else if (navigator.share) {
-      navigator
-        .share({
-          title: `${photo.title}`,
-          text: "Awesome photo, man!",
-          url: "https://gibbs-photography.com/image/1115"
-        })
-        .then(() => console.log("Successful share"))
-        .catch(error => console.log("Error sharing", error));
-    }
-  };
-
-  const sharePhotoViaEmail = () => {
-    if (!session) {
-      router.push(`/auth/signin`);
-    } else {
-      if (navigator.share) {
-        navigator
-          .share({
-            title: `${photo.title}`,
-            text: "Awesome photo, man!",
-            url: "https://gibbs-photography.com/image/1115"
-          })
-          .then(() => console.log("Successful share"))
-          .catch(error => console.log("Error sharing", error));
-      }
-    }
-  };
-
-  const inFavorites = (id: string): boolean => {
-    if (!session) {
-      return false;
-    }
-
-    // during development, could get in a situation where there was a session, but favorites hadn't been queried (session persisted when restarting server but favorites (cached on sign in) were purged). Instead of checking for this situation which should only occur in testing, Apollo 3.3 and up returns null if fields were missing
-    const { ...favs } = client.cache.readQuery({
-      query: FavoritesDocument
-    });
-
-    if (!favs) {
-      console.error(`There IS a session, but favorites have not been fetched.`);
-      useQuery(FavoritesDocument);
-    }
-
-    const photoList = favs.favorites?.photoList || [];
-
-    if (!photoList) {
-      return false;
-    }
-    const favIds = photoList.map(f => f.id);
-
-    return favIds.includes(id);
-  };
-
-  const inShoppingBag = (id: string): boolean => {
-    if (!session) {
-      return false;
-    }
-    const { ...bagItems } = client.cache.readQuery({
-      query: ShoppingBagItemsDocument
-    });
-
-    if (!bagItems) {
-      useQuery(ShoppingBagItemsDocument);
-    }
-
-    const photoList = bagItems.shoppingBagItems?.photoList || [];
-
-    const bagItemIds = photoList.map(f => f.id);
-
-    return bagItemIds.includes(id);
-  };
+  const { data: bagItems } = useQuery(ShoppingBagItemsDocument);
+  const inShoppingBag = useMemo(() => {
+    const bagItemIds = bagItems?.shoppingBagItems?.photoList?.map(b => b.id);
+    return bagItemIds ? bagItemIds.includes(photo.id) : false;
+  }, [bagItems]);
 
   const size = useBreakpointValue({
     default: "default",
@@ -488,7 +398,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
           <DropdownMenu.Item iconBefore="solid-expand" onClick={() => showLarger()}>
             <Text>View Larger</Text>
           </DropdownMenu.Item>
-          {inFavorites(photo.id) ? (
+          {inFavorites ? (
             <DropdownMenu.Item iconBefore="solid-minus" onClick={() => removePhotoFromFavorites()}>
               <Text>Remove from Favorites</Text>
             </DropdownMenu.Item>
@@ -497,7 +407,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
               <Text>Add to Favorites</Text>
             </DropdownMenu.Item>
           )}
-          {inShoppingBag(photo.id) ? (
+          {inShoppingBag ? (
             <DropdownMenu.Item
               iconBefore="solid-minus"
               onClick={() => removePhotoFromShoppingBag()}
@@ -509,53 +419,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
               <Text>Add to Shopping Bag</Text>
             </DropdownMenu.Item>
           )}
-
-          <DropdownMenu.Divider />
-          <DropdownMenuGroup title="Share">
-            <DropdownMenu.Item
-              iconBefore="brands-twitter"
-              color="#1da1f2"
-              onClick={() => sharePhotoOnTwitter()}
-            >
-              <Text color="text">Twitter</Text>
-            </DropdownMenu.Item>
-            {/* <DropdownMenu.Item>
-              <Flex flexDirection="row">
-                <TwitterShareButton
-                  url={"https://gibbs-photography.com"}
-                  title={"Explore your wild side"}
-                  hashtags={["wildside"]}
-                >
-                  <TwitterIcon size={24} style={{ borderRadius: "50%" }} />
-
-                  <Text.Block>Twitter</Text.Block>
-                </TwitterShareButton> */}
-            {/* </Flex>
-            </DropdownMenu.Item> */}
-            <DropdownMenu.Item
-              iconBefore="brands-facebook-f"
-              color="#4267b2"
-              onClick={() => sharePhotoOnFacebook()}
-            >
-              <Text color="text">Facebook</Text>
-            </DropdownMenu.Item>
-            {/* <DropdownMenu.Item>
-              <FacebookShareButton
-                url={"https://gibbs-photography.com"}
-                quote={"Explore your wild side"}
-                hashtag={"wildside"}
-              >
-                <FacebookIcon size={24} />
-              </FacebookShareButton> */}
-
-            <DropdownMenu.Item
-              iconBefore="solid-at"
-              color="#4267b2"
-              onClick={() => sharePhotoViaEmail()}
-            >
-              <Text color="text">Email</Text>
-            </DropdownMenu.Item>
-          </DropdownMenuGroup>
         </>
       }
     >
