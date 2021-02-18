@@ -52,8 +52,15 @@ const gpTheme: ThemeConfig = {
   global: {
     styles: {
       base: css`
+        html {
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+        }
         body {
-          overflow: "hidden";
+          height: 100%;
+          overflow: hidden;
+          position: relative;
         }
       `
     }
