@@ -22,7 +22,6 @@ const Footer: React.FC = () => {
               <FooterItem text={"© 2020 Gibbs Photography, LLC"} />
             </Box>
             <FooterItem text={"Privacy Policy"} link={"/legal/privacy-policy"} />
-            // TODO: Toast if signed in or send to sign in page
             <FooterItem text={"Subscribe to Newsletter"} />
             <FooterItem text={"Terms of Service"} link={"/legal/terms-of-service"} />
             <FooterItem text={"Contact Us"} link={"mailto: info@gibbs-photography.com"} />
@@ -34,7 +33,7 @@ const Footer: React.FC = () => {
         <Hide below="desktop">
           <Grid templateColumns="repeat(4, 1fr)" columnGap="1rem" justifyContent="space-between">
             <Box marginRight="20px">
-              <FooterItem text={"© 2020 Gibbs Photography, LLC"} />
+              <FooterItem text={"© 2021 Gibbs Photography, LLC"} />
             </Box>
             <FooterItem text={"Privacy Policy"} link={"/legal/privacy-policy"} />
             <FooterItem text={"Subscribe to Newsletter"} />
