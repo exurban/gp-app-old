@@ -53,7 +53,7 @@ const gpTheme: ThemeConfig = {
     styles: {
       base: css`
         body {
-          overflow-y: "hidden";
+          overflow: "hidden";
         }
       `
     }
