@@ -17,7 +17,6 @@ const SingleImageLayout: React.FC<{ title?: string }> = ({ children, title }) =>
         style={{
           width: "100vw",
           height: "100vh",
-
           margin: "0",
           backgroundColor: "#1b1c1a",
           overflowY: "hidden",

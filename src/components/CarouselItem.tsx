@@ -48,6 +48,8 @@ const CarouselItem: React.FC<Props> = ({ photo, idx }) => {
         data-value={idx}
         key={idx}
         height="100vh"
+        // maxHeight="100%"
+        alignY="center"
         margin="auto"
         style={{ overflowY: "hidden", overscrollBehaviorY: "none" }}
       >

@@ -31,7 +31,6 @@ const Carousel: React.FC<Props> = forwardRef(({ items, activeIndex, setActiveInd
     <AliceCarousel
       disableDotsControls
       disableButtonsControls
-      autoWidth
       infinite
       animationType="fadeout"
       animationDuration={800}

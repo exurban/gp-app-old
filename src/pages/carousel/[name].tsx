@@ -120,7 +120,7 @@ const Counter = styled(Text)`
   z-index: 20;
   padding: ${space(1, "major")}rem;
   border-radius: 6px;
-  background-color: rgba(27, 26, 28, 0.4);
+  background-color: rgba(27, 26, 28, 0.7);
   transition: all 0.25s ease;
 
   :hover {
