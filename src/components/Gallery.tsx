@@ -1,7 +1,16 @@
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../graphql-operations";
-import { Flex, Box, Icon, Heading, Button, Tooltip, useBreakpointValue } from "bumbag";
+import {
+  Flex,
+  Box,
+  Icon,
+  Heading,
+  Button,
+  Tooltip,
+  useBreakpointValue,
+  useBreakpoint
+} from "bumbag";
 // import { NextSeo } from "next-seo";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
@@ -18,6 +27,7 @@ const Gallery: React.FC<Props> = ({ input }) => {
     default: "default",
     "max-tablet": "small"
   });
+  const isMinDesktopAndOver = useBreakpoint("min-desktop");
 
   const { loading, error, data } = useQuery(AllPhotosOfSubjectDocument, {
     variables: {
@@ -94,7 +104,9 @@ const Gallery: React.FC<Props> = ({ input }) => {
             key={`${photo.id}-${idx}`}
             gridRow={photo.images[0].height > photo.images[0].width ? "auto / span 2" : "span 1"}
             gridColumn={
-              photo.images[0].width / photo.images[0].height > 1.7 ? "auto / span 2" : "span 1"
+              photo.images[0].width / photo.images[0].height > 1.7 && isMinDesktopAndOver
+                ? "auto / span 2"
+                : "span 1"
             }
           >
             <Slide photo={photo} priority={idx < 10} />

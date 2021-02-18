@@ -43,7 +43,7 @@ const FeaturedGallery: React.FC = () => {
               aria-label="view larger in carousel"
               size={size}
               fontSize={{ default: "500", "max-tablet": "300" }}
-              onClick={() => router.push(`/carousel/featured}`)}
+              onClick={() => router.push(`/carousel/featured`)}
             >
               <Icon icon="solid-expand" />
             </Button>
