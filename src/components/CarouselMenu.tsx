@@ -86,8 +86,30 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
   };
 
   const backToGallery = () => {
-    const { name } = router.query;
-    router.push(`/gallery/${name}`);
+    let { pathname } = router;
+    console.log(pathname);
+    if (!pathname || typeof pathname !== "string") {
+      return;
+    }
+
+    if (pathname.includes(`carousel`)) {
+      pathname = pathname.replace(`carousel`, `gallery`);
+    }
+
+    console.log(pathname);
+
+    if (pathname.includes(`/[name]`)) {
+      pathname = pathname.replace(`/[name]`, "");
+      const { name } = router.query;
+
+      router.push({
+        pathname: `${pathname}/${name}`
+      });
+    } else {
+      router.push({
+        pathname: `${pathname}/`
+      });
+    }
   };
 
   const addPhotoToFavorites = () => {
