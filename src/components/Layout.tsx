@@ -6,7 +6,6 @@ import {
   usePage,
   PageWithHeader,
   PageWithSidebar,
-  Hide,
   Level,
   TopNav,
   SideNav,
@@ -254,13 +253,14 @@ const Layout: React.FC<{ title?: string }> = ({
                       <ColorModeItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
                     </Flex>
                   </StyledItem>
-                  <Hide above="widescreen">
+
+                  {isMaxWidescreenAndUnder && (
                     <TopNav.Item>
                       <Button variant="ghost" onClick={page.sidebar.toggle}>
                         <Icon aria-label="Mobile Menu" icon="solid-bars" />
                       </Button>
                     </TopNav.Item>
-                  </Hide>
+                  )}
                 </TopNav.Section>
               </TopNav>
             </>
