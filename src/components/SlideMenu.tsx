@@ -21,7 +21,6 @@ import {
   RemovePhotoFromShoppingBagDocument
 } from "../graphql-operations";
 import { TwitterShareButton } from "react-share";
-import { NextSeo } from "next-seo";
 
 type Props = {
   setShowInfo: Dispatch<SetStateAction<boolean>>;
@@ -371,7 +370,9 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     Popover: {
       styles: {
         base: {
-          altitude: 400
+          altitude: 400,
+          animated: 20,
+          transition: "none"
         }
       },
       modes: {
@@ -392,49 +393,26 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
 
   return (
     <>
-      <NextSeo
-        title={photo.title}
-        description={photo.description}
-        canonical="https://gibbs-photography.com"
-        openGraph={{
-          url: "http://localhost:3000/carousel/bloom?sku=1042",
-          title: photo.title,
-          description: photo.description,
-          images: [
-            {
-              url: "http://localhost:3000/carousel/bloom?sku=1042",
-              width: photo.images?.[0].width,
-              height: photo.images?.[0].height,
-              alt: photo.images?.[0].altText
-            }
-          ],
-          site_name: "Gibbs Photography"
-        }}
-        twitter={{
-          handle: "gibbs_photog",
-          site: "https://gibbs-photography.com",
-          cardType: "summary_large_image"
-        }}
-      />
       <DDMenu
+        transition="none"
         menu={
           <>
             <DropdownMenu.Item iconBefore="solid-info-circle" onClick={() => setShowInfo(true)}>
-              <Text>Info</Text>
+              Info
             </DropdownMenu.Item>
             <DropdownMenu.Item iconBefore="solid-expand" onClick={() => showLarger()}>
-              <Text>View Larger</Text>
+              View Larger
             </DropdownMenu.Item>
             {inFavorites ? (
               <DropdownMenu.Item
                 iconBefore="solid-minus"
                 onClick={() => removePhotoFromFavorites()}
               >
-                <Text>Remove from Favorites</Text>
+                Remove from Favorites
               </DropdownMenu.Item>
             ) : (
               <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToFavorites()}>
-                <Text>Add to Favorites</Text>
+                Add to Favorites
               </DropdownMenu.Item>
             )}
             {inShoppingBag ? (
@@ -442,11 +420,11 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
                 iconBefore="solid-minus"
                 onClick={() => removePhotoFromShoppingBag()}
               >
-                <Text>Remove from Shopping Bag</Text>
+                Remove from Shopping Bag
               </DropdownMenu.Item>
             ) : (
               <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToShoppingBag()}>
-                <Text>Add to Shopping Bag</Text>
+                Add to Shopping Bag
               </DropdownMenu.Item>
             )}
             <DropdownMenu.Divider />
@@ -456,7 +434,7 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
                 title={`${photo.title}`}
                 hashtags={["photography", "nature"]}
               >
-                <Text>Twitter</Text>
+                <Text.Block>Twitter</Text.Block>
               </TwitterShareButton>
             </DropdownMenu.Group>
           </>
@@ -467,7 +445,9 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
           fontSize={{ default: "500", "max-tablet": "200" }}
           size={size}
           margin={spacing}
-          border="none"
+          padding={spacing}
+          transition="none"
+          _focus={{ boxShadow: "none" }}
         >
           <Icon aria-label="options" icon="solid-ellipsis-v" fontSize="200" />
         </Button>

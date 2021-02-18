@@ -1,5 +1,15 @@
 import { useRouter } from "next/router";
-import { Heading, Flex, Box, Tooltip, Grid, Button, Icon } from "bumbag";
+import {
+  Heading,
+  Flex,
+  Box,
+  Tooltip,
+  Grid,
+  Button,
+  Icon,
+  useBreakpointValue,
+  useBreakpoint
+} from "bumbag";
 import { ImageInfoFragment, PhotoInfoFragment } from "../graphql-operations";
 import GalleryHeader from "./GalleryHeader";
 import Slide from "./Slide";
@@ -16,6 +26,12 @@ const SectionGallery: React.FC<Props> = ({ coverImage, name, description, total,
   const router = useRouter();
   const section = router.pathname.split("/")[2];
 
+  const size = useBreakpointValue({
+    default: "default",
+    "max-tablet": "small"
+  });
+  const isMinDesktopAndOver = useBreakpoint("min-desktop");
+
   return (
     <>
       <Flex flexDirection="row" width="80vw" marginX="auto" marginTop="major-3">
@@ -27,7 +43,7 @@ const SectionGallery: React.FC<Props> = ({ coverImage, name, description, total,
         position="sticky"
         top="80px"
         paddingY="major-2"
-        zIndex="999"
+        zIndex="2"
       >
         <Flex justifyContent="flex-end" alignItems="flex-end" width="80vw" marginX="auto">
           <Heading use="h4" marginRight="major-2">
@@ -36,21 +52,25 @@ const SectionGallery: React.FC<Props> = ({ coverImage, name, description, total,
           <Tooltip placement="bottom" content="View larger images in a carousel">
             <Button
               palette="primary"
-              fontSize="500"
-              onClick={() =>
-                router.push(`/carousel/${section}/${encodeURIComponent(name.toLowerCase())}`)
-              }
+              aria-label="view larger in carousel"
+              size={size}
+              fontSize={{ default: "500", "max-tablet": "300" }}
+              onClick={() => router.push(`/carousel/${encodeURIComponent(section.toLowerCase())}`)}
             >
               <Icon icon="solid-expand" />
             </Button>
           </Tooltip>
         </Flex>
       </Box>
-      <Grid
-        gridTemplateColumns="repeat(auto-fit, minmax(700px, 1fr))"
-        gridTemplateRows="520px"
+      <Box
+        display="grid"
+        gridTemplateColumns={{
+          default: "repeat(auto-fit, minmax(400px, 1fr))",
+          "min-desktop": "repeat(auto-fit, minmax(500px, 2fr))",
+          "min-fullHD": "repeat(auto-fill, minmax(500px, 3fr))"
+        }}
         gridAutoFlow="row dense"
-        rowGap="5rem"
+        rowGap={{ default: "5rem", "max-tablet": "2rem" }}
         columnGap="1rem"
         justifyContent="space-evenly"
         justifyItems="center"
@@ -60,16 +80,22 @@ const SectionGallery: React.FC<Props> = ({ coverImage, name, description, total,
           <Box
             width="100%"
             height="100%"
+            padding={{
+              default: "major-1",
+              "max-Tablet": "minor-1"
+            }}
             key={`${photo.id}-${idx}`}
             gridRow={photo.images[0].height > photo.images[0].width ? "auto / span 2" : "span 1"}
             gridColumn={
-              photo.images[0].width / photo.images[0].height > 1.7 ? "auto / span 2" : "span 1"
+              photo.images[0].width / photo.images[0].height > 1.7 && isMinDesktopAndOver
+                ? "auto / span 2"
+                : "span 1"
             }
           >
             <Slide photo={photo} priority={idx < 10} />
           </Box>
         ))}
-      </Grid>
+      </Box>
     </>
   );
 };

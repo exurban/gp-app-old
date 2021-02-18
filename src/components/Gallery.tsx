@@ -82,7 +82,7 @@ const Gallery: React.FC<Props> = ({ input }) => {
       <Box
         display="grid"
         gridTemplateColumns={{
-          default: "repeat(auto-fit, minmax(400px, 1fr))",
+          default: "repeat(auto-fit, minmax(375px, 1fr))",
           "min-desktop": "repeat(auto-fit, minmax(500px, 2fr))",
           "min-fullHD": "repeat(auto-fill, minmax(500px, 3fr))"
         }}
@@ -91,7 +91,7 @@ const Gallery: React.FC<Props> = ({ input }) => {
         columnGap="1rem"
         justifyContent="space-evenly"
         justifyItems="center"
-        padding={{ default: "major-4", "max-tablet": "minor-1" }}
+        margin={{ default: "major-4", "max-tablet": "major-1" }}
       >
         {photos.map((photo, idx) => (
           <Box

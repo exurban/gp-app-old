@@ -1,5 +1,16 @@
 import Link from "next/link";
-import { Flex, Card, Button, Icon, Heading, Text, Divider, Tag, Link as BBLink } from "bumbag";
+import {
+  Flex,
+  Card,
+  Button,
+  Icon,
+  Heading,
+  Text,
+  Divider,
+  Tag,
+  useBreakpointValue,
+  Link as BBLink
+} from "bumbag";
 import { PhotoInfoFragment } from "../graphql-operations";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -13,6 +24,17 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
   const collections = photo?.collectionsForPhoto?.map(x => x.collection);
   const subjects = photo?.subjectsInPhoto?.map(x => x.subject);
   const tags = photo?.tagsForPhoto?.map(x => x.tag);
+
+  const size = useBreakpointValue({
+    default: "default",
+    "max-tablet": "small"
+  });
+
+  const spacing = useBreakpointValue({
+    default: "major-1",
+    "max-tablet": "minor-1"
+  });
+
   return (
     <>
       <Flex direction="row" width="100%" justifySelf="start" alignSelf="start">
@@ -39,7 +61,7 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
             <br />
             <Text fontSize="150">{photo.description}</Text>
           </Text.Block>
-          {collections !== undefined && collections.length > 0 ? (
+          {collections && collections.length > 0 ? (
             <>
               <Divider marginTop="major-2" />
               <Text fontVariant="small-caps" fontSize="100">
@@ -47,9 +69,10 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
               </Text>
               {collections?.map(collection => (
                 <Link
+                  key={collection.id}
                   href={`/gallery/collection/${encodeURIComponent(collection.name.toLowerCase())}`}
                 >
-                  <BBLink key={collection.id}>
+                  <BBLink>
                     <p>{collection.name}</p>
                   </BBLink>
                 </Link>
@@ -59,8 +82,11 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
 
           <Divider marginY="major-2" />
           {subjects?.map(subject => (
-            <Link href={`/gallery/${encodeURIComponent(subject.name.toLowerCase())}`}>
-              <BBLink key={subject.id}>
+            <Link
+              key={subject.id}
+              href={`/gallery/${encodeURIComponent(subject.name.toLowerCase())}`}
+            >
+              <BBLink>
                 <Tag palette="primary" marginLeft="minor-1">
                   {subject.name}
                 </Tag>
@@ -68,8 +94,8 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
             </Link>
           ))}
           {tags?.map(tag => (
-            <Link href={`/gallery/tag/${encodeURIComponent(tag.name.toLowerCase())}`}>
-              <Tag key={tag.id} palette="secondary" marginLeft="minor-1">
+            <Link key={tag.id} href={`/gallery/tag/${encodeURIComponent(tag.name.toLowerCase())}`}>
+              <Tag palette="secondary" marginLeft="minor-1">
                 {tag.name}
               </Tag>
             </Link>
@@ -79,23 +105,16 @@ const SlideInfo: React.FC<{ photo: PhotoInfoFragment; setShowInfo: Function }> =
           </Text.Block>
         </Card>
         <Button
-          variant="ghost"
           alignSelf="start"
-          alignX="right"
-          alignY="top"
-          marginX="major-1"
-          marginTop="major-1"
-          alignItems="center"
-          justifyContent="center"
+          variant="ghost"
+          fontSize={{ default: "500", "max-tablet": "200" }}
+          size={size}
+          margin={spacing}
+          padding={spacing}
+          border="none"
           onClick={() => setShowInfo(false)}
         >
-          <Icon
-            aria-label="options"
-            icon="regular-times-circle"
-            fontSize="200"
-            alignX="center"
-            alignY="center"
-          />
+          <Icon aria-label="options" icon="regular-times-circle" fontSize="200" />
         </Button>
       </Flex>
     </>
