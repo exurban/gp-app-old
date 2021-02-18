@@ -89,7 +89,7 @@ const Photo: React.FC = () => {
           description: photo.description,
           images: [
             {
-              url: photo.images?.[0].imageUrl,
+              url: "https://gibbs-photography.com/image/1191",
               width: photo.images?.[0].width,
               height: photo.images?.[0].height,
               alt: photo.images?.[0].altText
@@ -116,28 +116,10 @@ const Photo: React.FC = () => {
           <TwitterShareButton
             url={"https://gibbs-photography.com"}
             title={"Explore your wild side"}
-            hashtags={["wildside"]}
+            hashtags={["nature", "photography"]}
           >
             <TwitterIcon size={24} style={{ borderRadius: "50%" }} />
-            <NextSeo
-              title={photo.title}
-              description={photo.description}
-              canonical={`https://www.gibbs-photography.com/image/${photo.sku}`}
-              openGraph={{
-                url: `https://www.gibbs-photography.com/image/${photo.sku}`,
-                title: photo.title,
-                description: photo.description,
-                images: [
-                  {
-                    url: photo.images?.[0].imageUrl,
-                    width: photo.images?.[0].width,
-                    height: photo.images?.[0].height,
-                    alt: photo.images?.[0].altText
-                  }
-                ],
-                site_name: "Gibbs Photography"
-              }}
-            />
+
             <Text.Block>Twitter</Text.Block>
           </TwitterShareButton>
           <IconButton>
@@ -156,14 +138,14 @@ const Photo: React.FC = () => {
 
           <Button.Close size="large" color="#babbba" onClick={() => router.back()} />
         </Flex>
-        <div style={{ width: "100%", padding: "20px", position: "relative" }}>
+        <div style={{ height: "80vh", padding: "20px", position: "relative" }}>
           <StyledImage
             src={image.imageUrl}
             width={image.width}
             height={image.height}
             // sizes=
             layout="responsive"
-            quality={100}
+            quality={80}
             className="image-wrapper"
           />
         </div>

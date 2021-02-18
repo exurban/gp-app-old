@@ -18,7 +18,14 @@ const CarouselItem: React.FC<Props> = ({ photo, idx }) => {
       <Head>
         <title>{photo.title}</title>
       </Head>
-      <Box className="item" data-value={idx} key={idx} height="100vh" margin="auto">
+      <Box
+        className="item"
+        data-value={idx}
+        key={idx}
+        height="100vh"
+        margin="auto"
+        style={{ overflowY: "hidden", overscrollBehaviorY: "none" }}
+      >
         <StyledImage
           alt="demo"
           src={photo.images?.[0].imageUrl}

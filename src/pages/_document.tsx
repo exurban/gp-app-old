@@ -24,33 +24,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta
-            name="description"
-            content="Landscape and nature photography from photographers Boyd and Scott Gibbs."
-          />
-
-          <meta property="og:url" content="https://gibbs-photography.com" />
-          <meta property="og:type" content="website" />
-          <meta property="og:title" content="Gibbs Photography" />
-          <meta
-            property="og:description"
-            content="Stunning photography exposing the beauty of the natural world."
-          />
-          <meta
-            property="og:image"
-            content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp"
-          />
-
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta property="twitter:domain" content="gibbs-photography.com" />
-          <meta property="twitter:url" content="https://gibbs-photography.com" />
-          <meta name="twitter:title" content="Welcome" />
-          <meta name="twitter:description" content="to Gibbs Photography" />
-          <meta
-            name="twitter:image"
-            content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/test-preview.jpg"
-          />
-
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script

@@ -1,3 +1,4 @@
+import { css } from "bumbag";
 import {
   faChevronLeft,
   faChevronRight,
@@ -48,6 +49,15 @@ const gpTheme: ThemeConfig = {
   //     }
   //   }
   // },
+  global: {
+    styles: {
+      base: css`
+        body {
+          overflow-y: "hidden";
+        }
+      `
+    }
+  },
   TopNav: {
     Item: {
       variants: {

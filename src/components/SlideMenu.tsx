@@ -20,6 +20,8 @@ import {
   AddPhotoToShoppingBagDocument,
   RemovePhotoFromShoppingBagDocument
 } from "../graphql-operations";
+import { TwitterShareButton } from "react-share";
+import { NextSeo } from "next-seo";
 
 type Props = {
   setShowInfo: Dispatch<SetStateAction<boolean>>;
@@ -389,49 +391,88 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   }
 
   return (
-    <DDMenu
-      menu={
-        <>
-          <DropdownMenu.Item iconBefore="solid-info-circle" onClick={() => setShowInfo(true)}>
-            <Text>Info</Text>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item iconBefore="solid-expand" onClick={() => showLarger()}>
-            <Text>View Larger</Text>
-          </DropdownMenu.Item>
-          {inFavorites ? (
-            <DropdownMenu.Item iconBefore="solid-minus" onClick={() => removePhotoFromFavorites()}>
-              <Text>Remove from Favorites</Text>
+    <>
+      <NextSeo
+        title={photo.title}
+        description={photo.description}
+        canonical="https://gibbs-photography.com"
+        openGraph={{
+          url: "http://localhost:3000/carousel/bloom?sku=1042",
+          title: photo.title,
+          description: photo.description,
+          images: [
+            {
+              url: "http://localhost:3000/carousel/bloom?sku=1042",
+              width: photo.images?.[0].width,
+              height: photo.images?.[0].height,
+              alt: photo.images?.[0].altText
+            }
+          ],
+          site_name: "Gibbs Photography"
+        }}
+        twitter={{
+          handle: "gibbs_photog",
+          site: "https://gibbs-photography.com",
+          cardType: "summary_large_image"
+        }}
+      />
+      <DDMenu
+        menu={
+          <>
+            <DropdownMenu.Item iconBefore="solid-info-circle" onClick={() => setShowInfo(true)}>
+              <Text>Info</Text>
             </DropdownMenu.Item>
-          ) : (
-            <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToFavorites()}>
-              <Text>Add to Favorites</Text>
+            <DropdownMenu.Item iconBefore="solid-expand" onClick={() => showLarger()}>
+              <Text>View Larger</Text>
             </DropdownMenu.Item>
-          )}
-          {inShoppingBag ? (
-            <DropdownMenu.Item
-              iconBefore="solid-minus"
-              onClick={() => removePhotoFromShoppingBag()}
-            >
-              <Text>Remove from Shopping Bag</Text>
-            </DropdownMenu.Item>
-          ) : (
-            <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToShoppingBag()}>
-              <Text>Add to Shopping Bag</Text>
-            </DropdownMenu.Item>
-          )}
-        </>
-      }
-    >
-      <Button
-        variant="ghost"
-        fontSize={{ default: "500", "max-tablet": "200" }}
-        size={size}
-        margin={spacing}
-        border="none"
+            {inFavorites ? (
+              <DropdownMenu.Item
+                iconBefore="solid-minus"
+                onClick={() => removePhotoFromFavorites()}
+              >
+                <Text>Remove from Favorites</Text>
+              </DropdownMenu.Item>
+            ) : (
+              <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToFavorites()}>
+                <Text>Add to Favorites</Text>
+              </DropdownMenu.Item>
+            )}
+            {inShoppingBag ? (
+              <DropdownMenu.Item
+                iconBefore="solid-minus"
+                onClick={() => removePhotoFromShoppingBag()}
+              >
+                <Text>Remove from Shopping Bag</Text>
+              </DropdownMenu.Item>
+            ) : (
+              <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToShoppingBag()}>
+                <Text>Add to Shopping Bag</Text>
+              </DropdownMenu.Item>
+            )}
+            <DropdownMenu.Divider />
+            <DropdownMenu.Group title="Share">
+              <TwitterShareButton
+                url={"https://gibbs-photography.com/carousel/bloom?sku=1042"}
+                title={`${photo.title}`}
+                hashtags={["photography", "nature"]}
+              >
+                <Text>Twitter</Text>
+              </TwitterShareButton>
+            </DropdownMenu.Group>
+          </>
+        }
       >
-        <Icon aria-label="options" icon="solid-ellipsis-v" fontSize="200" />
-      </Button>
-    </DDMenu>
+        <Button
+          variant="ghost"
+          fontSize={{ default: "500", "max-tablet": "200" }}
+          size={size}
+          margin={spacing}
+          border="none"
+        >
+          <Icon aria-label="options" icon="solid-ellipsis-v" fontSize="200" />
+        </Button>
+      </DDMenu>
+    </>
   );
 };
 
