@@ -59,7 +59,7 @@ const gpTheme: ThemeConfig = {
         }
         body {
           height: 100%;
-          overflow: hidden;
+          overflow: auto;
           position: relative;
         }
       `
