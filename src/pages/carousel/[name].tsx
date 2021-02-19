@@ -1,36 +1,29 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../../graphql-operations";
 import Loader from "../../components/Loader";
 import ErrorMessage from "../../components/ErrorMessage";
-import Carousel from "../../components/Carousel";
+import AliceCarousel from "react-alice-carousel";
+import "react-alice-carousel/lib/alice-carousel.css";
 import CarouselItem from "../../components/CarouselItem";
 import CarouselMenu from "../../components/CarouselMenu";
 import { space, Text, Button, Icon, styled } from "bumbag";
 import { isMobile } from "react-device-detect";
 
-interface CarouselRef {
-  prevSlide: () => void;
-  nextSlide: () => void;
-  showSlideAtIndex: (arg0: number) => void;
-}
-
 const PhotoCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const carouselRef = useRef<CarouselRef>();
 
   const handleKeyDown = (event: { keyCode: number }) => {
     switch (event.keyCode) {
       case 37:
       case 38: {
-        carouselRef.current?.prevSlide();
+        slidePrev();
         break;
       }
       case 39:
       case 40: {
-        carouselRef.current?.nextSlide();
+        slideNext();
         break;
       }
       case 73: {
@@ -57,7 +50,7 @@ const PhotoCarousel: React.FC = () => {
     if (sku && typeof sku === "string") {
       const skuNum = parseInt(sku);
       const index = photos.findIndex(x => x.sku === skuNum);
-      carouselRef.current?.showSlideAtIndex(index);
+      setActiveIndex(index);
     }
   }, []);
 
@@ -80,6 +73,24 @@ const PhotoCarousel: React.FC = () => {
 
   const items = photos.map((photo, idx) => <CarouselItem photo={photo} idx={idx} />);
 
+  const slidePrev = () => {
+    if (activeIndex === 0) {
+      setActiveIndex(total - 1);
+    } else {
+      setActiveIndex(activeIndex - 1);
+    }
+  };
+  const slideNext = () => {
+    if (activeIndex + 1 === total) {
+      setActiveIndex(0);
+    } else {
+      setActiveIndex(activeIndex + 1);
+    }
+  };
+  const onSlideChanged = ({ item }) => {
+    setActiveIndex(item);
+  };
+
   return (
     <>
       <Counter>
@@ -87,23 +98,23 @@ const PhotoCarousel: React.FC = () => {
       </Counter>
       <CarouselMenu photo={photos[activeIndex]} />
       {!isMobile && (
-        <PrevButton variant="ghost" zIndex="20" onClick={() => carouselRef.current?.prevSlide()}>
+        <PrevButton variant="ghost" zIndex="20" onClick={() => slidePrev()}>
           <Icon aria-label="previous" icon="solid-chevron-left" />
         </PrevButton>
       )}
-      <Carousel
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+      <AliceCarousel
+        disableDotsControls
+        disableButtonsControls
+        infinite
+        animationType="fadeout"
+        animationDuration={800}
+        animationEasingFunction="ease-in-out"
         items={items}
         activeIndex={activeIndex}
-        setActiveIndex={setActiveIndex}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        ref={carouselRef}
-        style={{ overflowY: "hidden", overscrollBehaviorY: "none" }}
+        onSlideChanged={onSlideChanged}
       />
       {!isMobile && (
-        <NextButton variant="ghost" zIndex="20" onClick={() => carouselRef.current?.nextSlide()}>
+        <NextButton variant="ghost" zIndex="20" onClick={slideNext}>
           <Icon aria-label="next" icon="solid-chevron-right" />
         </NextButton>
       )}

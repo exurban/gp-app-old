@@ -21,7 +21,6 @@ import {
   AddPhotoToShoppingBagDocument,
   RemovePhotoFromShoppingBagDocument
 } from "../graphql-operations";
-import { TwitterShareButton } from "react-share";
 import CarouselInfoModal from "./CarouselInfoModal";
 
 const MenuButton = applyTheme(Button, {
@@ -395,15 +394,6 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
             </DropdownMenu.Item>
           )}
           <DropdownMenu.Divider />
-          <DropdownMenu.Group title="Share">
-            <TwitterShareButton
-              url={"https://gibbs-photography.com/carousel/bloom?sku=1042"}
-              title={`${photo.title}`}
-              hashtags={["photography", "nature"]}
-            >
-              <Text>Twitter</Text>
-            </TwitterShareButton>
-          </DropdownMenu.Group>
         </>
       }
     >

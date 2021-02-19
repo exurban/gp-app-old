@@ -54,7 +54,13 @@ const SectionGallery: React.FC<Props> = ({ coverImage, name, description, total,
               aria-label="view larger in carousel"
               size={size}
               fontSize={{ default: "500", "max-tablet": "300" }}
-              onClick={() => router.push(`/carousel/${encodeURIComponent(section.toLowerCase())}`)}
+              onClick={() =>
+                router.push(
+                  `/carousel/${encodeURIComponent(section.toLowerCase())}/${encodeURIComponent(
+                    name.toLowerCase()
+                  )}`
+                )
+              }
             >
               <Icon icon="solid-expand" />
             </Button>

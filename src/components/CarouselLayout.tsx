@@ -1,9 +1,12 @@
 import Head from "next/head";
+import useWindowDimensions from "../utils/useWindowDimensions";
 
 const SingleImageLayout: React.FC = ({ children }) => {
   if (typeof window === "undefined") {
     return null;
   }
+  const { width, height } = useWindowDimensions();
+
   return (
     <>
       <Head>
@@ -14,12 +17,12 @@ const SingleImageLayout: React.FC = ({ children }) => {
       <div
         className="carousel-page"
         style={{
-          width: "100vw",
-          height: "100vh",
+          width: width,
+          height: height,
           margin: "0",
           backgroundColor: "#1b1c1a",
           overflowY: "hidden",
-          overscrollBehavior: "none"
+          overscrollBehaviorY: "none"
         }}
       >
         {children}

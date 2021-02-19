@@ -5306,10 +5306,10 @@ rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-alice-carousel@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/react-alice-carousel/-/react-alice-carousel-2.3.0.tgz#31472d14d0eca13a6d0ab2bce1c1968f3850d696"
-  integrity sha512-PJOvWQnQ91LuC+QAmghY+C+9hbG7KuC2+FQDZXRds98RAsv2CCSMwi/ewhATDcwbtvJZjw8M8zn32uf2m4hmnQ==
+react-alice-carousel@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-alice-carousel/-/react-alice-carousel-2.4.0.tgz#57f68045996d139c7814452ff598ce8c05f22761"
+  integrity sha512-ea4q7hyvSJr1s97LYQ3gyK1i8KxOQ+IPdt1QYbVqFpm8ZzswDLf0f14Wrh3YQh6FJk4FBd8wPhGKlAG35gKltw==
   dependencies:
     vanilla-swipe "^2.2.0"
 
