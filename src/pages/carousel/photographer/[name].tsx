@@ -60,6 +60,8 @@ const PhotographerCarousel: React.FC = () => {
       setActiveIndex(activeIndex + 1);
     }
   };
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const onSlideChanged = ({ item }) => {
     setActiveIndex(item);
   };
