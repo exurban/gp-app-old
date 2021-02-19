@@ -61,6 +61,7 @@ const gpTheme: ThemeConfig = {
           height: 100%;
           overflow: auto;
           position: relative;
+          overscroll-behavior: none;
         }
       `
     }

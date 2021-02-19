@@ -20,7 +20,7 @@ const SingleImageLayout: React.FC<{ title?: string }> = ({ children, title }) =>
           margin: "0",
           backgroundColor: "#1b1c1a",
           overflowY: "hidden",
-          overscrollBehaviorY: "none"
+          overscrollBehavior: "none"
         }}
       >
         {children}
