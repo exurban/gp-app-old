@@ -19,7 +19,7 @@ const IndexPage: React.FC = () => {
         <Image
           // src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1090-1612563207994.webp"
           // src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1169-1612571849332.webp"
-          src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1089-1612563104512.webp"
+          src="/images/index-hero-1089.webp"
           alt="Hero"
           layout="fill"
           objectFit="cover"
