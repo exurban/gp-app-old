@@ -2,6 +2,7 @@ import { PhotoInfoFragment } from "../graphql-operations";
 import Image from "next/image";
 import { Box, styled } from "bumbag";
 import useWindowDimensions from "../utils/useWindowDimensions";
+import { isMobile } from "react-device-detect";
 
 const StyledImage = styled(Image)`
   border-radius: 20px;
@@ -20,7 +21,12 @@ const CarouselItem: React.FC<Props> = ({ photo, idx }) => {
 
   return (
     <>
-      <Box className="item" data-value={idx} key={idx} height={`${height}px`}>
+      <Box
+        className="item"
+        data-value={idx}
+        key={idx}
+        height={isMobile ? `${height}px` : `${height - 100}px`}
+      >
         <StyledImage
           alt="demo"
           src={photo.images?.[0].imageUrl}

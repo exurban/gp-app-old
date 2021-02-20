@@ -7,8 +7,8 @@
  * Add to Bag "B"
  * Share (bring up share modal)
  */
-import { useMemo } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+
+import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/client";
 import { DropdownMenu, Text, Icon, Button, applyTheme, useToasts } from "bumbag";
@@ -73,6 +73,7 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
   const [session] = useSession();
   const router = useRouter();
   const toasts = useToasts();
+  const client = useApolloClient();
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
   const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
   const [addToShoppingBag] = useMutation(AddPhotoToShoppingBagDocument);
@@ -346,17 +347,50 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
     }
   };
 
-  const { data: favs } = useQuery(FavoritesDocument);
-  const inFavorites = useMemo(() => {
-    const favIds = favs?.favorites?.photoList?.map(f => f.id);
-    return favIds ? favIds.includes(photo.id) : false;
-  }, [favs]);
+  function inFavorites() {
+    if (!session) {
+      return false;
+    }
 
-  const { data: bagItems } = useQuery(ShoppingBagItemsDocument);
-  const inShoppingBag = useMemo(() => {
-    const bagItemIds = bagItems?.shoppingBagItems?.photoList?.map(b => b.id);
-    return bagItemIds ? bagItemIds.includes(photo.id) : false;
-  }, [bagItems]);
+    // during development, could get in a situation where there was a session, but favorites hadn't been queried (session persisted when restarting server but favorites (cached on sign in) were purged). Instead of checking for this situation which should only occur in testing, Apollo 3.3 and up returns null if fields were missing
+    const { ...favs } = client.cache.readQuery({
+      query: FavoritesDocument
+    });
+
+    if (!favs) {
+      console.error(`There IS a session, but favorites have not been fetched.`);
+      useQuery(FavoritesDocument);
+    }
+
+    const photoList: PhotoInfoFragment[] = favs.favorites?.photoList || [];
+
+    if (!photoList) {
+      return false;
+    }
+    const favIds = photoList.map(f => f.id);
+    console.log(`looking for photo with id in favorites: ${photo.id} in ${favIds}`);
+
+    return favIds.includes(photo.id);
+  }
+
+  const inShoppingBag = (): boolean => {
+    if (!session) {
+      return false;
+    }
+    const { ...bagItems } = client.cache.readQuery({
+      query: ShoppingBagItemsDocument
+    });
+
+    if (!bagItems) {
+      useQuery(ShoppingBagItemsDocument);
+    }
+
+    const photoList: PhotoInfoFragment[] = bagItems.shoppingBagItems?.photoList || [];
+
+    const bagItemIds = photoList.map(f => f.id);
+
+    return bagItemIds.includes(photo.id);
+  };
 
   if (typeof window === undefined) {
     return <p>waiting</p>;
@@ -372,7 +406,7 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
 
           <CarouselInfoModal photo={photo} />
 
-          {inFavorites ? (
+          {inFavorites() ? (
             <DropdownMenu.Item iconBefore="solid-minus" onClick={() => removePhotoFromFavorites()}>
               <Text>Remove from Favorites</Text>
             </DropdownMenu.Item>
@@ -381,7 +415,7 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
               <Text>Add to Favorites</Text>
             </DropdownMenu.Item>
           )}
-          {inShoppingBag ? (
+          {inShoppingBag() ? (
             <DropdownMenu.Item
               iconBefore="solid-minus"
               onClick={() => removePhotoFromShoppingBag()}
