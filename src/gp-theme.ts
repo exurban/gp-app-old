@@ -38,17 +38,6 @@ import {
 import { ThemeConfig } from "bumbag";
 
 const gpTheme: ThemeConfig = {
-  // fonts: {
-  //   importUrls: ["https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap"]
-  // },
-
-  // Button: {
-  //   styles: {
-  //     focus: {
-  //       boxShadow: "none"
-  //     }
-  //   }
-  // },
   global: {
     styles: {
       base: css`
@@ -63,6 +52,23 @@ const gpTheme: ThemeConfig = {
           position: relative;
           overscroll-behavior-y: none;
         }
+        @font-face {
+          font-family: "Raleway";
+          font-style: normal;
+          font-weight: 400;
+          src: local(""), url("../fonts/raleway-v19-latin-regular.woff2") format("woff2"),
+            /* Chrome 26+, Opera 23+, Firefox 39+ */ url("../fonts/raleway-v19-latin-regular.woff")
+              format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        }
+        /* raleway-700 - latin */
+        @font-face {
+          font-family: "Raleway";
+          font-style: normal;
+          font-weight: 700;
+          src: local(""), url("../fonts/raleway-v19-latin-700.woff2") format("woff2"),
+            /* Chrome 26+, Opera 23+, Firefox 39+ */ url("../fonts/raleway-v19-latin-700.woff")
+              format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        }
       `
     }
   },
@@ -72,7 +78,7 @@ const gpTheme: ThemeConfig = {
         navigationText: {
           styles: {
             base: {
-              // fontFamily: "Raleway, system-ui",
+              fontFamily: "Raleway, system-ui",
               fontVariant: "small-caps"
             },
             focus: {
