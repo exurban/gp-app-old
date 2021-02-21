@@ -1,4 +1,4 @@
-import Head from "next/head";
+// import Head from "next/head";
 import useWindowDimensions from "../utils/useWindowDimensions";
 
 const SingleImageLayout: React.FC = ({ children }) => {
@@ -9,10 +9,10 @@ const SingleImageLayout: React.FC = ({ children }) => {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+      </Head> */}
 
       <div
         className="carousel-page"
