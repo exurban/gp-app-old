@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Head from "next/head";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
 import {
@@ -8,8 +9,18 @@ import {
 } from "../../graphql-operations";
 import Loader from "../../components/Loader";
 import ErrorMessage from "../../components/ErrorMessage";
-import { Flex, applyTheme, Text, Button, Icon, styled } from "bumbag";
-import { NextSeo } from "next-seo";
+import Link from "next/link";
+import {
+  Flex,
+  Tag,
+  // applyTheme,
+  Heading,
+  Text,
+  // Button,
+  Divider,
+  Link as BBLink,
+  styled
+} from "bumbag";
 import { TwitterShareButton, TwitterIcon } from "react-share";
 
 const Photo: React.FC = () => {
@@ -32,134 +43,167 @@ const Photo: React.FC = () => {
 
   if (loading) return <Loader />;
 
-  if (error) return <ErrorMessage message="Error loading photos." />;
+  if (error) return <ErrorMessage message="Error loading photo." />;
 
   const photo: PhotoInfoFragment = data.photoWithSku;
   const image: ImageInfoFragment = photo.images[0];
 
-  const share = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          url: document.location.href,
-          title: photo.title,
-          text: photo.description
-        })
-        .then(() => console.log(`Share was successful.`))
-        .catch(error => console.log(`Sharing failed:`, error));
-    } else {
-      console.log(`Your browser doesn't support file sharing.`);
-    }
-  };
+  const pgName = photo?.photographer?.name as string;
+  const locationName = photo?.location?.name as string;
+  const subjects = photo?.subjectsInPhoto?.map(x => x.subject);
+  const tags = photo?.tagsForPhoto?.map(x => x.tag);
+  const collections = photo?.collectionsForPhoto?.map(x => x.collection);
+
+  // const share = () => {
+  //   if (navigator.share) {
+  //     navigator
+  //       .share({
+  //         url: document.location.href,
+  //         title: photo.title,
+  //         text: photo.description
+  //       })
+  //       .then(() => console.log(`Share was successful.`))
+  //       .catch(error => console.log(`Sharing failed:`, error));
+  //   } else {
+  //     console.log(`Your browser doesn't support file sharing.`);
+  //   }
+  // };
 
   const StyledImage = styled(Image)`
     border-radius: 4px;
   `;
 
-  const IconButton = applyTheme(Button, {
-    styles: {
-      base: {
-        fontSize: "14px"
-      }
-    },
-    defaultProps: {
-      palette: "primary",
-      variant: "ghost",
-      size: "small",
-      color: "#babbba",
-      _hover: {
-        backgroundColor: "#babbba",
-        color: "#1b1c1a"
-      },
-      _focus: {
-        boxShadow: "none"
-      }
-    }
-  });
+  // const IconButton = applyTheme(Button, {
+  //   styles: {
+  //     base: {
+  //       fontSize: "14px"
+  //     }
+  //   },
+  //   defaultProps: {
+  //     palette: "primary",
+  //     variant: "ghost",
+  //     size: "small",
+  //     color: "#babbba",
+  //     _hover: {
+  //       backgroundColor: "#babbba",
+  //       color: "#1b1c1a"
+  //     },
+  //     _focus: {
+  //       boxShadow: "none"
+  //     }
+  //   }
+  // });
 
   return (
     <>
-      <NextSeo
-        title={photo.title}
-        description={photo.description}
-        canonical={`https://www.gibbs-photography.com/image/${photo.sku}`}
-        openGraph={{
-          url: `https://www.gibbs-photography.com/image/${photo.sku}`,
-          title: photo.title,
-          description: photo.description,
-          images: [
-            {
-              url: "https://gibbs-photography.com/image/1191",
-              width: photo.images?.[0].width,
-              height: photo.images?.[0].height,
-              alt: photo.images?.[0].altText
-            }
-          ],
-          site_name: "Gibbs Photography"
-        }}
-        twitter={{
-          handle: "gibbs_photog",
-          site: "https://gibbs-photography.com",
-          cardType: "summary_large_image"
-        }}
-      />
-      <Flex
-        className="image-metadata-wrapper"
-        flexDirection="column"
-        // width="1800px"
-        width={image.isPortrait ? "800px" : "1800px"}
-        height="100vh"
-        alignX="center"
-        alignY="center"
-      >
-        <Flex flexDirection="row" width="98%" justifyContent="space-between">
-          <TwitterShareButton
-            url={"https://gibbs-photography.com"}
-            title={"Explore your wild side"}
-            hashtags={["nature", "photography"]}
-          >
-            <TwitterIcon size={24} style={{ borderRadius: "50%" }} />
+      <Head>
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" key="twcard" />
+        <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
 
-            <Text.Block>Twitter</Text.Block>
-          </TwitterShareButton>
-          <IconButton>
-            <Icon aria-label="share" icon="solid-shareAlt" fontSize="300" onClick={() => share()} />
-          </IconButton>
-          <Text.Block
-            fontSize="400"
-            fontWeight="300"
-            color="#babbba"
-            margin="0px"
-            padding="0px"
-            alignSelf="flex-end"
-          >
-            {photo.title}
-          </Text.Block>
+        {/* Open Graph */}
+        <meta
+          property="og:url"
+          content={`https://www.gibbs-photography.com/image/${photo.sku}`}
+          key="ogurl"
+        />
+        <meta property="og:image" content={photo.images?.[0].imageUrl} key="ogimage" />
+        <meta property="og:site_name" content="Gibbs Photography" key="ogsitename" />
+        <meta property="og:title" content={photo.title} key="ogtitle" />
+        <meta property="og:description" content={photo.description} key="ogdesc" />
+      </Head>
 
-          <Button.Close size="large" color="#babbba" onClick={() => router.back()} />
-        </Flex>
-        <div style={{ height: "80vh", padding: "20px", position: "relative" }}>
+      <Flex width="100%" alignX="center" marginTop="major-4">
+        <Flex width="90vw" maxWidth="720px" flexDirection="column">
           <StyledImage
             src={image.imageUrl}
-            width={image.width}
-            height={image.height}
-            // sizes=
-            layout="responsive"
-            quality={80}
-            className="image-wrapper"
+            layout="intrinsic"
+            width={image.width / 2}
+            height={image.height / 2}
           />
-        </div>
-        <Flex fontSize="150" color="#babbba" justifyContent="space-between" width="90%">
-          <Text.Block fontSize="150" color="#babbba">
-            {photo.photographer?.name}
-          </Text.Block>
-          <Text.Block fontSize="150" color="#babbba">
+          <Heading use="h2" textAlign="center" marginTop="major-4">
+            {photo.title}
+          </Heading>
+          <Text.Block fontSize="400" marginY="major-3">
             {photo.description}
           </Text.Block>
-          <Text.Block fontSize="150" color="#babbba">
-            {photo.location?.name}
-            {/* W:{image.width} H:{image.height} Q: */}
+          <Link href={`/gallery/photographer/${encodeURIComponent(pgName.toLowerCase())}`}>
+            <BBLink>
+              <Heading use="h5" marginBottom="major-2">
+                {pgName}
+              </Heading>
+            </BBLink>
+          </Link>
+
+          <Text.Block marginBottom="major-3">
+            <Link href={`/gallery/location/${encodeURIComponent(locationName.toLowerCase())}`}>
+              <BBLink>
+                <Text marginBottom="major-2" color="secondary">
+                  {locationName}
+                </Text>
+              </BBLink>
+            </Link>
           </Text.Block>
+          {collections && collections.length > 0 ? (
+            <>
+              <Divider marginTop="major-2" />
+              <Text fontVariant="small-caps" fontSize="100">
+                Collections:
+              </Text>
+              {collections?.map(collection => (
+                <Link
+                  key={collection.id}
+                  href={`/gallery/collection/${encodeURIComponent(collection.name.toLowerCase())}`}
+                >
+                  <BBLink>
+                    <p>{collection.name}</p>
+                  </BBLink>
+                </Link>
+              ))}
+            </>
+          ) : null}
+
+          <Divider marginY="major-2" />
+          <Flex alignItems="baseline">
+            <Text.Block fontSize="200" fontVariant="small-caps">
+              Related:
+            </Text.Block>
+            {subjects?.map(subject => (
+              <Link
+                key={subject.id}
+                href={`/gallery/${encodeURIComponent(subject.name.toLowerCase())}`}
+              >
+                <BBLink>
+                  <Tag palette="primary" marginLeft="major-1">
+                    {subject.name}
+                  </Tag>
+                </BBLink>
+              </Link>
+            ))}
+            {tags?.map(tag => (
+              <Link
+                key={tag.id}
+                href={`/gallery/tag/${encodeURIComponent(tag.name.toLowerCase())}`}
+              >
+                <Tag palette="secondary" marginLeft="major-1">
+                  {tag.name}
+                </Tag>
+              </Link>
+            ))}
+          </Flex>
+          <Divider marginY="major-2" />
+          <Flex alignItems="baseline">
+            <Text.Block fontSize="200" fontVariant="small-caps">
+              Share:
+            </Text.Block>
+            <TwitterShareButton
+              url={`https://gibbs-photography.com/image/${photo.sku}`}
+              title={photo.title}
+              hashtags={["nature", "photography"]}
+            >
+              <TwitterIcon size={36} style={{ borderRadius: "50%" }} />
+            </TwitterShareButton>
+          </Flex>
         </Flex>
       </Flex>
     </>

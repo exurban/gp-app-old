@@ -4,7 +4,13 @@ import { extractCritical } from "bumbag-server";
 import { InitializeColorMode } from "bumbag";
 
 export default class MyDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
+  static async getInitialProps(
+    ctx: DocumentContext
+  ): Promise<{
+    styles: JSX.Element;
+    html: string;
+    head?: (JSX.Element | null)[] | undefined;
+  }> {
     const initialProps = await Document.getInitialProps(ctx);
     const styles = extractCritical(initialProps.html);
     return {
@@ -20,10 +26,25 @@ export default class MyDocument extends Document {
       )
     };
   }
-  render() {
+  render(): JSX.Element {
     return (
       <Html lang="en">
         <Head>
+          <title>"Gibbs Photography"</title>
+          <meta name="description" content="" />
+
+          <meta property="og:url" content="https://www.gibbs-photography.com/" key="ogurl" />
+          <meta property="og:type" content="website" key="ogtype" />
+          <meta property="og:title" content="" key="ogtitle" />
+          <meta property="og:description" content="" key="ogdesc" />
+          <meta property="og:image" content="" key="ogimage" />
+
+          <meta name="twitter:card" content="summary_large_image" key="twcard" />
+          <meta property="twitter:domain" content="" />
+          <meta property="twitter:url" content="http://localhost:3000/image/1042" />
+          <meta name="twitter:title" content="" />
+          <meta name="twitter:description" content="" />
+          <meta name="twitter:image" content="" />
           <link
             rel="preload"
             href="/fonts/raleway-v19-latin-700.woff2"

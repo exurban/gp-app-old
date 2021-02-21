@@ -6,8 +6,8 @@ import { Provider as AuthProvider } from "next-auth/client";
 import { Provider as BumbagProvider, ToastManager } from "bumbag";
 import { useEffect } from "react";
 import * as gtag from "../utils/gtag";
-// import { DefaultSeo } from "next-seo";
-// import SEO from "../../next-seo.config";
+import { DefaultSeo } from "next-seo";
+import SEO from "../../next-seo.config";
 import Layout from "../components/Layout";
 import CarouselLayout from "../components/CarouselLayout";
 import gpTheme from "../gp-theme";
@@ -28,23 +28,27 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   }, [router.events]);
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <AuthProvider session={pageProps.session}>
-        <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
-          {router.pathname.startsWith(`/carousel/`) ? (
-            <CarouselLayout>
-              <Component {...pageProps} />
-            </CarouselLayout>
-          ) : (
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          )}
+    <>
+      <ApolloProvider client={apolloClient}>
+        <AuthProvider session={pageProps.session}>
+          <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
+            {router.pathname.startsWith(`/carousel/`) ? (
+              <CarouselLayout>
+                <DefaultSeo {...SEO} />
+                <Component {...pageProps} />
+              </CarouselLayout>
+            ) : (
+              <Layout>
+                <DefaultSeo {...SEO} />
+                <Component {...pageProps} />
+              </Layout>
+            )}
 
-          <ToastManager />
-        </BumbagProvider>
-      </AuthProvider>
-    </ApolloProvider>
+            <ToastManager />
+          </BumbagProvider>
+        </AuthProvider>
+      </ApolloProvider>
+    </>
   );
 };
 
