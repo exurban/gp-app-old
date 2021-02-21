@@ -101,7 +101,7 @@ const Photo: React.FC = () => {
     <>
       <NextSeo
         title="A Dilly of a Pickle."
-        description="Deep poop stains."
+        description={`title: ${photo.title} - ${photo.sku}`}
         openGraph={{
           title: "Blip Blop",
           description: "In the drip drop.",
