@@ -30,7 +30,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          {/* Twitter */}
+          {/* Twitter
           <meta name="twitter:card" content="summary_large_image" key="twcard" />
           <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
           <meta
@@ -49,7 +49,7 @@ export default class MyDocument extends Document {
           <meta name="twitter:description" content="photo DESCRIPTION" key="twdesc" />
 
           {/* Open Graph */}
-          <meta
+          {/*<meta
             name="og:url"
             content={`https://www.gibbs-photography.com/image/1115`}
             key="ogurl"
@@ -61,7 +61,7 @@ export default class MyDocument extends Document {
           />
           <meta name="og:site_name" content="Gibbs Photography" key="ogsitename" />
           <meta name="og:title" content="OG title" key="ogtitle" />
-          <meta name="og:description" content="OG DESCRIPTION" key="ogdesc" />
+          <meta name="og:description" content="OG DESCRIPTION" key="ogdesc" /> */}
           <link
             rel="preload"
             href="/fonts/raleway-v19-latin-700.woff2"
