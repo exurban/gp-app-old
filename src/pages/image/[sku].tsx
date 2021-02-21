@@ -1,3 +1,5 @@
+import { GetStaticProps, GetStaticPaths } from "next";
+import { addApolloState, initializeApollo } from "../../lib/apolloClient";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
@@ -216,6 +218,29 @@ const Photo: React.FC = () => {
       </Flex>
     </>
   );
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [{ params: { sku: "1042" } }, { params: { sku: "1115" } }],
+    fallback: false
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({
+    query: PhotoWithSkuDocument,
+    variables: { sku: parseInt(params!.sku as string) }
+  });
+
+  return addApolloState(apolloClient, {
+    props: {
+      initialApolloState: apolloClient.cache.extract()
+    },
+    revalidate: 1
+  });
 };
 
 export default Photo;
