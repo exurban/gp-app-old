@@ -100,6 +100,14 @@ const Photo: React.FC = () => {
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" key="twcard" />
         <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
+        <meta name="twitter:image" content={photo.images?.[0].imageUrl} key="twimage" />
+        <meta
+          property="twitter:url"
+          content={`https://gibbs-photography.com/image/${photo.sku}`}
+          key="twurl"
+        />
+        <meta name="twitter:title" content={photo.title} key="twtitle" />
+        <meta name="twitter:description" content={photo.description} key="twdesc" />
 
         {/* Open Graph */}
         <meta

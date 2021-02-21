@@ -39,12 +39,13 @@ export default class MyDocument extends Document {
           <meta property="og:description" content="" key="ogdesc" />
           <meta property="og:image" content="" key="ogimage" />
 
+          <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
           <meta name="twitter:card" content="summary_large_image" key="twcard" />
           <meta property="twitter:domain" content="" />
           <meta property="twitter:url" content="http://localhost:3000/image/1042" />
           <meta name="twitter:title" content="" />
           <meta name="twitter:description" content="" />
-          <meta name="twitter:image" content="" />
+          <meta name="twitter:image" content="" key="twimage" />
           <link
             rel="preload"
             href="/fonts/raleway-v19-latin-700.woff2"
