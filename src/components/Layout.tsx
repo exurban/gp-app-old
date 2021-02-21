@@ -1,5 +1,5 @@
 import React from "react";
-import Head from "next/head";
+// import Head from "next/head";
 import Footer from "./Footer";
 import { useSession, signOut } from "next-auth/client";
 import {
@@ -30,6 +30,7 @@ const Layout: React.FC<{ title?: string }> = ({
   children,
   title = "Gallery - Gibbs Photography"
 }) => {
+  console.log(title);
   const page = usePage();
   const isMinDesktopAndOver = useBreakpoint("min-desktop");
   const isMaxDesktopAndUnder = useBreakpoint("max-desktop");
