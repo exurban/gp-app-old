@@ -111,14 +111,14 @@ const Photo: React.FC = () => {
 
         {/* Open Graph */}
         <meta
-          property="og:url"
+          name="og:url"
           content={`https://www.gibbs-photography.com/image/${photo.sku}`}
           key="ogurl"
         />
-        <meta property="og:image" content={photo.images?.[0].imageUrl} key="ogimage" />
-        <meta property="og:site_name" content="Gibbs Photography" key="ogsitename" />
-        <meta property="og:title" content={photo.title} key="ogtitle" />
-        <meta property="og:description" content={photo.description} key="ogdesc" />
+        <meta name="og:image" content={photo.images?.[0].imageUrl} key="ogimage" />
+        <meta name="og:site_name" content="Gibbs Photography" key="ogsitename" />
+        <meta name="og:title" content={photo.title} key="ogtitle" />
+        <meta name="og:description" content={photo.description} key="ogdesc" />
       </Head>
 
       <Flex width="100%" alignX="center" marginTop="major-4">
