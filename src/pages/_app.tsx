@@ -6,8 +6,8 @@ import { Provider as AuthProvider } from "next-auth/client";
 import { Provider as BumbagProvider, ToastManager } from "bumbag";
 import { useEffect } from "react";
 import * as gtag from "../utils/gtag";
-// import { DefaultSeo } from "next-seo";
-// import SEO from "../../next-seo.config";
+import { DefaultSeo } from "next-seo";
+import SEO from "../../next-seo.config";
 import Layout from "../components/Layout";
 import CarouselLayout from "../components/CarouselLayout";
 import gpTheme from "../gp-theme";
@@ -30,6 +30,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <>
       <ApolloProvider client={apolloClient}>
+        <DefaultSeo {...SEO} />
         <AuthProvider session={pageProps.session}>
           <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
             {router.pathname.startsWith(`/carousel/`) ? (
