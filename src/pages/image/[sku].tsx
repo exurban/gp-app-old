@@ -1,7 +1,8 @@
 import { GetStaticProps, GetStaticPaths } from "next";
 import { addApolloState, initializeApollo } from "../../lib/apolloClient";
 import { useRouter } from "next/router";
-import Head from "next/head";
+// import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
 import {
@@ -98,30 +99,28 @@ const Photo: React.FC = () => {
 
   return (
     <>
-      <Head>
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" key="twcard" />
-        <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
-        <meta name="twitter:image" content={photo.images?.[0].imageUrl} key="twimage" />
-        <meta
-          property="twitter:url"
-          content={`https://gibbs-photography.com/image/${photo.sku}`}
-          key="twurl"
-        />
-        <meta name="twitter:title" content={photo.title} key="twtitle" />
-        <meta name="twitter:description" content={photo.description} key="twdesc" />
-
-        {/* Open Graph */}
-        <meta
-          name="og:url"
-          content={`https://www.gibbs-photography.com/image/${photo.sku}`}
-          key="ogurl"
-        />
-        <meta name="og:image" content={photo.images?.[0].imageUrl} key="ogimage" />
-        <meta name="og:site_name" content="Gibbs Photography" key="ogsitename" />
-        <meta name="og:title" content={photo.title} key="ogtitle" />
-        <meta name="og:description" content={photo.description} key="ogdesc" />
-      </Head>
+      <NextSeo
+        openGraph={{
+          type: "website",
+          url: "https://www.example.com/page",
+          title: "Open Graph Title",
+          description: "Open Graph Description",
+          images: [
+            {
+              url: "https://www.example.ie/og-image.jpg",
+              width: 800,
+              height: 600,
+              alt: "Og Image Alt"
+            },
+            {
+              url: "https://www.example.ie/og-image-2.jpg",
+              width: 800,
+              height: 600,
+              alt: "Og Image Alt 2"
+            }
+          ]
+        }}
+      />
 
       <Flex width="100%" alignX="center" marginTop="major-4">
         <Flex width="90vw" maxWidth="720px" flexDirection="column">
