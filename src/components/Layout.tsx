@@ -1,5 +1,5 @@
 import React from "react";
-// import Head from "next/head";
+import Head from "next/head";
 import Footer from "./Footer";
 import { useSession, signOut } from "next-auth/client";
 import {
@@ -62,11 +62,38 @@ const Layout: React.FC<{ title?: string }> = ({
 
   return (
     <>
-      {/* <Head>
+      <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head> */}
+        <meta name="twitter:card" content="summary_large_image" key="twcard" />
+        <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
+        <meta
+          name="twitter:image"
+          content={
+            "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1043-1612553422228.webp"
+          }
+          key="twimage"
+        />
+        <meta
+          property="twitter:url"
+          content={`https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1043-1612553422228.webp`}
+          key="twurl"
+        />
+        <meta name="twitter:title" content="Photo TITLE" key="twtitle" />
+        <meta name="twitter:description" content="photo DESCRIPTION" key="twdesc" />
+
+        {/* Open Graph */}
+        <meta name="og:url" content={`https://www.gibbs-photography.com/image/1115`} key="ogurl" />
+        <meta
+          name="og:image"
+          content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1048-1612554931186.webp"
+          key="ogimage"
+        />
+        <meta name="og:site_name" content="Gibbs Photography" key="ogsitename" />
+        <meta name="og:title" content="OG title" key="ogtitle" />
+        <meta name="og:description" content="OG DESCRIPTION" key="ogdesc" />
+      </Head>
       <PageWithHeader
         sticky
         headerHeight="80px"
