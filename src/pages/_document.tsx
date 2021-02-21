@@ -30,6 +30,38 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          {/* Twitter */}
+          <meta name="twitter:card" content="summary_large_image" key="twcard" />
+          <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
+          <meta
+            name="twitter:image"
+            content={
+              "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1043-1612553422228.webp"
+            }
+            key="twimage"
+          />
+          <meta
+            property="twitter:url"
+            content={`https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1043-1612553422228.webp`}
+            key="twurl"
+          />
+          <meta name="twitter:title" content="Photo TITLE" key="twtitle" />
+          <meta name="twitter:description" content="photo DESCRIPTION" key="twdesc" />
+
+          {/* Open Graph */}
+          <meta
+            name="og:url"
+            content={`https://www.gibbs-photography.com/image/${photo.sku}`}
+            key="ogurl"
+          />
+          <meta
+            name="og:image"
+            content="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1048-1612554931186.webp"
+            key="ogimage"
+          />
+          <meta name="og:site_name" content="Gibbs Photography" key="ogsitename" />
+          <meta name="og:title" content="OG title" key="ogtitle" />
+          <meta name="og:description" content="OG DESCRIPTION" key="ogdesc" />
           <link
             rel="preload"
             href="/fonts/raleway-v19-latin-700.woff2"
