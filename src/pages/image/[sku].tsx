@@ -228,11 +228,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+  if (!params || typeof params.sku !== "string") {
+    return;
+  }
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
     query: PhotoWithSkuDocument,
-    variables: { sku: parseInt(params!.sku as string) }
+    variables: { sku: parseInt(params.sku) }
   });
 
   return addApolloState(apolloClient, {

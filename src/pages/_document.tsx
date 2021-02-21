@@ -1,5 +1,5 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
-import { GA_TRACKING_ID } from "../utils/gtag";
+// import { GA_TRACKING_ID } from "../utils/gtag";
 import { extractCritical } from "bumbag-server";
 import { InitializeColorMode } from "bumbag";
 
@@ -93,7 +93,7 @@ export default class MyDocument extends Document {
           <meta content="#ffffff" name="msapplication-TileColor" />
           <meta content="/static/favicons/browserconfig.xml" name="msapplication-config" />
           {/* Global Site Tag (gtag.js) - Google Analytics */}
-          <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
+          {/* <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script
             dangerouslySetInnerHTML={{
               __html: `
@@ -104,8 +104,8 @@ export default class MyDocument extends Document {
                 page_path: window.location.pathname,
               });
           `
-            }}
-          />
+            }} 
+          />*/}
         </Head>
         <body>
           <InitializeColorMode />
