@@ -35,17 +35,12 @@ export default class MyDocument extends Document {
 
           <meta property="og:url" content="https://www.gibbs-photography.com/" key="ogurl" />
           <meta property="og:type" content="website" key="ogtype" />
-          <meta property="og:title" content="" key="ogtitle" />
-          <meta property="og:description" content="" key="ogdesc" />
-          <meta property="og:image" content="" key="ogimage" />
 
           <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
           <meta name="twitter:card" content="summary_large_image" key="twcard" />
-          <meta property="twitter:domain" content="" />
-          <meta property="twitter:url" content="http://localhost:3000/image/1042" />
-          <meta name="twitter:title" content="" />
-          <meta name="twitter:description" content="" />
-          <meta name="twitter:image" content="" key="twimage" />
+          <meta property="twitter:domain" content="https://gibbs-photography.com" />
+          <meta property="twitter:url" content="https://gibbs-photography.com/image/1042" />
+
           <link
             rel="preload"
             href="/fonts/raleway-v19-latin-700.woff2"
