@@ -31,7 +31,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     <>
       <ApolloProvider client={apolloClient}>
         <AuthProvider session={pageProps.session}>
-          <BumbagProvider colorMode="dark" theme={gpTheme}>
+          <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
             {router.pathname.startsWith(`/carousel/`) ? (
               <CarouselLayout>
                 <Component {...pageProps} />

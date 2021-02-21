@@ -61,11 +61,11 @@ const Layout: React.FC<{ title?: string }> = ({
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+      </Head> */}
       <PageWithHeader
         sticky
         headerHeight="80px"
