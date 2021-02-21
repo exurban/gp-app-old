@@ -99,7 +99,14 @@ const Photo: React.FC = () => {
 
   return (
     <>
-      <NextSeo title="A Dilly of a Pickle." description="Deep poop stains." />
+      <NextSeo
+        title="A Dilly of a Pickle."
+        description="Deep poop stains."
+        openGraph={{
+          title: "Blip Blop",
+          description: "In the drip drop."
+        }}
+      />
 
       <Flex width="100%" alignX="center" marginTop="major-4">
         <Flex width="90vw" maxWidth="720px" flexDirection="column">
