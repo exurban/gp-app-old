@@ -30,21 +30,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <title>Gibbs Photography</title>
-          <meta name="description" content="" />
-
-          <meta property="og:url" content="https://www.gibbs-photography.com/" key="ogurl" />
-          <meta property="og:type" content="website" key="ogtype" />
-
-          <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
-          <meta name="twitter:card" content="summary_large_image" key="twcard" />
-          <meta property="twitter:domain" content="https://gibbs-photography.com" key="twdomain" />
-          <meta
-            property="twitter:url"
-            content="https://gibbs-photography.com/image/1042"
-            key="twurl"
-          />
-
           <link
             rel="preload"
             href="/fonts/raleway-v19-latin-700.woff2"

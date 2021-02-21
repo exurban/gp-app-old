@@ -63,6 +63,22 @@ const Layout: React.FC<{ title?: string }> = ({
     <>
       <Head>
         <title>{title}</title>
+
+        <title>Gibbs Photography</title>
+        <meta name="description" content="" />
+
+        <meta property="og:url" content="https://www.gibbs-photography.com/" key="ogurl" />
+        <meta property="og:type" content="website" key="ogtype" />
+
+        <meta name="twitter:creator" content={"@gibbs_photog"} key="twhandle" />
+        <meta name="twitter:card" content="summary_large_image" key="twcard" />
+        <meta property="twitter:domain" content="https://gibbs-photography.com" key="twdomain" />
+        <meta
+          property="twitter:url"
+          content="https://gibbs-photography.com/image/1042"
+          key="twurl"
+        />
+
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
