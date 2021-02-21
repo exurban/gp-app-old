@@ -1,5 +1,7 @@
 export default {
   openGraph: {
+    title: "boopsy",
+    description: "doopsy",
     type: "grapes",
     locale: "en_US",
     url: "https://www.gibbs-photography.com",
