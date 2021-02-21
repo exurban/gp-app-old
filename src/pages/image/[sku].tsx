@@ -107,16 +107,11 @@ const Photo: React.FC = () => {
           description: "Open Graph Description",
           images: [
             {
-              url: "https://www.example.ie/og-image.jpg",
+              url:
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1054-1612556468192.webp",
               width: 800,
               height: 600,
               alt: "Og Image Alt"
-            },
-            {
-              url: "https://www.example.ie/og-image-2.jpg",
-              width: 800,
-              height: 600,
-              alt: "Og Image Alt 2"
             }
           ]
         }}
