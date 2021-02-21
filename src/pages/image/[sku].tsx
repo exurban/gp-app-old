@@ -99,23 +99,7 @@ const Photo: React.FC = () => {
 
   return (
     <>
-      <NextSeo
-        openGraph={{
-          type: "website",
-          url: "https://www.example.com/page",
-          title: "Open Graph Title",
-          description: "Open Graph Description",
-          images: [
-            {
-              url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1054-1612556468192.webp",
-              width: 800,
-              height: 600,
-              alt: "Og Image Alt"
-            }
-          ]
-        }}
-      />
+      <NextSeo title="A Dilly of a Pickle." description="Deep poop stains." />
 
       <Flex width="100%" alignX="center" marginTop="major-4">
         <Flex width="90vw" maxWidth="720px" flexDirection="column">
