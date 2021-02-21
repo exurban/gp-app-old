@@ -104,7 +104,9 @@ const Photo: React.FC = () => {
         description="Deep poop stains."
         openGraph={{
           title: "Blip Blop",
-          description: "In the drip drop."
+          description: "In the drip drop.",
+          type: "website",
+          url: "www.sydney.com"
         }}
       />
 
