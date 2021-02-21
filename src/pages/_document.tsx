@@ -51,7 +51,7 @@ export default class MyDocument extends Document {
           {/* Open Graph */}
           <meta
             name="og:url"
-            content={`https://www.gibbs-photography.com/image/${photo.sku}`}
+            content={`https://www.gibbs-photography.com/image/1115`}
             key="ogurl"
           />
           <meta
