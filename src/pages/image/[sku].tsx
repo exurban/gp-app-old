@@ -106,10 +106,22 @@ const Photo: React.FC = () => {
         title={title}
         description={description}
         openGraph={{
-          title: "Blip Blop",
-          description: "In the drip drop.",
           type: "website",
-          url: "www.sydney.com"
+          locale: "en_US",
+          url: "https://www.gibbs-photography.com",
+          site_name: "Gibbs Photography",
+          title: `Image ${photo.sku}`,
+          description: `Description for ${photo.sku}`,
+          images: [
+            {
+              url: `${photo.images?.[0].imageUrl}`
+            }
+          ]
+        }}
+        twitter={{
+          handle: "@gibbs_photog",
+          site: "https://gibbs-photography.com",
+          cardType: "summary_large_image"
         }}
       />
 
@@ -212,7 +224,7 @@ const Photo: React.FC = () => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [{ params: { sku: "1042" } }, { params: { sku: "1115" } }],
+    paths: [{ params: { sku: "1042" } }, { params: { sku: "1115" } }, { params: { sku: "1116" } }],
     fallback: false
   };
 };
