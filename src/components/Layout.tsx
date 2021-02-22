@@ -64,7 +64,7 @@ const Layout: React.FC<{ title?: string }> = ({
     <>
       <NextSeo
         title={title}
-        description={description}
+        description="A new description that won't work, either."
         openGraph={{
           title: "Blip Blop",
           description: "In the drip drop.",
