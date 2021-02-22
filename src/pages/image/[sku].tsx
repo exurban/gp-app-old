@@ -97,11 +97,14 @@ const Photo: React.FC = () => {
   //   }
   // });
 
+  const title = "A Dilly of a Pickle";
+  const description = `title: ${photo.title} - ${photo.sku}`;
+
   return (
     <>
       <NextSeo
-        title="A Dilly of a Pickle."
-        description={`title: ${photo.title} - ${photo.sku}`}
+        title={title}
+        description={description}
         openGraph={{
           title: "Blip Blop",
           description: "In the drip drop.",

@@ -30,7 +30,6 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <>
       <ApolloProvider client={apolloClient}>
-        <DefaultSeo {...SEO} />
         <AuthProvider session={pageProps.session}>
           <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>
             {router.pathname.startsWith(`/carousel/`) ? (
@@ -39,6 +38,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
               </CarouselLayout>
             ) : (
               <Layout>
+                <DefaultSeo {...SEO} />
                 <Component {...pageProps} />
               </Layout>
             )}
