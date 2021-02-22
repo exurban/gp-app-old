@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useSession, signIn } from "next-auth/client";
-import Head from "next/head";
 import {
   Icon,
   Input,
@@ -38,13 +37,6 @@ const SignIn: React.FC = () => {
 
   return (
     <>
-      <Head>
-        <title>Sign in</title>
-        <meta
-          name="sign in"
-          content="Member sign in to add to favorites and shopping bag and to purchase art."
-        />
-      </Head>
       <Flex>
         <Stack
           className="stack-bjg"

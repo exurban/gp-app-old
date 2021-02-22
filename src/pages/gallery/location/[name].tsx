@@ -4,6 +4,7 @@ import { AllPhotosAtLocationDocument, AllPhotosAtLocationInput } from "../../../
 import Loader from "../../../components/Loader";
 import ErrorMessage from "../../../components/ErrorMessage";
 import SectionGallery from "../../../components/SectionGallery";
+import { NextSeo } from "next-seo";
 
 const LocationGallery: React.FC = () => {
   const router = useRouter();
@@ -32,14 +33,29 @@ const LocationGallery: React.FC = () => {
 
   const { locationInfo, total, photos } = data.allPhotosAtLocation;
 
+  const title = "Burr-rrup!";
+  const description = "uh-huh";
+
   return (
-    <SectionGallery
-      coverImage={locationInfo.coverImage}
-      name={locationInfo.name}
-      description={locationInfo.description}
-      total={total}
-      photos={photos}
-    />
+    <>
+      <NextSeo
+        title={title}
+        description={description}
+        openGraph={{
+          title: title,
+          description: "In the drip drop.",
+          type: "website",
+          url: "www.sydney.com"
+        }}
+      />
+      <SectionGallery
+        coverImage={locationInfo.coverImage}
+        name={locationInfo.name}
+        description={locationInfo.description}
+        total={total}
+        photos={photos}
+      />
+    </>
   );
 };
 

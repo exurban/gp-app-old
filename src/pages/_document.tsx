@@ -1,4 +1,4 @@
-import Document, { Html, Main, NextScript, DocumentContext } from "next/document";
+import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
 // import { GA_TRACKING_ID } from "../utils/gtag";
 import { extractCritical } from "bumbag-server";
 import { InitializeColorMode } from "bumbag";
@@ -75,6 +75,7 @@ export default class MyDocument extends Document {
             }} 
           />
         </Head> */}
+        <Head />
         <body>
           <InitializeColorMode />
           <Main />

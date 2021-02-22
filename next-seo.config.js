@@ -1,15 +1,13 @@
 export default {
   openGraph: {
-    title: "boopsy",
-    description: "doopsy",
-    type: "grapes",
+    type: "website",
     locale: "en_US",
     url: "https://www.gibbs-photography.com",
-    site_name: "Dum-Dum"
+    site_name: "Gibbs Photography"
   },
   twitter: {
-    handle: "@de-douche",
-    site: "https://i-is-a-dum-dum.com",
+    handle: "@gibbs_photog",
+    site: "https://gibbs-photography.com",
     cardType: "summary_large_image"
   }
 };
