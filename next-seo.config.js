@@ -3,13 +3,7 @@ export default {
     type: "website",
     locale: "en_US",
     url: "https://www.gibbs-photography.com",
-    site_name: "Gibbs Photography",
-    images: [
-      {
-        url:
-          "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/cover_test-1612906617518.webp"
-      }
-    ]
+    site_name: "Gibbs Photography"
   },
   twitter: {
     handle: "@gibbs_photog",

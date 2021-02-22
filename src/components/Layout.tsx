@@ -63,13 +63,13 @@ const Layout: React.FC<{ title?: string }> = ({
   return (
     <>
       <NextSeo
-        title="Layout Title"
+        title="Layout title"
         description="Layout description"
         openGraph={{
           images: [
             {
               url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/new-item-1612906654420.webp"
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1047-1612554843501.webp"
             }
           ]
         }}
