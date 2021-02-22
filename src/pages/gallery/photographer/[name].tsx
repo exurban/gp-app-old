@@ -63,7 +63,7 @@ const PhotographerGallery: React.FC = () => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [{ params: { name: "Boyd Gibbs" } }, { params: { name: "Scott Gibbs" } }],
+    paths: [{ params: { name: "Boyd" } }, { params: { name: "Scott" } }],
     fallback: false
   };
 };
