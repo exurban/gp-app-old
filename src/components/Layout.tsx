@@ -24,6 +24,7 @@ import SignOutItem from "./SignOutItem";
 import ColorModeItem from "./ColorModeItem";
 import ActiveLink from "./ActiveLink";
 import ShoppingBagSideNavItem from "./ShoppingBagSideNavItem";
+import { NextSeo } from "next-seo";
 
 const Layout: React.FC<{ title?: string }> = ({
   children,
@@ -61,6 +62,18 @@ const Layout: React.FC<{ title?: string }> = ({
 
   return (
     <>
+      <NextSeo
+        title="Layout Title"
+        description="Layout description"
+        openGraph={{
+          images: [
+            {
+              url:
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/new-item-1612906654420.webp"
+            }
+          ]
+        }}
+      />
       <PageWithHeader
         sticky
         headerHeight="80px"

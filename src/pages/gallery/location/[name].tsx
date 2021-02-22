@@ -33,19 +33,18 @@ const LocationGallery: React.FC = () => {
 
   const { locationInfo, total, photos } = data.allPhotosAtLocation;
 
-  const title = "Burr-rrup!";
-  const description = "uh-huh";
-
   return (
     <>
       <NextSeo
-        title={title}
-        description={description}
+        title="Location Page"
+        description="Location description"
         openGraph={{
-          title: title,
-          description: "In the drip drop.",
-          type: "website",
-          url: "www.sydney.com"
+          images: [
+            {
+              url:
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/new-item-1612906654420.webp"
+            }
+          ]
         }}
       />
       <SectionGallery

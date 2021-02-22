@@ -97,7 +97,7 @@ const SectionGallery: React.FC<Props> = ({ coverImage, name, description, total,
                 : "span 1"
             }
           >
-            <Slide photo={photo} priority={idx < 10} />
+            <Slide photo={photo} priority={false} />
           </Box>
         ))}
       </Box>
