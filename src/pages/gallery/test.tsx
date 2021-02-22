@@ -1,8 +1,21 @@
 import { Box, Card, Text, Grid } from "bumbag";
+import { NextSeo } from "next-seo";
 
 const Test: React.FC = () => {
   return (
     <>
+      <NextSeo
+        title="Admin Test Page"
+        description="Admin Test description"
+        openGraph={{
+          images: [
+            {
+              url:
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/cover_test-1612906617518.webp"
+            }
+          ]
+        }}
+      />
       <Box width="600px" height="100px" marginY="major-2" marginX="auto" altitude="200">
         <Text>Some stuff here.</Text>
       </Box>
