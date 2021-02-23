@@ -10,6 +10,8 @@ import * as gtag from "../utils/gtag";
 import Layout from "../components/Layout";
 import CarouselLayout from "../components/CarouselLayout";
 import gpTheme from "../gp-theme";
+import SEO from "../../next-seo.config";
+import { DefaultSeo } from "next-seo";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const apolloClient = useApollo(pageProps);
@@ -28,6 +30,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 
   return (
     <>
+      <DefaultSeo {...SEO} />
       <ApolloProvider client={apolloClient}>
         <AuthProvider session={pageProps.session}>
           <BumbagProvider isSSR colorMode="dark" theme={gpTheme}>

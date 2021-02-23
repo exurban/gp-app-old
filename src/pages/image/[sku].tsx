@@ -97,8 +97,8 @@ const Photo: React.FC = () => {
   //   }
   // });
 
-  const title = "A Dilly of a Pickle";
-  const description = `title: ${photo.title} - ${photo.sku}`;
+  const title = `${photo.title}`;
+  const description = `${photo.description}`;
 
   return (
     <>
@@ -106,22 +106,11 @@ const Photo: React.FC = () => {
         title={title}
         description={description}
         openGraph={{
-          type: "website",
-          locale: "en_US",
-          url: "https://www.gibbs-photography.com",
-          site_name: "Gibbs Photography",
-          title: `Image ${photo.sku}`,
-          description: `Description for ${photo.sku}`,
           images: [
             {
               url: `${photo.images?.[0].imageUrl}`
             }
           ]
-        }}
-        twitter={{
-          handle: "@gibbs_photog",
-          site: "https://gibbs-photography.com",
-          cardType: "summary_large_image"
         }}
       />
 
