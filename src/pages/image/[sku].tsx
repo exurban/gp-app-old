@@ -109,8 +109,7 @@ const Photo: React.FC = () => {
         openGraph={{
           images: [
             {
-              url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
+              url: photo.images[0].imageUrl
             }
           ]
         }}
