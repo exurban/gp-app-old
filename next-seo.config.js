@@ -4,8 +4,9 @@ export default {
     locale: "en_US",
     url: "https://www.gibbs-photography.com",
     site_name: "Gibbs Photography",
-    title: "Gibbs Photography - Default SEO",
-    description: "GP Description from Default SEO"
+    defaultTitle: "Gibbs Photography",
+    titleTemplate: "%s | Gibbs Photography",
+    description: "Wildlife and landscape photography"
   },
   twitter: {
     handle: "@gibbs_photog",

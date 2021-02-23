@@ -19,7 +19,7 @@ import {
   // applyTheme,
   Heading,
   Text,
-  // Button,
+  Button,
   Divider,
   Link as BBLink,
   styled
@@ -57,20 +57,20 @@ const Photo: React.FC = () => {
   const tags = photo?.tagsForPhoto?.map(x => x.tag);
   const collections = photo?.collectionsForPhoto?.map(x => x.collection);
 
-  // const share = () => {
-  //   if (navigator.share) {
-  //     navigator
-  //       .share({
-  //         url: document.location.href,
-  //         title: photo.title,
-  //         text: photo.description
-  //       })
-  //       .then(() => console.log(`Share was successful.`))
-  //       .catch(error => console.log(`Sharing failed:`, error));
-  //   } else {
-  //     console.log(`Your browser doesn't support file sharing.`);
-  //   }
-  // };
+  const share = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          url: document.location.href,
+          title: photo.title,
+          text: photo.description
+        })
+        .then(() => console.log(`Share was successful.`))
+        .catch(error => console.log(`Sharing failed:`, error));
+    } else {
+      console.log(`Your browser doesn't support file sharing.`);
+    }
+  };
 
   const StyledImage = styled(Image)`
     border-radius: 4px;
@@ -204,6 +204,7 @@ const Photo: React.FC = () => {
             >
               <TwitterIcon size={36} style={{ borderRadius: "50%" }} />
             </TwitterShareButton>
+            <Button onClick={() => share()}>Share</Button>
           </Flex>
         </Flex>
       </Flex>

@@ -21,6 +21,7 @@ import {
   RemovePhotoFromShoppingBagDocument
 } from "../graphql-operations";
 import { TwitterShareButton } from "react-share";
+import { NextSeo } from "next-seo";
 
 type Props = {
   setShowInfo: Dispatch<SetStateAction<boolean>>;
@@ -35,6 +36,11 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
   const [addToShoppingBag] = useMutation(AddPhotoToShoppingBagDocument);
   const [removeFromShoppingBag] = useMutation(RemovePhotoFromShoppingBagDocument);
+
+  const thisUrl = () => {
+    const { pathname } = router;
+    return `https://gibbs-photography.com${pathname}`;
+  };
 
   const signinFirst = () => {
     localStorage.setItem("lastUrl", router.pathname);
@@ -387,12 +393,23 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
     }
   });
 
-  if (typeof window === undefined) {
-    return <p>waiting</p>;
-  }
+  // if (typeof window === undefined) {
+  //   return <p>waiting</p>;
+  // }
 
   return (
     <>
+      <NextSeo
+        title={photo.title}
+        description={photo.description}
+        openGraph={{
+          images: [
+            {
+              url: `${photo.images?.[0].imageUrl}`
+            }
+          ]
+        }}
+      />
       <DDMenu
         transition="none"
         menu={
@@ -430,8 +447,8 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
             <DropdownMenu.Divider />
             <DropdownMenu.Group title="Share">
               <TwitterShareButton
-                url={"https://gibbs-photography.com/carousel/bloom?sku=1042"}
-                title={`${photo.title}`}
+                url={thisUrl()}
+                title={`${photo.title}\n`}
                 hashtags={["photography", "nature"]}
               >
                 <Text.Block>Twitter</Text.Block>
