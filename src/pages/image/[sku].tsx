@@ -61,7 +61,8 @@ const Photo: React.FC = () => {
     if (navigator.share) {
       navigator
         .share({
-          url: photo.images[0].imageUrl
+          url:
+            "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
         })
         .then(() => console.log(`Share was successful.`))
         .catch(error => console.log(`Sharing failed:`, error));
