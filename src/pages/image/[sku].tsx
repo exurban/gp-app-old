@@ -61,6 +61,8 @@ const Photo: React.FC = () => {
     if (navigator.share) {
       navigator
         .share({
+          title: "Flowers",
+          text: "Some flowers over a river.",
           url:
             "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
         })
