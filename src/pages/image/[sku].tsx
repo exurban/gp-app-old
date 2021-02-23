@@ -186,7 +186,7 @@ const Photo: React.FC = () => {
               Share:
             </Text.Block>
             <TwitterShareButton
-              url="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
+              url="https://gibbs-photography.com/image/1115"
               title={photo.title}
               hashtags={["nature", "photography"]}
             >
