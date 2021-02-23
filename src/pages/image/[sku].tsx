@@ -19,7 +19,7 @@ import {
   // applyTheme,
   Heading,
   Text,
-  Button,
+  // Button,
   Divider,
   Link as BBLink,
   styled
@@ -56,22 +56,6 @@ const Photo: React.FC = () => {
   const subjects = photo?.subjectsInPhoto?.map(x => x.subject);
   const tags = photo?.tagsForPhoto?.map(x => x.tag);
   const collections = photo?.collectionsForPhoto?.map(x => x.collection);
-
-  const share = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: "Flowers",
-          text: "Some flowers over a river.",
-          url:
-            "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
-        })
-        .then(() => console.log(`Share was successful.`))
-        .catch(error => console.log(`Sharing failed:`, error));
-    } else {
-      console.log(`Your browser doesn't support file sharing.`);
-    }
-  };
 
   const StyledImage = styled(Image)`
     border-radius: 4px;
