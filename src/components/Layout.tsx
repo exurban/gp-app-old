@@ -58,7 +58,7 @@ const Layout: React.FC<{ title?: string }> = ({
     page.sidebar.close;
   }
 
-  if (typeof window === "undefined") return null;
+  // if (typeof window === "undefined") return null;
 
   return (
     <>
