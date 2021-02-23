@@ -107,10 +107,11 @@ const Photo: React.FC = () => {
         title={title}
         description={description}
         openGraph={{
-          url: `https://gibbs-photography.com/carousel/bloom?sku=1115`,
+          url: "https://gibbs-photography.com/image/1115",
           images: [
             {
-              url: photo.images[0].imageUrl
+              url:
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
             }
           ]
         }}
@@ -127,9 +128,7 @@ const Photo: React.FC = () => {
           <Heading use="h2" textAlign="center" marginTop="major-4">
             {photo.title}
           </Heading>
-          <Text.Block fontSize="400" marginY="major-3">
-            {photo.description}
-          </Text.Block>
+
           <Link href={`/gallery/photographer/${encodeURIComponent(pgName.toLowerCase())}`}>
             <BBLink>
               <Heading use="h5" marginBottom="major-2">
@@ -146,6 +145,9 @@ const Photo: React.FC = () => {
                 </Text>
               </BBLink>
             </Link>
+          </Text.Block>
+          <Text.Block fontSize="400" marginY="major-3">
+            {photo.description}
           </Text.Block>
           {collections && collections.length > 0 ? (
             <>
@@ -200,13 +202,12 @@ const Photo: React.FC = () => {
               Share:
             </Text.Block>
             <TwitterShareButton
-              url={`https://gibbs-photography.com/image/${photo.sku}`}
+              url="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
               title={photo.title}
               hashtags={["nature", "photography"]}
             >
               <TwitterIcon size={36} style={{ borderRadius: "50%" }} />
             </TwitterShareButton>
-            <Button onClick={() => share()}>Share</Button>
           </Flex>
         </Flex>
       </Flex>
