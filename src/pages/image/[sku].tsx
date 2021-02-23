@@ -107,6 +107,7 @@ const Photo: React.FC = () => {
         title={title}
         description={description}
         openGraph={{
+          url: `https://gibbs-photography.com/carousel/bloom?sku=1115`,
           images: [
             {
               url: photo.images[0].imageUrl
