@@ -11,8 +11,8 @@ const BirdGallery: React.FC = () => {
   return (
     <>
       <NextSeo
-        title="Bloom Gallery"
-        description="Bloom Gallery description"
+        title="Bird page title"
+        description="Bird page description"
         openGraph={{
           images: [
             {

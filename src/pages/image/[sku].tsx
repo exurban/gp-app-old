@@ -13,13 +13,14 @@ import {
 import Loader from "../../components/Loader";
 import ErrorMessage from "../../components/ErrorMessage";
 import Link from "next/link";
+import { photoSkus } from "../../../build-data";
 import {
   Flex,
   Tag,
   // applyTheme,
   Heading,
   Text,
-  // Button,
+  Button,
   Divider,
   Link as BBLink,
   styled
@@ -30,7 +31,6 @@ const Photo: React.FC = () => {
   const router = useRouter();
 
   const { sku } = router.query;
-  console.log(`sku is ${sku}`);
 
   let skuInt = 0;
   if (sku && typeof sku === "string") {
@@ -91,17 +91,16 @@ const Photo: React.FC = () => {
         title={title}
         description={description}
         openGraph={{
-          url: "https://gibbs-photography.com/image/1115",
+          url: `https://gibbs-photography.com/image/${photo.sku}`,
           images: [
             {
-              url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
+              url: photo.images[0].imageUrl
             }
           ]
         }}
       />
 
-      <Flex width="100%" alignX="center" marginTop="major-4">
+      <Flex width="100%" alignX="center" marginY="major-4">
         <Flex width="90vw" maxWidth="720px" flexDirection="column">
           <StyledImage
             src={image.imageUrl}
@@ -133,6 +132,15 @@ const Photo: React.FC = () => {
           <Text.Block fontSize="400" marginY="major-3">
             {photo.description}
           </Text.Block>
+          <Flex flexDirection="row" width="100%" alignX="center" marginY="major-3">
+            <Button iconBefore="regular-star" marginX="major-2">
+              Add to Favorites
+            </Button>
+            <Button iconBefore="solid-shopping-bag" marginX="major-2">
+              Add to Shopping Bag
+            </Button>
+          </Flex>
+
           {collections && collections.length > 0 ? (
             <>
               <Divider marginTop="major-2" />
@@ -180,13 +188,14 @@ const Photo: React.FC = () => {
               </Link>
             ))}
           </Flex>
+
           <Divider marginY="major-2" />
           <Flex alignItems="baseline">
             <Text.Block fontSize="200" fontVariant="small-caps">
               Share:
             </Text.Block>
             <TwitterShareButton
-              url="https://gibbs-photography.com/image/1115"
+              url={`https://gibbs-photography.com/image/${photo.sku}`}
               title={photo.title}
               hashtags={["nature", "photography"]}
             >
@@ -199,9 +208,13 @@ const Photo: React.FC = () => {
   );
 };
 
+// const skus = ["1041", "1042", "1043", "1044", "1045", "1046", "1047", "1048", "1049", "1050"];
+
 export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = photoSkus.map(sku => ({ params: { sku: sku } }));
   return {
-    paths: [{ params: { sku: "1042" } }, { params: { sku: "1115" } }, { params: { sku: "1116" } }],
+    // paths: [{ params: { sku: "1042" } }, { params: { sku: "1115" } }, { params: { sku: "1116" } }],
+    paths: paths,
     fallback: false
   };
 };

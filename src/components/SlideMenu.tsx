@@ -400,8 +400,8 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   return (
     <>
       <NextSeo
-        title={photo.title}
-        description={photo.description}
+        title="Slide menu data"
+        description="Slide menu description"
         openGraph={{
           images: [
             {

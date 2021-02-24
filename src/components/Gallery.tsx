@@ -11,7 +11,7 @@ import {
   useBreakpointValue,
   useBreakpoint
 } from "bumbag";
-// import { NextSeo } from "next-seo";
+import { NextSeo } from "next-seo";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
 import GalleryHeader from "./GalleryHeader";
@@ -45,6 +45,15 @@ const Gallery: React.FC<Props> = ({ input }) => {
 
   return (
     <>
+      <NextSeo
+        title="Gallery data"
+        description="Gallery description"
+        openGraph={{
+          title: "Gallery data",
+          description: "Gallery description"
+        }}
+      />
+
       <Flex flexDirection="row" width="80vw" marginX="auto" marginTop="major-3">
         <GalleryHeader
           image={subjectInfo.coverImage}

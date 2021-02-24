@@ -1,51 +1,69 @@
-import { Box, Card, Text, Grid } from "bumbag";
-import { NextSeo } from "next-seo";
+import { Rover, Text, Flex, applyTheme, Button } from "bumbag";
 
 const Test: React.FC = () => {
+  const rover = Rover.useState();
+  const roverCtx = Rover.useContext();
+
+  const StyledButton = applyTheme(Button, {
+    styles: {
+      base: {
+        boxShadow: "none"
+      }
+    },
+    defaultProps: {
+      width: "400px",
+      margin: "major-2",
+      border: "3px solid",
+      // borderColor: tabindex === 0 ? "primary" : "rgba(0, 0, 0, 0)",
+      borderColor: "rgba(0, 0, 0, 0.1)",
+      transition: "border-color 0.25s ease",
+      _hover: {
+        border: "3px solid",
+        borderColor: "primary"
+      },
+      _disabled: {
+        color: "red"
+      }
+    }
+  });
+
+  console.log({ roverCtx });
+  console.log(rover.currentId);
+
   return (
     <>
-      <NextSeo
-        title="Admin Test Page"
-        description="Admin Test description"
-        openGraph={{
-          images: [
-            {
-              url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/cover_test-1612906617518.webp"
-            }
-          ]
-        }}
-      />
-      <Box width="600px" height="100px" marginY="major-2" marginX="auto" altitude="200">
-        <Text>Some stuff here.</Text>
-      </Box>
-      <Card>
-        <Text>Some more stuff here.</Text>
-      </Card>
-      <Grid
-        templateColumns="repeat(auto-fit, minmax(min(375px, 100%), max(700px)))"
-        rowGap="5rem"
-        columnGap="1rem"
-        justifyContent="space-evenly"
-        justifyItems="center"
-        padding={{ default: "major-4", "max-tablet": "minor-1" }}
-      >
-        <Card altitude="200" alignX="center" alignY="center">
-          <Text>Card 1</Text>
-        </Card>
-        <Card altitude="200" alignX="center" alignY="center">
-          <Text>Card 2</Text>
-        </Card>
-        <Card altitude="200" alignX="center" alignY="center">
-          <Text>Card 3</Text>
-        </Card>
-        <Card altitude="200" alignX="center" alignY="center">
-          <Text>Card 4</Text>
-        </Card>
-        <Card altitude="200" alignX="center" alignY="center">
-          <Text>Card 5</Text>
-        </Card>
-      </Grid>
+      <Flex flexDirection="column">
+        <Rover {...rover} use={StyledButton} id="a" stopId="aa">
+          <Flex
+            width="100%"
+            justifyContent="space-between"
+            height="24px"
+            alignY="center"
+            padding="major-2"
+          >
+            <Text.Block>12" x 18"</Text.Block>
+            <Text.Block>$375</Text.Block>
+          </Flex>
+        </Rover>
+        <Rover {...rover} use={StyledButton} id="b">
+          <Flex width="100%" justifyContent="space-between" height="24px" alignY="center">
+            <Text.Block>16" x 24"</Text.Block>
+            <Text.Block>$575</Text.Block>
+          </Flex>
+        </Rover>
+        <Rover {...rover} use={StyledButton} id="c">
+          <Flex width="100%" justifyContent="space-between" height="24px" alignY="center">
+            <Text.Block>20" x 30"</Text.Block>
+            <Text.Block>$875</Text.Block>
+          </Flex>
+        </Rover>
+        <Rover {...rover} use={StyledButton} id="d">
+          <Flex width="100%" justifyContent="space-between" height="24px" alignY="center">
+            <Text.Block>30" x 45"</Text.Block>
+            <Text.Block>$1200</Text.Block>
+          </Flex>
+        </Rover>
+      </Flex>
     </>
   );
 };
