@@ -114,7 +114,7 @@ const ConfigureForPurchasePage: React.FC = () => {
           </Text.Block>
           <Divider />
           <Heading use="h5" marginY="major-3">
-            Choose your finish.
+            Choose your material.
           </Heading>
           <Flex
             className="finish-options-wrapper"
@@ -128,40 +128,39 @@ const ConfigureForPurchasePage: React.FC = () => {
               <Grid
                 className="fine-art-print"
                 gridTemplateColumns="25% 70%"
-                rowGap="major-1"
-                columnGap="major-1"
+                style={{ columnGap: "8px" }}
               >
-                <Text.Block fontSize="250" fontWeight="700" gridArea="1/1/1/1">
-                  Fine Art Print
+                <Text.Block fontSize="250" fontWeight="700" gridArea="1/1/1/1" alignSelf="flex-end">
+                  Exhibition Paper
                 </Text.Block>
-                <Text.Block fontSize="150" color="info500" gridArea="2/1/2/1">
+                <Text.Block fontSize="150" color="info500" gridArea="2/1/2/1" marginTop="major-2">
                   from $250
                 </Text.Block>
-                <Text.Block gridArea="1/2/2/2" alignSelf="center">
-                  Insert a 2-sentence description of this finish. Make it a little longer so it
-                  appears more realistic for now.
+                <Text.Block gridColumn="2" gridRow="1/span 2" alignSelf="center">
+                  A high-resolution image is printed in ink on exhibition-quality paper. and may be
+                  finished with a single mat and your choice of wood or metal frame.
                 </Text.Block>
               </Grid>
             </FinishCard>
-            <Button margin="major-1" userSelect="none" height="80px" textAlign="left">
+            <FinishCard margin="major-1" userSelect="none">
               <Grid
                 className="metal-print"
-                gridTemplateColumns="25% 75%"
-                rowGap="major-1"
-                columnGap="major-1"
+                gridTemplateColumns="25% 70%"
+                style={{ columnGap: "8px" }}
               >
-                <Text.Block fontSize="250" fontWeight="700" gridArea="1/1/1/1">
-                  Metal Print
+                <Text.Block fontSize="250" fontWeight="700" gridArea="1/1/1/1" alignSelf="flex-end">
+                  Aluminum
                 </Text.Block>
-                <Text.Block fontSize="150" color="info500" gridArea="2/1/2/1">
+                <Text.Block fontSize="150" color="info500" gridArea="2/1/2/1" marginTop="major-2">
                   from $275
                 </Text.Block>
-                <Text.Block gridArea="1/2/2/2" alignSelf="center" fontWeight="400">
-                  Insert a 2-sentence description of this finish. Make it a little longer so it
-                  appears more realistic for now.
+                <Text.Block gridColumn="2" gridRow="1/span 2" alignSelf="center" fontWeight="400">
+                  The image is rendered by infusing dyes directly into the surface of a specially
+                  coated aluminum sheet, resulting in a more brilliant, luminescent print. The image
+                  may be mounted in a flush
                 </Text.Block>
               </Grid>
-            </Button>
+            </FinishCard>
           </Flex>
           <Divider />
           <Heading use="h5" marginY="major-3">
@@ -196,6 +195,14 @@ const ConfigureForPurchasePage: React.FC = () => {
               }
             ]}
           />
+          <Divider marginTop="major-4" />
+          <Heading use="h5" marginY="major-3">
+            Add a mat.
+          </Heading>
+          <Divider marginTop="major-4" />
+          <Heading use="h5" marginY="major-3">
+            Add a frame.
+          </Heading>
 
           <Button palette="primary" width="120px" margin="16px 0 0 auto">
             Add to Bag
