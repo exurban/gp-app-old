@@ -1,14 +1,18 @@
+import { useMemo } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
+import { useQuery, useMutation } from "@apollo/client";
 import { addApolloState, initializeApollo } from "../../lib/apolloClient";
+import { useSession } from "next-auth/client";
 import { useRouter } from "next/router";
-// import Head from "next/head";
 import { NextSeo } from "next-seo";
 import Image from "next/image";
-import { useQuery } from "@apollo/client";
 import {
   PhotoInfoFragment,
   PhotoWithSkuDocument,
-  ImageInfoFragment
+  ImageInfoFragment,
+  FavoritesDocument,
+  AddPhotoToFavoritesDocument,
+  ShoppingBagItemsDocument
 } from "../../graphql-operations";
 import Loader from "../../components/Loader";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -17,18 +21,21 @@ import { photoSkus } from "../../../build-data";
 import {
   Flex,
   Tag,
-  // applyTheme,
   Heading,
   Text,
   Button,
   Divider,
   Link as BBLink,
-  styled
+  styled,
+  useToasts
 } from "bumbag";
-import { TwitterShareButton, TwitterIcon } from "react-share";
+import { TwitterShareButton, TwitterIcon, FacebookShareButton, FacebookIcon } from "react-share";
 
 const Photo: React.FC = () => {
+  const [session] = useSession();
   const router = useRouter();
+  const toasts = useToasts();
+  const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
 
   const { sku } = router.query;
 
@@ -61,26 +68,78 @@ const Photo: React.FC = () => {
     border-radius: 4px;
   `;
 
-  // const IconButton = applyTheme(Button, {
-  //   styles: {
-  //     base: {
-  //       fontSize: "14px"
-  //     }
-  //   },
-  //   defaultProps: {
-  //     palette: "primary",
-  //     variant: "ghost",
-  //     size: "small",
-  //     color: "#babbba",
-  //     _hover: {
-  //       backgroundColor: "#babbba",
-  //       color: "#1b1c1a"
-  //     },
-  //     _focus: {
-  //       boxShadow: "none"
-  //     }
-  //   }
-  // });
+  const signinFirst = () => {
+    localStorage.setItem("lastUrl", router.pathname);
+    localStorage.setItem("favPhoto", photo.id);
+    router.push("/auth/signin");
+  };
+
+  const addPhotoToFavorites = () => {
+    if (!session) {
+      signinFirst();
+      return;
+    }
+
+    let success;
+    let msg;
+
+    addToFavorites({
+      variables: { photoId: parseInt(photo.id) },
+      optimisticResponse: {
+        __typename: "Mutation",
+        addPhotoToFavorites: {
+          success: true,
+          message: `Added ${photo.title} to your favorites.`,
+          addedPhotoWithId: photo.id,
+          __typename: "AddPhotoToFavoritesResponse"
+        }
+      },
+      update: (cache, { data: { ...newPhotoResponse } }) => {
+        const { ...existing } = cache.readQuery({
+          query: FavoritesDocument
+        });
+
+        const response = newPhotoResponse.addPhotoToFavorites;
+        success = response.success;
+        msg = response.message;
+
+        const existingPhotos = existing.favorites?.photoList || [];
+
+        cache.writeQuery({
+          query: FavoritesDocument,
+          data: {
+            favorites: {
+              __typename: "FavoritesResponse",
+              photoList: photo ? [photo, ...existingPhotos] : [...existingPhotos]
+            }
+          }
+        });
+      }
+    });
+    {
+      success
+        ? toasts.success({
+            title: "Added",
+            message: msg
+          })
+        : toasts.warning({
+            title: "Failed to add.",
+            message: msg
+          });
+    }
+  };
+
+  const { data: favs } = useQuery(FavoritesDocument);
+  const inFavorites = useMemo(() => {
+    const favIds = favs?.favorites?.photoList?.map(f => f.id);
+    return favIds ? favIds.includes(photo.id) : false;
+  }, [favs]);
+
+  const { data: bagItems } = useQuery(ShoppingBagItemsDocument);
+  const inShoppingBag = useMemo(() => {
+    const bagItemIds = bagItems?.shoppingBagItems?.photoList?.map(b => b.id);
+    return bagItemIds ? bagItemIds.includes(photo.id) : false;
+  }, [bagItems]);
 
   const title = `${photo.title}`;
   const description = `${photo.description}`;
@@ -103,10 +162,12 @@ const Photo: React.FC = () => {
       <Flex width="100%" alignX="center" marginY="major-4">
         <Flex width="90vw" maxWidth="720px" flexDirection="column">
           <StyledImage
+            className="image-wrapper"
             src={image.imageUrl}
-            layout="intrinsic"
-            width={image.width / 2}
-            height={image.height / 2}
+            layout="responsive"
+            width={image.width}
+            height={image.height}
+            sizes="(max-width: 400px) 100vw, 720px"
           />
           <Heading use="h2" textAlign="center" marginTop="major-4">
             {photo.title}
@@ -133,12 +194,40 @@ const Photo: React.FC = () => {
             {photo.description}
           </Text.Block>
           <Flex flexDirection="row" width="100%" alignX="center" marginY="major-3">
-            <Button iconBefore="regular-star" marginX="major-2">
-              Add to Favorites
-            </Button>
-            <Button iconBefore="solid-shopping-bag" marginX="major-2">
-              Add to Shopping Bag
-            </Button>
+            {inFavorites ? (
+              <Button
+                iconBefore="regular-star"
+                marginX="major-2"
+                onClick={() => router.push(`/user/favorites`)}
+              >
+                View in Favorites
+              </Button>
+            ) : (
+              <Button
+                iconBefore="regular-star"
+                marginX="major-2"
+                onClick={() => addPhotoToFavorites()}
+              >
+                Add to Favorites
+              </Button>
+            )}
+            {inShoppingBag ? (
+              <Button
+                iconBefore="solid-shopping-bag"
+                marginX="major-2"
+                onClick={() => router.push(`/shop/options/${photo.sku}`)}
+              >
+                View in Shopping Bag
+              </Button>
+            ) : (
+              <Button
+                iconBefore="solid-shopping-bag"
+                marginX="major-2"
+                onClick={() => router.push(`/shop/options/${photo.sku}`)}
+              >
+                View in Shopping Bag
+              </Button>
+            )}
           </Flex>
 
           {collections && collections.length > 0 ? (
@@ -190,7 +279,7 @@ const Photo: React.FC = () => {
           </Flex>
 
           <Divider marginY="major-2" />
-          <Flex alignItems="baseline">
+          <Flex alignItems="center">
             <Text.Block fontSize="200" fontVariant="small-caps">
               Share:
             </Text.Block>
@@ -198,9 +287,18 @@ const Photo: React.FC = () => {
               url={`https://gibbs-photography.com/image/${photo.sku}`}
               title={photo.title}
               hashtags={["nature", "photography"]}
+              style={{ marginLeft: "16px" }}
             >
               <TwitterIcon size={36} style={{ borderRadius: "50%" }} />
             </TwitterShareButton>
+            <FacebookShareButton
+              url={`https://gibbs-photography.com/image/${photo.sku}`}
+              title={photo.title}
+              hashtag={"photography"}
+              style={{ marginLeft: "8px" }}
+            >
+              <FacebookIcon size={36} style={{ borderRadius: "50%" }} />
+            </FacebookShareButton>
           </Flex>
         </Flex>
       </Flex>
@@ -208,12 +306,9 @@ const Photo: React.FC = () => {
   );
 };
 
-// const skus = ["1041", "1042", "1043", "1044", "1045", "1046", "1047", "1048", "1049", "1050"];
-
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = photoSkus.map(sku => ({ params: { sku: sku } }));
   return {
-    // paths: [{ params: { sku: "1042" } }, { params: { sku: "1115" } }, { params: { sku: "1116" } }],
     paths: paths,
     fallback: false
   };

@@ -1,16 +1,8 @@
-import React, { Dispatch, SetStateAction, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useRouter } from "next/router";
 import { useQuery, useMutation } from "@apollo/client";
 import { useSession } from "next-auth/client";
-import {
-  DropdownMenu,
-  Text,
-  Icon,
-  Button,
-  applyTheme,
-  useToasts,
-  useBreakpointValue
-} from "bumbag";
+import { DropdownMenu, Icon, Button, applyTheme, useToasts, useBreakpointValue } from "bumbag";
 import {
   FavoritesDocument,
   AddPhotoToFavoritesDocument,
@@ -20,15 +12,13 @@ import {
   AddPhotoToShoppingBagDocument,
   RemovePhotoFromShoppingBagDocument
 } from "../graphql-operations";
-import { TwitterShareButton } from "react-share";
 import { NextSeo } from "next-seo";
 
 type Props = {
-  setShowInfo: Dispatch<SetStateAction<boolean>>;
   photo: PhotoInfoFragment;
 };
 
-const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
+const SlideMenu: React.FC<Props> = ({ photo }) => {
   const [session] = useSession();
   const router = useRouter();
   const toasts = useToasts();
@@ -37,18 +27,17 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   const [addToShoppingBag] = useMutation(AddPhotoToShoppingBagDocument);
   const [removeFromShoppingBag] = useMutation(RemovePhotoFromShoppingBagDocument);
 
-  const thisUrl = () => {
-    const { pathname } = router;
-    return `https://gibbs-photography.com${pathname}`;
-  };
-
   const signinFirst = () => {
     localStorage.setItem("lastUrl", router.pathname);
     localStorage.setItem("favPhoto", photo.id);
     router.push("/auth/signin");
   };
 
-  const showLarger = () => {
+  const showInfo = () => {
+    router.push(`/image/${photo.sku}`);
+  };
+
+  const showInCarousel = () => {
     let { pathname } = router;
 
     if (!pathname || typeof pathname !== "string") {
@@ -76,7 +65,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
   };
 
   const addPhotoToFavorites = () => {
-    console.log(`adding to favorites.`);
     if (!session) {
       signinFirst();
       return;
@@ -414,10 +402,10 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
         transition="none"
         menu={
           <>
-            <DropdownMenu.Item iconBefore="solid-info-circle" onClick={() => setShowInfo(true)}>
+            <DropdownMenu.Item iconBefore="solid-info-circle" onClick={() => showInfo()}>
               Info
             </DropdownMenu.Item>
-            <DropdownMenu.Item iconBefore="solid-expand" onClick={() => showLarger()}>
+            <DropdownMenu.Item iconBefore="solid-expand" onClick={() => showInCarousel()}>
               View Larger
             </DropdownMenu.Item>
             {inFavorites ? (
@@ -444,16 +432,6 @@ const SlideMenu: React.FC<Props> = ({ setShowInfo, photo }) => {
                 Add to Shopping Bag
               </DropdownMenu.Item>
             )}
-            <DropdownMenu.Divider />
-            <DropdownMenu.Group title="Share">
-              <TwitterShareButton
-                url={thisUrl()}
-                title={`${photo.title}\n`}
-                hashtags={["photography", "nature"]}
-              >
-                <Text.Block>Twitter</Text.Block>
-              </TwitterShareButton>
-            </DropdownMenu.Group>
           </>
         }
       >
