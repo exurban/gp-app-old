@@ -137,8 +137,9 @@ const ConfigureForPurchasePage: React.FC = () => {
                   from $250
                 </Text.Block>
                 <Text.Block gridColumn="2" gridRow="1/span 2" alignSelf="center">
-                  A high-resolution image is printed in ink on exhibition-quality paper. and may be
-                  finished with a single mat and your choice of wood or metal frame.
+                  The high-resolution image is printed in ink on fine-art quality paper. This paper
+                  print may be ordered separately, or finished with your choice of a single mat and
+                  wood or metal frame.
                 </Text.Block>
               </Grid>
             </FinishCard>
@@ -155,9 +156,9 @@ const ConfigureForPurchasePage: React.FC = () => {
                   from $275
                 </Text.Block>
                 <Text.Block gridColumn="2" gridRow="1/span 2" alignSelf="center" fontWeight="400">
-                  The image is rendered by infusing dyes directly into the surface of a specially
-                  coated aluminum sheet, resulting in a more brilliant, luminescent print. The image
-                  may be mounted in a flush
+                  The high-resolution image is rendered by infusing dyes into the surface of a
+                  specially-coated aluminum sheet. This aluminum print may be ordered separately, or
+                  mounted in your choice of a float frame.
                 </Text.Block>
               </Grid>
             </FinishCard>
