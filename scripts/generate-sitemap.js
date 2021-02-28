@@ -9,11 +9,18 @@ const prettier = require("prettier");
   const prettierConfig = await prettier.resolveConfig("./.prettierrc.js");
 
   // Ignore Next.js specific files (e.g., _app.js) and API routes.
-  const pages = await globby(["pages/**/*{.js,.mdx}", "!pages/_*.js", "!pages/api"]);
+  const pages = await globby(["pages/**/*{.js,.tsx,.mdx}", "!pages/_*.js", "!pages/api"]);
+
+  // I don't know the exact folder structure, but load your raw files
+  const modules = await globby(["modules/**/*{.js,.mdx}"]);
+  const docs = await globby(["docs/**/*{.js,.mdx}"]);
+
+  // Combine them into the pages you care about
+  const allPages = [...pages, ...modules, ...docs];
   const sitemap = `
         <?xml version="1.0" encoding="UTF-8"?>
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-            ${pages
+            ${allPages
               .map(page => {
                 const path = page.replace("pages", "").replace(".js", "").replace(".mdx", "");
                 const route = path === "/index" ? "" : path;
