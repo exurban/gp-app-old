@@ -59,6 +59,8 @@
     "@typescript-eslint/parser": "^4.7.0",
     "eslint": "^7.13.0",
     "eslint-plugin-graphql": "^4.0.0",
+    "globby": "^11.0.2",
+    "prettier": "^2.2.1",
     "typescript": "4.1.3"
   }
 }
