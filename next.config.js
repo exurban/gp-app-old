@@ -1,9 +1,6 @@
 /* eslint-disable no-undef */
 module.exports = {
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      require("./scripts/generate-sitemap");
-    }
+  webpack: config => {
     config.module.rules.push({
       test: /\.(graphql|gql)$/,
       exclude: /node_modules/,
