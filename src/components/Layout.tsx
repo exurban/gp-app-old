@@ -24,7 +24,6 @@ import SignOutItem from "./SignOutItem";
 import ColorModeItem from "./ColorModeItem";
 import ActiveLink from "./ActiveLink";
 import ShoppingBagSideNavItem from "./ShoppingBagSideNavItem";
-import { NextSeo } from "next-seo";
 
 const Layout: React.FC<{ title?: string }> = ({
   children,
@@ -58,22 +57,8 @@ const Layout: React.FC<{ title?: string }> = ({
     page.sidebar.close;
   }
 
-  // if (typeof window === "undefined") return null;
-
   return (
     <>
-      <NextSeo
-        title="Layout title"
-        description="Layout description"
-        openGraph={{
-          images: [
-            {
-              url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1047-1612554843501.webp"
-            }
-          ]
-        }}
-      />
       <PageWithHeader
         sticky
         headerHeight="80px"
@@ -111,51 +96,6 @@ const Layout: React.FC<{ title?: string }> = ({
                 )}
                 {isMaxDesktopAndUnder ? null : (
                   <>
-                    <ActiveLink
-                      activeClassName="active"
-                      aria-label="Bloom gallery"
-                      href={`/gallery/bloom`}
-                      passHref={true}
-                    >
-                      <StyledItem
-                        className="nav-link"
-                        variant="navigationText"
-                        fontSize={{ default: "32px", "max-fullHD": "26px" }}
-                        fontWeight={{ default: "700", "max-fullHD": "600" }}
-                      >
-                        Bloom
-                      </StyledItem>
-                    </ActiveLink>
-                    <ActiveLink
-                      activeClassName="active"
-                      aria-label="Bird gallery"
-                      href={`/gallery/bird`}
-                      passHref={true}
-                    >
-                      <StyledItem
-                        className="nav-link"
-                        variant="navigationText"
-                        fontSize={{ default: "32px", "max-fullHD": "26px" }}
-                        fontWeight={{ default: "700", "max-fullHD": "600" }}
-                      >
-                        Bird
-                      </StyledItem>
-                    </ActiveLink>
-                    <ActiveLink
-                      activeClassName="active"
-                      aria-label="Beast gallery"
-                      href={`/gallery/beast`}
-                      passHref={true}
-                    >
-                      <StyledItem
-                        className="nav-link"
-                        variant="navigationText"
-                        fontSize={{ default: "32px", "max-fullHD": "26px" }}
-                        fontWeight={{ default: "700", "max-fullHD": "600" }}
-                      >
-                        Beast
-                      </StyledItem>
-                    </ActiveLink>
                     <ActiveLink
                       activeClassName="active"
                       aria-label="Land gallery"
@@ -199,6 +139,51 @@ const Layout: React.FC<{ title?: string }> = ({
                         fontWeight={{ default: "700", "max-fullHD": "600" }}
                       >
                         Sky
+                      </StyledItem>
+                    </ActiveLink>
+                    <ActiveLink
+                      activeClassName="active"
+                      aria-label="Bloom gallery"
+                      href={`/gallery/bloom`}
+                      passHref={true}
+                    >
+                      <StyledItem
+                        className="nav-link"
+                        variant="navigationText"
+                        fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                        fontWeight={{ default: "700", "max-fullHD": "600" }}
+                      >
+                        Bloom
+                      </StyledItem>
+                    </ActiveLink>
+                    <ActiveLink
+                      activeClassName="active"
+                      aria-label="Bird gallery"
+                      href={`/gallery/bird`}
+                      passHref={true}
+                    >
+                      <StyledItem
+                        className="nav-link"
+                        variant="navigationText"
+                        fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                        fontWeight={{ default: "700", "max-fullHD": "600" }}
+                      >
+                        Bird
+                      </StyledItem>
+                    </ActiveLink>
+                    <ActiveLink
+                      activeClassName="active"
+                      aria-label="Beast gallery"
+                      href={`/gallery/beast`}
+                      passHref={true}
+                    >
+                      <StyledItem
+                        className="nav-link"
+                        variant="navigationText"
+                        fontSize={{ default: "32px", "max-fullHD": "26px" }}
+                        fontWeight={{ default: "700", "max-fullHD": "600" }}
+                      >
+                        Beast
                       </StyledItem>
                     </ActiveLink>
                   </>
@@ -300,51 +285,7 @@ const Layout: React.FC<{ title?: string }> = ({
                   Featured
                 </StyledSideNavItem>
               </ActiveLink>
-              <ActiveLink
-                href={`/gallery/bloom`}
-                activeClassName="active"
-                aria-label="Bloom gallery"
-                passHref={true}
-              >
-                <StyledSideNavItem
-                  className="nav-link"
-                  variant="navigationText"
-                  navId="bloom"
-                  onClick={page.sidebar.close}
-                >
-                  Bloom
-                </StyledSideNavItem>
-              </ActiveLink>
-              <ActiveLink
-                href={`/gallery/bird`}
-                activeClassName="active"
-                aria-label="Bird gallery"
-                passHref={true}
-              >
-                <StyledSideNavItem
-                  className="nav-link"
-                  variant="navigationText"
-                  navId="bird"
-                  onClick={page.sidebar.close}
-                >
-                  Bird
-                </StyledSideNavItem>
-              </ActiveLink>
-              <ActiveLink
-                href={`/gallery/beast`}
-                activeClassName="active"
-                aria-label="Beast gallery"
-                passHref={true}
-              >
-                <StyledSideNavItem
-                  className="nav-link"
-                  variant="navigationText"
-                  navId="beast"
-                  onClick={page.sidebar.close}
-                >
-                  Beast
-                </StyledSideNavItem>
-              </ActiveLink>
+
               <ActiveLink
                 href={`/gallery/land`}
                 activeClassName="active"
@@ -388,6 +329,51 @@ const Layout: React.FC<{ title?: string }> = ({
                   onClick={page.sidebar.close}
                 >
                   Sky
+                </StyledSideNavItem>
+              </ActiveLink>
+              <ActiveLink
+                href={`/gallery/bloom`}
+                activeClassName="active"
+                aria-label="Bloom gallery"
+                passHref={true}
+              >
+                <StyledSideNavItem
+                  className="nav-link"
+                  variant="navigationText"
+                  navId="bloom"
+                  onClick={page.sidebar.close}
+                >
+                  Bloom
+                </StyledSideNavItem>
+              </ActiveLink>
+              <ActiveLink
+                href={`/gallery/bird`}
+                activeClassName="active"
+                aria-label="Bird gallery"
+                passHref={true}
+              >
+                <StyledSideNavItem
+                  className="nav-link"
+                  variant="navigationText"
+                  navId="bird"
+                  onClick={page.sidebar.close}
+                >
+                  Bird
+                </StyledSideNavItem>
+              </ActiveLink>
+              <ActiveLink
+                href={`/gallery/beast`}
+                activeClassName="active"
+                aria-label="Beast gallery"
+                passHref={true}
+              >
+                <StyledSideNavItem
+                  className="nav-link"
+                  variant="navigationText"
+                  navId="beast"
+                  onClick={page.sidebar.close}
+                >
+                  Beast
                 </StyledSideNavItem>
               </ActiveLink>
               {isMaxDesktopAndUnder && (

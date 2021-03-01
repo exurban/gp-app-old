@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://gibbs-photography.com
+
+# Sitemaps
+Sitemap: https://gibbs-photography.com/sitemap.xml
