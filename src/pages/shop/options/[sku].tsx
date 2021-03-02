@@ -205,6 +205,15 @@ const ConfigureForPurchasePage: React.FC = () => {
             <Text.Block alignSelf="center" marginLeft="major-2" color="info500" fontWeight="500">
               +$40
             </Text.Block>
+            <Text.Block
+              use="i"
+              alignSelf="center"
+              marginLeft="major-1"
+              color="textTint"
+              fontWeight="300"
+            >
+              (optional)
+            </Text.Block>
           </Flex>
 
           <Box
@@ -260,6 +269,15 @@ const ConfigureForPurchasePage: React.FC = () => {
             </Heading>
             <Text.Block alignSelf="center" marginLeft="major-2" color="info500" fontWeight="500">
               +$85
+            </Text.Block>
+            <Text.Block
+              use="i"
+              alignSelf="center"
+              marginLeft="major-1"
+              color="textTint"
+              fontWeight="300"
+            >
+              (optional, price includes acrylic sheet to protect image)
             </Text.Block>
           </Flex>
 
