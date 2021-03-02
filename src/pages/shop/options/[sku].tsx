@@ -12,6 +12,7 @@ import Loader from "../../../components/Loader";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { NextSeo } from "next-seo";
 import {
+  Box,
   Grid,
   Flex,
   Text,
@@ -134,7 +135,7 @@ const ConfigureForPurchasePage: React.FC = () => {
                   Exhibition Paper
                 </Text.Block>
                 <Text.Block fontSize="150" color="info500" gridArea="2/1/2/1" marginTop="major-2">
-                  from $250
+                  from $170
                 </Text.Block>
                 <Text.Block gridColumn="2" gridRow="1/span 2" alignSelf="center">
                   The high-resolution image is printed in ink on fine-art quality paper. This paper
@@ -153,7 +154,7 @@ const ConfigureForPurchasePage: React.FC = () => {
                   Aluminum
                 </Text.Block>
                 <Text.Block fontSize="150" color="info500" gridArea="2/1/2/1" marginTop="major-2">
-                  from $275
+                  from $170
                 </Text.Block>
                 <Text.Block gridColumn="2" gridRow="1/span 2" alignSelf="center" fontWeight="400">
                   The high-resolution image is rendered by infusing dyes into the surface of a
@@ -176,36 +177,211 @@ const ConfigureForPurchasePage: React.FC = () => {
             sizeOptions={[
               {
                 description: '12" x 18"',
-                price: 350,
+                price: 170,
                 value: "12x18"
               },
               {
                 description: '16" x 24"',
-                price: 600,
+                price: 215,
                 value: "16x24"
               },
               {
                 description: '20" x 30"',
-                price: 900,
+                price: 280,
                 value: "20x30"
               },
               {
                 description: '30" x 45"',
-                price: 1200,
+                price: 360,
                 value: "30x45"
               }
             ]}
           />
           <Divider marginTop="major-4" />
-          <Heading use="h5" marginY="major-3">
-            Add a mat.
-          </Heading>
-          <Divider marginTop="major-4" />
-          <Heading use="h5" marginY="major-3">
-            Add a frame.
-          </Heading>
+          <Flex>
+            <Heading use="h5" marginY="major-3">
+              Add a mat.
+            </Heading>
+            <Text.Block alignSelf="center" marginLeft="major-2" color="info500" fontWeight="500">
+              +$40
+            </Text.Block>
+          </Flex>
 
-          <Button palette="primary" width="120px" margin="16px 0 0 auto">
+          <Box
+            display="grid"
+            gridTemplateColumns="1fr 1fr 1fr"
+            rowGap="2rem"
+            columnGap="1rem"
+            justifyItems="center"
+            alignItems="start"
+            justifyContent="space-evenly"
+          >
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/mat_black.jpg"
+                alt="Black Mat"
+                width="170px"
+                height="110px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Black
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/mat_grey.jpg"
+                alt="Grey Mat"
+                width="170px"
+                height="110px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Grey
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/mat_white.jpg"
+                alt="White Mat"
+                width="170px"
+                height="110px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                White
+              </Text.Block>
+            </Card>
+          </Box>
+          <Divider marginTop="major-4" />
+          <Flex>
+            <Heading use="h5" marginY="major-3">
+              Add a frame.
+            </Heading>
+            <Text.Block alignSelf="center" marginLeft="major-2" color="info500" fontWeight="500">
+              +$85
+            </Text.Block>
+          </Flex>
+
+          <Box
+            display="grid"
+            gridTemplateColumns="1fr 1fr 1fr"
+            rowGap="2rem"
+            columnGap="1rem"
+            justifyItems="center"
+            alignItems="start"
+            justifyContent="space-evenly"
+          >
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_black.jpg"
+                alt="Black Wood"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Black Wood
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_mocha.jpg"
+                alt="Mocha Wood"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Mocha Wood
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_walnut.jpg"
+                alt="Walnut Wood"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Walnut Wood
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_cherry.jpg"
+                alt="Cherry Wood"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Cherry Wood
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_white.jpg"
+                alt="White Wood"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                White Wood
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/metal_black.jpg"
+                alt="Black Metal"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Black Metal
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/metal_dark_pewter.jpg"
+                alt="Dark Pewter Metal"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Dark Pewter Metal
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/metal_light_pewter.jpg"
+                alt="Light Pewter Metal"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Light Pewter Metal
+              </Text.Block>
+            </Card>
+            <Card>
+              <img
+                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/metal_silver.jpg"
+                alt="Silver Metal"
+                width="150px"
+                height="135px"
+                style={{ borderRadius: "4px" }}
+              />
+              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
+                Silver Metal
+              </Text.Block>
+            </Card>
+          </Box>
+          <Button palette="primary" width="120px" margin="40px 0 0 auto">
             Add to Bag
           </Button>
         </Flex>
