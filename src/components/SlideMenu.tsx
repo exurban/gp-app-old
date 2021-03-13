@@ -8,11 +8,8 @@ import {
   AddPhotoToFavoritesDocument,
   RemovePhotoFromFavoritesDocument,
   PhotoInfoFragment,
-  ShoppingBagItemsDocument,
-  AddPhotoToShoppingBagDocument,
-  RemovePhotoFromShoppingBagDocument
+  ShoppingBagItemsDocument
 } from "../graphql-operations";
-import { NextSeo } from "next-seo";
 
 type Props = {
   photo: PhotoInfoFragment;
@@ -24,11 +21,9 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
   const toasts = useToasts();
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
   const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
-  const [addToShoppingBag] = useMutation(AddPhotoToShoppingBagDocument);
-  const [removeFromShoppingBag] = useMutation(RemovePhotoFromShoppingBagDocument);
 
   const signinFirst = () => {
-    localStorage.setItem("lastUrl", router.pathname);
+    localStorage.setItem("redirectUrl", router.pathname);
     localStorage.setItem("favPhoto", photo.id);
     router.push("/auth/signin");
   };
@@ -196,146 +191,12 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
     });
   };
 
-  const addPhotoToShoppingBag = () => {
-    if (!session) {
-      signinFirst();
-    }
-
-    let success;
-    let msg;
-
-    addToShoppingBag({
-      variables: { photoId: parseInt(photo.id) },
-      optimisticResponse: {
-        __typename: "Mutation",
-        addPhotoToShoppingBag: {
-          success: true,
-          message: `Successfully added ${photo.title} to your shopping bag.`,
-          addedPhotoWithId: photo.id,
-          __typename: "AddPhotoToShoppingBagResponse"
-        }
-      },
-      update: (cache, { data: { ...newBagItemResponse } }) => {
-        const { ...existing } = cache.readQuery({
-          query: ShoppingBagItemsDocument
-        });
-
-        const response = newBagItemResponse.addPhotoToShoppingBag;
-        const newPhotoId = response.addedPhotoWithId;
-        success = response.success;
-        msg = response.message;
-
-        if (newPhotoId != photo.id) {
-          console.log(
-            `Incoming response from server with id ${newPhotoId} does not match added photo id ${photo.id}`
-          );
-        }
-        const existingPhotos = existing.shoppingBagItems?.photoList || [];
-
-        cache.writeQuery({
-          query: ShoppingBagItemsDocument,
-          data: {
-            shoppingBagItems: {
-              __typename: "ShoppingBagItemsResponse",
-              photoList: photo ? [photo, ...existingPhotos] : [...existingPhotos]
-            }
-          }
-        });
-      }
-    });
-    {
-      success
-        ? toasts.success({
-            title: "Added",
-            message: msg
-          })
-        : toasts.warning({
-            title: "Failed to add.",
-            message: msg
-          });
-    }
+  const addToShoppingBag = () => {
+    router.push(`/shop/options/${photo.sku}`);
   };
 
-  const removePhotoFromShoppingBag = () => {
-    if (!session) {
-      signinFirst();
-      return;
-    }
-
-    let success;
-    let msg;
-
-    removeFromShoppingBag({
-      variables: { photoId: parseInt(photo.id) },
-      optimisticResponse: {
-        __typename: "Mutation",
-        removePhotoFromShoppingBag: {
-          success: true,
-          message: `Successfully removed ${photo.title} from your shopping bag.`,
-          removedPhotoWithId: photo.id,
-          __typename: "RemovePhotoFromShoppingBagResponse"
-        }
-      },
-      update: (cache, { data: { ...removePhotoResponse } }) => {
-        const { ...existing } = cache.readQuery({
-          query: ShoppingBagItemsDocument
-        });
-
-        const response = removePhotoResponse.removePhotoFromShoppingBag;
-        const idOfPhotoToRemove = response.removedPhotoWithId;
-        success = response.success;
-        msg = response.message;
-
-        if (idOfPhotoToRemove != photo.id) {
-          console.log(
-            `ID of photo to remove incoming from server ${idOfPhotoToRemove} does not match ID of photo to remove ${photo.id}`
-          );
-        }
-
-        const existingPhotos = existing.shoppingBagItems?.photoList || [];
-
-        cache.writeQuery({
-          query: ShoppingBagItemsDocument,
-          data: {
-            shoppingBagItems: {
-              __typename: "ShoppingBagItemsResponse",
-              photoList: existingPhotos.filter(rec => rec.id != idOfPhotoToRemove)
-            }
-          }
-        });
-      }
-    });
-    {
-      success
-        ? toasts.success({
-            title: "Removed",
-            message: msg
-          })
-        : toasts.warning({
-            title: "Failed to remove.",
-            message: msg
-          });
-    }
-    removeFromShoppingBag({
-      variables: { photoId: parseInt(photo.id) },
-      update: (cache, { data: { ...removePhotoResponse } }) => {
-        const { ...existing } = cache.readQuery({
-          query: ShoppingBagItemsDocument
-        });
-        const photoToRemove = removePhotoResponse.removePhotoFromShoppingBag.removedPhotoWithId;
-        const existingPhotos = existing.shoppingBagItems?.photoList || [];
-
-        cache.writeQuery({
-          query: ShoppingBagItemsDocument,
-          data: {
-            shoppingBagItems: {
-              __typename: "ShoppingBagItemsResponse",
-              photoList: existingPhotos.filter(rec => rec.id != photoToRemove)
-            }
-          }
-        });
-      }
-    });
+  const viewInShoppingBag = () => {
+    router.push(`/shop/review-order`);
   };
 
   const { data: favs } = useQuery(FavoritesDocument);
@@ -346,7 +207,7 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
 
   const { data: bagItems } = useQuery(ShoppingBagItemsDocument);
   const inShoppingBag = useMemo(() => {
-    const bagItemIds = bagItems?.shoppingBagItems?.photoList?.map(b => b.id);
+    const bagItemIds = bagItems?.shoppingBagItems?.dataList?.map(b => b.photo.id);
     return bagItemIds ? bagItemIds.includes(photo.id) : false;
   }, [bagItems]);
 
@@ -387,17 +248,6 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
 
   return (
     <>
-      <NextSeo
-        title="Slide menu data"
-        description="Slide menu description"
-        openGraph={{
-          images: [
-            {
-              url: `${photo.images?.[0].imageUrl}`
-            }
-          ]
-        }}
-      />
       <DDMenu
         transition="none"
         menu={
@@ -421,14 +271,11 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
               </DropdownMenu.Item>
             )}
             {inShoppingBag ? (
-              <DropdownMenu.Item
-                iconBefore="solid-minus"
-                onClick={() => removePhotoFromShoppingBag()}
-              >
-                Remove from Shopping Bag
+              <DropdownMenu.Item iconBefore="solid-minus" onClick={() => viewInShoppingBag()}>
+                View in Shopping Bag
               </DropdownMenu.Item>
             ) : (
-              <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToShoppingBag()}>
+              <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addToShoppingBag()}>
                 Add to Shopping Bag
               </DropdownMenu.Item>
             )}

@@ -1,0 +1,30 @@
+fragment MatInfo on Mat {
+  id
+  name
+  displayName
+  description
+  color
+  printType
+  matSku
+  aspectRatio
+  dimension1
+  dimension2
+  retailPrice
+  createdAt
+  updatedAt
+  coverImage {
+    id
+    imageName
+    fileExtension
+    imageUrl
+    altText
+    aspectRatio
+    size
+    width
+    height
+    isPortrait
+    isPanoramic
+    createdAt
+    updatedAt
+  }
+}

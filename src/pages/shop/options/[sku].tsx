@@ -1,35 +1,57 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import { useSession } from "next-auth/client";
 import {
-  PhotoWithSkuDocument,
-  PhotoInfoFragment,
-  ImageInfoFragment
+  PhotoAndFinishOptionsForSkuDocument,
+  PrintInfoFragment,
+  MatInfoFragment,
+  FrameInfoFragment,
+  AddProductDocument,
+  AddProductMutationVariables
 } from "../../../graphql-operations";
 import Loader from "../../../components/Loader";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { NextSeo } from "next-seo";
-import {
-  Box,
-  Grid,
-  Flex,
-  Text,
-  Heading,
-  Link as BBLink,
-  styled,
-  applyTheme,
-  Divider,
-  Card,
-  Button
-} from "bumbag";
+import { Flex, Text, Heading, styled, Divider, Button } from "bumbag";
 
-import OptionCards from "../../../components/OptionCards";
+import PrintTypeCard from "../../../components/PrintTypeCard";
+import SelectPrintSize from "../../../components/SelectPrintSize";
+import SelectMat from "../../../components/SelectMat";
+import SelectFrame from "../../../components/SelectFrame";
 
 const ConfigureForPurchasePage: React.FC = () => {
+  const [session] = useSession();
   const router = useRouter();
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
+  // const [aspectRatio, setAspectRatio] = useState<string | undefined | null>(undefined);
+  const [selectedPrintType, setSelectedPrintType] = useState<string | undefined>(undefined);
+  const [selectedPrint, setSelectedPrint] = useState<PrintInfoFragment | undefined>(undefined);
+  const [matsToDisplay, setMatsToDisplay] = useState<MatInfoFragment[] | undefined>(undefined);
+  const [selectedMat, setSelectedMat] = useState<MatInfoFragment | undefined>(undefined);
+  const [framesToDisplay, setFramesToDisplay] = useState<FrameInfoFragment[] | undefined>(
+    undefined
+  );
+  const [selectedFrame, setSelectedFrame] = useState<FrameInfoFragment | undefined>(undefined);
+
+  const [addProduct] = useMutation(AddProductDocument, {
+    // refetchQueries: [
+    //   {
+    //     query: ShoppingBagItemsDocument
+    //   }
+    // ],
+    onCompleted(data) {
+      console.log(`Added product to shopping bag. ${JSON.stringify(data, null, 2)}`);
+      if (!session) {
+        localStorage.setItem("redirectUrl", "https://gibbs-photography.com/shop/review-order");
+        if (data.addProduct.newProduct) {
+          localStorage.setItem("bagProduct", data.addProduct.newProduct.id);
+        }
+
+        router.push("/auth/signin");
+      }
+    }
+  });
 
   // * get location's name from router
   const { sku } = router.query;
@@ -40,30 +62,120 @@ const ConfigureForPurchasePage: React.FC = () => {
   }
 
   useEffect(() => {
-    if (selectedSize) {
-      console.log(`selected size ${selectedSize}`);
+    if (selectedPrintType) {
+      console.log(`selected print type ${selectedPrintType} and aspect ratio ${aspectRatio}`);
+      setSelectedPrint(undefined);
     }
-  }, [selectedSize, setSelectedSize]);
+  }, [selectedPrintType, setSelectedPrintType]);
 
-  const { loading, error, data } = useQuery(PhotoWithSkuDocument, {
+  useEffect(() => {
+    if (selectedPrint) {
+      console.log(`selected print: ${JSON.stringify(selectedPrint, null, 2)}`);
+      const matSelections = mats?.filter(
+        mt => mt.dimension1 === selectedPrint.dimension1 && mt.printType === selectedPrintType
+      );
+      setMatsToDisplay(matSelections);
+      const frameSelections = frames?.filter(
+        fr => fr.dimension1 === selectedPrint.dimension1 && fr.printType === selectedPrint.type
+      );
+      setFramesToDisplay(frameSelections);
+    }
+  }, [selectedPrint, setSelectedPrint]);
+
+  const { loading, error, data } = useQuery(PhotoAndFinishOptionsForSkuDocument, {
     variables: { sku: skuInt }
   });
 
-  if (error) return <ErrorMessage message="Error loading photos." />;
+  if (error) return <ErrorMessage message="Error loading photo." />;
 
   if (loading) return <Loader />;
 
   if (!data) return null;
 
-  const photo: PhotoInfoFragment = data.photoWithSku;
-  const image: ImageInfoFragment = photo.images[0];
+  const { photo, prints, mats, frames } = data.photoAndFinishOptionsForSku;
 
+  if (!photo) return null;
+
+  const image = photo.images[0];
+  const aspectRatio = image.aspectRatio;
   const pgName = photo?.photographer?.name as string;
   const locationName = photo?.location?.name as string;
+
+  const imagePrices = [
+    {
+      size: 12,
+      price: photo.retailPrice12
+    },
+    {
+      size: 16,
+      price: photo.retailPrice16
+    },
+    {
+      size: 20,
+      price: photo.retailPrice20
+    },
+    {
+      size: 24,
+      price: photo.retailPrice24
+    },
+    {
+      size: 30,
+      price: photo.retailPrice30
+    }
+  ];
+
+  if (!prints) return null;
+
+  const paperPrints = prints.filter(p => p.type === "paper");
+  const paperPrices = imagePrices.map((ip, idx) => ip.price + paperPrints[idx].retailPrice);
+  const lowestPricePaper = Math.min(...paperPrices);
+
+  console.log({ paperPrices });
+
+  // const lowestPricePaper = paperPrints?.reduce(
+  //   (min, p) => (p.retailPrice < min ? p.retailPrice : min),
+  //   paperPrints[0].retailPrice
+  // );
+  const aluPrints = prints.filter(p => p.type === "alu");
+  const aluPrices = imagePrices.map((ip, idx) => ip.price + aluPrints[idx].retailPrice);
+  const lowestPriceAlu = Math.min(...aluPrices);
+
+  // const lowestPriceAlu = aluPrints?.reduce(
+  //   (min, p) => (p.retailPrice < min ? p.retailPrice : min),
+  //   aluPrints[0].retailPrice
+  // );
 
   const StyledImage = styled(Image)`
     border-radius: 4px;
   `;
+
+  console.log(
+    `Build product with photo:${photo.id} print:${selectedPrint?.id} mat: ${selectedMat?.id} frame: ${selectedFrame?.id}`
+  );
+
+  const createProduct = () => {
+    let matId, frameId;
+    if (!selectedPrint) return;
+    if (selectedMat) {
+      matId = parseInt(selectedMat.id);
+    }
+
+    if (selectedFrame) {
+      frameId = parseInt(selectedFrame.id);
+    }
+
+    const input = {
+      photoId: parseInt(photo.id),
+      printId: parseInt(selectedPrint.id),
+      matId: matId,
+      frameId: frameId
+    };
+    console.log(`Adding product with input: ${JSON.stringify(input, null, 2)}`);
+    const addVariables: AddProductMutationVariables = { input };
+    addProduct({
+      variables: addVariables
+    });
+  };
 
   return (
     <>
@@ -71,11 +183,10 @@ const ConfigureForPurchasePage: React.FC = () => {
         title={`${photo.title}`}
         description={`${photo.description}`}
         openGraph={{
-          url: "https://gibbs-photography.com/image/1115",
+          url: `https://gibbs-photography.com/image/${photo.sku}`,
           images: [
             {
-              url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1123-2.jpg"
+              url: image.imageUrl
             }
           ]
         }}
@@ -93,23 +204,15 @@ const ConfigureForPurchasePage: React.FC = () => {
             {photo.title}
           </Heading>
 
-          <Link href={`/gallery/photographer/${encodeURIComponent(pgName.toLowerCase())}`}>
-            <BBLink>
-              <Heading use="h5" marginBottom="major-2">
-                {pgName}
-              </Heading>
-            </BBLink>
-          </Link>
-
+          <Heading use="h5" marginBottom="major-2">
+            {pgName}
+          </Heading>
           <Text.Block marginBottom="major-3">
-            <Link href={`/gallery/location/${encodeURIComponent(locationName.toLowerCase())}`}>
-              <BBLink>
-                <Text marginBottom="major-2" color="secondary">
-                  {locationName}
-                </Text>
-              </BBLink>
-            </Link>
+            <Text marginBottom="major-2" color="secondary">
+              {locationName}
+            </Text>
           </Text.Block>
+
           <Text.Block fontSize="400" marginY="major-3">
             {photo.description}
           </Text.Block>
@@ -125,281 +228,55 @@ const ConfigureForPurchasePage: React.FC = () => {
             marginBottom="major-3"
             justifyContent="space-around"
           >
-            <FinishCard margin="major-1" userSelect="none">
-              <Grid
-                className="fine-art-print"
-                gridTemplateColumns="25% 70%"
-                style={{ columnGap: "8px" }}
-              >
-                <Text.Block fontSize="250" fontWeight="700" gridArea="1/1/1/1" alignSelf="flex-end">
-                  Exhibition Paper
-                </Text.Block>
-                <Text.Block fontSize="150" color="info500" gridArea="2/1/2/1" marginTop="major-2">
-                  from $170
-                </Text.Block>
-                <Text.Block gridColumn="2" gridRow="1/span 2" alignSelf="center">
-                  The high-resolution image is printed in ink on fine-art quality paper. This paper
-                  print may be ordered separately, or finished with your choice of a single mat and
-                  wood or metal frame.
-                </Text.Block>
-              </Grid>
-            </FinishCard>
-            <FinishCard margin="major-1" userSelect="none">
-              <Grid
-                className="metal-print"
-                gridTemplateColumns="25% 70%"
-                style={{ columnGap: "8px" }}
-              >
-                <Text.Block fontSize="250" fontWeight="700" gridArea="1/1/1/1" alignSelf="flex-end">
-                  Aluminum
-                </Text.Block>
-                <Text.Block fontSize="150" color="info500" gridArea="2/1/2/1" marginTop="major-2">
-                  from $170
-                </Text.Block>
-                <Text.Block gridColumn="2" gridRow="1/span 2" alignSelf="center" fontWeight="400">
-                  The high-resolution image is rendered by infusing dyes into the surface of a
-                  specially-coated aluminum sheet. This aluminum print may be ordered separately, or
-                  mounted in your choice of a float frame.
-                </Text.Block>
-              </Grid>
-            </FinishCard>
+            <PrintTypeCard
+              type="paper"
+              displayName="Exhibition Paper"
+              lowestPrice={lowestPricePaper}
+              description="The high-resolution image is printed in ink on fine-art quality paper. This paper print may be ordered separately, or finished with your choice of a single mat and wood or metal frame."
+              selectedPrintType={selectedPrintType}
+              setSelectedPrintType={setSelectedPrintType}
+            />
+            <PrintTypeCard
+              type="alu"
+              displayName="Aluminum"
+              lowestPrice={lowestPriceAlu}
+              description="The high-resolution image is rendered by infusing dyes into the surface of a specially-coated aluminum sheet. This aluminum print may be ordered separately, or mounted in your choice of a float frame."
+              selectedPrintType={selectedPrintType}
+              setSelectedPrintType={setSelectedPrintType}
+            />
           </Flex>
-          <Divider />
-          <Heading use="h5" marginY="major-3">
-            Choose your size.
-          </Heading>
-          <OptionCards
-            orientation="vertical"
-            spacing="major-1"
-            width="50%"
-            alignX="center"
-            setSelectedSize={setSelectedSize}
-            sizeOptions={[
-              {
-                description: '12" x 18"',
-                price: 170,
-                value: "12x18"
-              },
-              {
-                description: '16" x 24"',
-                price: 215,
-                value: "16x24"
-              },
-              {
-                description: '20" x 30"',
-                price: 280,
-                value: "20x30"
-              },
-              {
-                description: '30" x 45"',
-                price: 360,
-                value: "30x45"
-              }
-            ]}
-          />
-          <Divider marginTop="major-4" />
-          <Flex>
-            <Heading use="h5" marginY="major-3">
-              Add a mat.
-            </Heading>
-            <Text.Block alignSelf="center" marginLeft="major-2" color="info500" fontWeight="500">
-              +$40
-            </Text.Block>
-            <Text.Block
-              use="i"
-              alignSelf="center"
-              marginLeft="major-1"
-              color="textTint"
-              fontWeight="300"
-            >
-              (optional)
-            </Text.Block>
-          </Flex>
+          {aspectRatio && selectedPrintType && (
+            <>
+              <SelectPrintSize
+                prints={prints.filter(p => p.type === selectedPrintType)}
+                imagePrices={imagePrices}
+                selectedPrint={selectedPrint}
+                setSelectedPrint={setSelectedPrint}
+              />
+            </>
+          )}
+          {selectedPrint && (
+            <>
+              <SelectMat
+                mats={matsToDisplay}
+                selectedMat={selectedMat}
+                setSelectedMat={setSelectedMat}
+              />
+              <SelectFrame
+                frames={framesToDisplay}
+                selectedFrame={selectedFrame}
+                setSelectedFrame={setSelectedFrame}
+              />
+            </>
+          )}
 
-          <Box
-            display="grid"
-            gridTemplateColumns="1fr 1fr 1fr"
-            rowGap="2rem"
-            columnGap="1rem"
-            justifyItems="center"
-            alignItems="start"
-            justifyContent="space-evenly"
+          <Button
+            palette="primary"
+            width="120px"
+            margin="40px 0 40px auto"
+            disabled={selectedPrint === undefined}
+            onClick={() => createProduct()}
           >
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/mat_black.jpg"
-                alt="Black Mat"
-                width="170px"
-                height="110px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Black
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/mat_grey.jpg"
-                alt="Grey Mat"
-                width="170px"
-                height="110px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Grey
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/mat_white.jpg"
-                alt="White Mat"
-                width="170px"
-                height="110px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                White
-              </Text.Block>
-            </Card>
-          </Box>
-          <Divider marginTop="major-4" />
-          <Flex>
-            <Heading use="h5" marginY="major-3">
-              Add a frame.
-            </Heading>
-            <Text.Block alignSelf="center" marginLeft="major-2" color="info500" fontWeight="500">
-              +$85
-            </Text.Block>
-            <Text.Block
-              use="i"
-              alignSelf="center"
-              marginLeft="major-1"
-              color="textTint"
-              fontWeight="300"
-            >
-              (optional, price includes acrylic sheet to protect image)
-            </Text.Block>
-          </Flex>
-
-          <Box
-            display="grid"
-            gridTemplateColumns="1fr 1fr 1fr"
-            rowGap="2rem"
-            columnGap="1rem"
-            justifyItems="center"
-            alignItems="start"
-            justifyContent="space-evenly"
-          >
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_black.jpg"
-                alt="Black Wood"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Black Wood
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_mocha.jpg"
-                alt="Mocha Wood"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Mocha Wood
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_walnut.jpg"
-                alt="Walnut Wood"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Walnut Wood
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_cherry.jpg"
-                alt="Cherry Wood"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Cherry Wood
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/wood_white.jpg"
-                alt="White Wood"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                White Wood
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/metal_black.jpg"
-                alt="Black Metal"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Black Metal
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/metal_dark_pewter.jpg"
-                alt="Dark Pewter Metal"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Dark Pewter Metal
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/metal_light_pewter.jpg"
-                alt="Light Pewter Metal"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Light Pewter Metal
-              </Text.Block>
-            </Card>
-            <Card>
-              <img
-                src="https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/metal_silver.jpg"
-                alt="Silver Metal"
-                width="150px"
-                height="135px"
-                style={{ borderRadius: "4px" }}
-              />
-              <Text.Block fontSize="150" textAlign="center" marginTop="major-1">
-                Silver Metal
-              </Text.Block>
-            </Card>
-          </Box>
-          <Button palette="primary" width="120px" margin="40px 0 0 auto">
             Add to Bag
           </Button>
         </Flex>
@@ -409,20 +286,3 @@ const ConfigureForPurchasePage: React.FC = () => {
 };
 
 export default ConfigureForPurchasePage;
-
-const FinishCard = applyTheme(Card, {
-  styles: {
-    base: {
-      boxShadow: "none"
-    }
-  },
-  defaultProps: {
-    border: "3px solid",
-    borderColor: "rgba(0, 0, 0, 0)",
-    transition: "border-color 0.25s ease",
-    _hover: {
-      border: "3px solid",
-      borderColor: "primary"
-    }
-  }
-});

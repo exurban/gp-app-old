@@ -5,15 +5,15 @@ import {
   FavoritesDocument,
   ShoppingBagItemsDocument,
   AddPhotoToFavoritesDocument,
-  AddPhotoToShoppingBagDocument
+  AddProductToShoppingBagDocument
 } from "../../graphql-operations";
-import { Flex } from "bumbag";
+import { Flex, Heading } from "bumbag";
 
 const SigninSuccess: React.FC = () => {
   const session = useSession();
   const router = useRouter();
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
-  const [addToShoppingBag] = useMutation(AddPhotoToShoppingBagDocument);
+  const [addToShoppingBag] = useMutation(AddProductToShoppingBagDocument);
 
   if (typeof window !== "undefined" && session) {
     const newFav = localStorage.getItem("favPhoto");
@@ -24,21 +24,22 @@ const SigninSuccess: React.FC = () => {
       localStorage.removeItem("favPhoto");
     }
 
-    const newBagItem = localStorage.getItem("bagPhoto");
+    const newBagItem = localStorage.getItem("bagProduct");
     if (newBagItem) {
       addToShoppingBag({
-        variables: { photoId: parseInt(newBagItem) }
+        variables: { productId: parseInt(newBagItem) }
       });
-      localStorage.removeItem("bagPhoto");
+      localStorage.removeItem("bagProduct");
     }
 
     useQuery(FavoritesDocument);
 
     useQuery(ShoppingBagItemsDocument);
 
-    const url = localStorage.getItem("lastUrl");
+    const url = localStorage.getItem("redirectUrl");
     if (url) {
-      localStorage.removeItem("lastUrl");
+      console.log(`should be pushing to ${url}`);
+      localStorage.removeItem("redirectUrl");
       router.push(url);
     } else {
       router.push("/gallery/beast");
@@ -47,7 +48,7 @@ const SigninSuccess: React.FC = () => {
 
   return (
     <Flex width="90%" maxWidth="700px" marginX="auto" alignX="center" height="70vh" alignY="center">
-      Thanks for signing in! You're being sent back from whence you came.
+      <Heading use="h4">Thanks for signing in!</Heading>
     </Flex>
   );
 };

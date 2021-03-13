@@ -80,7 +80,7 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
   const [removeFromShoppingBag] = useMutation(RemovePhotoFromShoppingBagDocument);
 
   const signinFirst = () => {
-    localStorage.setItem("lastUrl", router.pathname);
+    localStorage.setItem("redirectUrl", router.pathname);
     localStorage.setItem("favPhoto", photo.id);
     router.push("/auth/signin");
   };

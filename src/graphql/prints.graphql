@@ -1,0 +1,13 @@
+fragment PrintInfo on Print {
+  id
+  name
+  description
+  type
+  printSku
+  aspectRatio
+  dimension1
+  dimension2
+  retailPrice
+  createdAt
+  updatedAt
+}

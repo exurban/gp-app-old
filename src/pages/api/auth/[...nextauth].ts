@@ -104,7 +104,7 @@ const options: InitOptions = {
     secret: process.env.NEXTAUTH_SECRET
   },
   pages: {
-    signIn: "/auth/signin-test",
+    signIn: "/auth/signin",
     signOut: "/auth/signout",
     error: "/auth/error",
     verifyRequest: "/auth/verify-email"

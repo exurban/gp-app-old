@@ -4,9 +4,12 @@ fragment ImageInfo on Image {
   fileExtension
   imageUrl
   altText
+  aspectRatio
   size
   width
   height
   isPortrait
   isPanoramic
+  createdAt
+  updatedAt
 }

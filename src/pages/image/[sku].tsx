@@ -9,7 +9,6 @@ import Image from "next/image";
 import {
   PhotoInfoFragment,
   PhotoWithSkuDocument,
-  ImageInfoFragment,
   FavoritesDocument,
   AddPhotoToFavoritesDocument,
   ShoppingBagItemsDocument
@@ -63,7 +62,7 @@ const Photo: React.FC = () => {
   if (error) return <ErrorMessage message="Error loading photo." />;
 
   const photo: PhotoInfoFragment = data.photoWithSku;
-  const image: ImageInfoFragment = photo.images[0];
+  const image = photo.images[0];
 
   const pgName = photo?.photographer?.name as string;
   const locationName = photo?.location?.name as string;
@@ -76,7 +75,7 @@ const Photo: React.FC = () => {
   `;
 
   const signinFirst = () => {
-    localStorage.setItem("lastUrl", router.pathname);
+    localStorage.setItem("redirectUrl", router.pathname);
     localStorage.setItem("favPhoto", photo.id);
     router.push("/auth/signin");
   };
@@ -144,7 +143,7 @@ const Photo: React.FC = () => {
 
   const { data: bagItems } = useQuery(ShoppingBagItemsDocument);
   const inShoppingBag = useMemo(() => {
-    const bagItemIds = bagItems?.shoppingBagItems?.photoList?.map(b => b.id);
+    const bagItemIds = bagItems?.shoppingBagItems?.dataList?.map(b => b.photo.id);
     return bagItemIds ? bagItemIds.includes(photo.id) : false;
   }, [bagItems]);
 
@@ -232,7 +231,7 @@ const Photo: React.FC = () => {
                 marginX="major-2"
                 onClick={() => router.push(`/shop/options/${photo.sku}`)}
               >
-                View in Shopping Bag
+                Add to Shopping Bag
               </Button>
             )}
           </Flex>

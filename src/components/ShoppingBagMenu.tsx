@@ -28,7 +28,7 @@ const ShoppingBagMenu: React.FC = () => {
                 onClick={e => {
                   e.preventDefault();
                   signOut();
-                  localStorage.removeItem("lastUrl");
+                  localStorage.removeItem("redirectUrl");
                   localStorage.removeItem("cursor");
                 }}
               >

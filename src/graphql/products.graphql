@@ -1,0 +1,64 @@
+query product($id: Int!) {
+  product(id: $id) {
+    id
+    totalRetailPrice
+    photo {
+      ...PhotoInfo
+    }
+    print {
+      ...PrintInfo
+    }
+    mat {
+      ...MatInfo
+    }
+    frame {
+      ...FrameInfo
+    }
+  }
+}
+
+mutation addProduct($input: AddProductInput!) {
+  addProduct(input: $input) {
+    success
+    message
+    newProduct {
+      id
+      totalRetailPrice
+      photo {
+        ...PhotoInfo
+      }
+      print {
+        ...PrintInfo
+      }
+      mat {
+        ...MatInfo
+      }
+      frame {
+        ...FrameInfo
+      }
+    }
+  }
+}
+
+mutation updateProduct($id: Int!, $input: UpdateProductInput!) {
+  updateProduct(id: $id, input: $input) {
+    success
+    message
+    updatedProduct {
+      id
+      totalRetailPrice
+      photo {
+        ...PhotoInfo
+      }
+      print {
+        ...PrintInfo
+      }
+      mat {
+        ...MatInfo
+      }
+      frame {
+        ...FrameInfo
+      }
+    }
+  }
+}

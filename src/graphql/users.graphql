@@ -18,22 +18,6 @@ mutation removePhotoFromFavorites($photoId: Float!) {
   }
 }
 
-mutation addPhotoToShoppingBag($photoId: Float!) {
-  addPhotoToShoppingBag(photoId: $photoId) {
-    success
-    message
-    addedPhotoWithId
-  }
-}
-
-mutation removePhotoFromShoppingBag($photoId: Float!) {
-  removePhotoFromShoppingBag(photoId: $photoId) {
-    success
-    message
-    removedPhotoWithId
-  }
-}
-
 query favorites {
   favorites {
     photoList {
@@ -44,9 +28,52 @@ query favorites {
 
 query shoppingBagItems {
   shoppingBagItems {
-    photoList {
-      ...PhotoInfo
+    dataList {
+      id
+      totalRetailPrice
+      photo {
+        ...PhotoInfo
+      }
+      print {
+        ...PrintInfo
+      }
+      mat {
+        ...MatInfo
+      }
+      frame {
+        ...FrameInfo
+      }
     }
+  }
+}
+
+mutation addProductToShoppingBag($productId: Float!) {
+  addProductToShoppingBag(productId: $productId) {
+    success
+    message
+    addedProduct {
+      id
+      totalRetailPrice
+      photo {
+        ...PhotoInfo
+      }
+      print {
+        ...PrintInfo
+      }
+      mat {
+        ...MatInfo
+      }
+      frame {
+        ...FrameInfo
+      }
+    }
+  }
+}
+
+mutation removeProductFromShoppingBag($productId: Float!) {
+  removeProductFromShoppingBag(productId: $productId) {
+    success
+    message
   }
 }
 

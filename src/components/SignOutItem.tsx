@@ -18,7 +18,7 @@ const AccountItem: React.FC<Props> = ({ size }) => {
       onClick={e => {
         e.preventDefault();
         signOut();
-        localStorage.removeItem("lastUrl");
+        localStorage.removeItem("redirectUrl");
         localStorage.removeItem("cursor");
       }}
     >
