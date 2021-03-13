@@ -17,9 +17,7 @@ import {
   AddPhotoToFavoritesDocument,
   RemovePhotoFromFavoritesDocument,
   PhotoInfoFragment,
-  ShoppingBagItemsDocument,
-  AddPhotoToShoppingBagDocument,
-  RemovePhotoFromShoppingBagDocument
+  ShoppingBagItemsDocument
 } from "../graphql-operations";
 import CarouselInfoModal from "./CarouselInfoModal";
 
@@ -76,8 +74,6 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
   const client = useApolloClient();
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
   const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
-  const [addToShoppingBag] = useMutation(AddPhotoToShoppingBagDocument);
-  const [removeFromShoppingBag] = useMutation(RemovePhotoFromShoppingBagDocument);
 
   const signinFirst = () => {
     localStorage.setItem("redirectUrl", router.pathname);
@@ -113,7 +109,6 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
   };
 
   const addPhotoToFavorites = () => {
-    console.log(`adding to favorites.`);
     if (!session) {
       signinFirst();
       return;
@@ -225,126 +220,12 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
     }
   };
 
-  const addPhotoToShoppingBag = () => {
-    if (!session) {
-      signinFirst();
-    }
-
-    let success;
-    let msg;
-
-    addToShoppingBag({
-      variables: { photoId: parseInt(photo.id) },
-      optimisticResponse: {
-        __typename: "Mutation",
-        addPhotoToShoppingBag: {
-          success: true,
-          message: `Successfully added ${photo.title} to your shopping bag.`,
-          addedPhotoWithId: photo.id,
-          __typename: "AddPhotoToShoppingBagResponse"
-        }
-      },
-      update: (cache, { data: { ...newBagItemResponse } }) => {
-        const { ...existing } = cache.readQuery({
-          query: ShoppingBagItemsDocument
-        });
-
-        const response = newBagItemResponse.addPhotoToShoppingBag;
-        const newPhotoId = response.addedPhotoWithId;
-        success = response.success;
-        msg = response.message;
-
-        if (newPhotoId != photo.id) {
-          console.log(
-            `Incoming response from server with id ${newPhotoId} does not match added photo id ${photo.id}`
-          );
-        }
-        const existingPhotos = existing.shoppingBagItems?.photoList || [];
-
-        cache.writeQuery({
-          query: ShoppingBagItemsDocument,
-          data: {
-            shoppingBagItems: {
-              __typename: "ShoppingBagItemsResponse",
-              photoList: photo ? [photo, ...existingPhotos] : [...existingPhotos]
-            }
-          }
-        });
-      }
-    });
-    {
-      success
-        ? toasts.success({
-            title: "Added",
-            message: msg
-          })
-        : toasts.warning({
-            title: "Failed to add.",
-            message: msg
-          });
-    }
+  const addToShoppingBag = () => {
+    router.push(`/shop/options/${photo.sku}`);
   };
 
-  const removePhotoFromShoppingBag = () => {
-    if (!session) {
-      signinFirst();
-      return;
-    }
-
-    let success;
-    let msg;
-
-    removeFromShoppingBag({
-      variables: { photoId: parseInt(photo.id) },
-      optimisticResponse: {
-        __typename: "Mutation",
-        removePhotoFromShoppingBag: {
-          success: true,
-          message: `Successfully removed ${photo.title} from your shopping bag.`,
-          removedPhotoWithId: photo.id,
-          __typename: "RemovePhotoFromShoppingBagResponse"
-        }
-      },
-      update: (cache, { data: { ...removePhotoResponse } }) => {
-        const { ...existing } = cache.readQuery({
-          query: ShoppingBagItemsDocument
-        });
-
-        const response = removePhotoResponse.removePhotoFromShoppingBag;
-        const idOfPhotoToRemove = response.removedPhotoWithId;
-        success = response.success;
-        msg = response.message;
-
-        if (idOfPhotoToRemove != photo.id) {
-          console.log(
-            `ID of photo to remove incoming from server ${idOfPhotoToRemove} does not match ID of photo to remove ${photo.id}`
-          );
-        }
-
-        const existingPhotos = existing.shoppingBagItems?.photoList || [];
-
-        cache.writeQuery({
-          query: ShoppingBagItemsDocument,
-          data: {
-            shoppingBagItems: {
-              __typename: "ShoppingBagItemsResponse",
-              photoList: existingPhotos.filter(rec => rec.id != idOfPhotoToRemove)
-            }
-          }
-        });
-      }
-    });
-    {
-      success
-        ? toasts.success({
-            title: "Removed",
-            message: msg
-          })
-        : toasts.warning({
-            title: "Failed to remove.",
-            message: msg
-          });
-    }
+  const viewInShoppingBag = () => {
+    router.push(`/shop/review-order`);
   };
 
   function inFavorites() {
@@ -385,9 +266,9 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
       useQuery(ShoppingBagItemsDocument);
     }
 
-    const photoList: PhotoInfoFragment[] = bagItems.shoppingBagItems?.photoList || [];
+    const photoList = bagItems.shoppingBagItems?.dataList || [];
 
-    const bagItemIds = photoList.map(f => f.id);
+    const bagItemIds = photoList.map(f => f.photo.id);
 
     return bagItemIds.includes(photo.id);
   };
@@ -416,14 +297,11 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
             </DropdownMenu.Item>
           )}
           {inShoppingBag() ? (
-            <DropdownMenu.Item
-              iconBefore="solid-minus"
-              onClick={() => removePhotoFromShoppingBag()}
-            >
-              <Text>Remove from Shopping Bag</Text>
+            <DropdownMenu.Item iconBefore="solid-minus" onClick={() => viewInShoppingBag()}>
+              <Text>View in Shopping Bag</Text>
             </DropdownMenu.Item>
           ) : (
-            <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addPhotoToShoppingBag()}>
+            <DropdownMenu.Item iconBefore="solid-plus" onClick={() => addToShoppingBag()}>
               <Text>Add to Shopping Bag</Text>
             </DropdownMenu.Item>
           )}
