@@ -24,7 +24,7 @@ import SelectFrame from "../../../components/SelectFrame";
 const ConfigureForPurchasePage: React.FC = () => {
   const [session] = useSession();
   const router = useRouter();
-  // const [aspectRatio, setAspectRatio] = useState<string | undefined | null>(undefined);
+
   const [selectedPrintType, setSelectedPrintType] = useState<string | undefined>(undefined);
   const [selectedPrint, setSelectedPrint] = useState<PrintInfoFragment | undefined>(undefined);
   const [matsToDisplay, setMatsToDisplay] = useState<MatInfoFragment[] | undefined>(undefined);
@@ -35,13 +35,13 @@ const ConfigureForPurchasePage: React.FC = () => {
   const [selectedFrame, setSelectedFrame] = useState<FrameInfoFragment | undefined>(undefined);
 
   const [addProduct] = useMutation(AddProductDocument, {
-    // refetchQueries: [
-    //   {
-    //     query: ShoppingBagItemsDocument
-    //   }
-    // ],
     onCompleted(data) {
-      console.log(`Added product to shopping bag. ${JSON.stringify(data, null, 2)}`);
+      // * if user was signed in, product was added to bag upon creation--push to review-order
+      if (session && data.addProduct.success && !data.addProduct.newProduct) {
+        router.push("/shop/review-order");
+      }
+
+      // * if user not signed in, save product id to localStorage and push to signin, add product to bag upon successful signin, then push to review-order
       if (!session) {
         localStorage.setItem("redirectUrl", "https://gibbs-photography.com/shop/review-order");
         if (data.addProduct.newProduct) {
@@ -63,14 +63,12 @@ const ConfigureForPurchasePage: React.FC = () => {
 
   useEffect(() => {
     if (selectedPrintType) {
-      console.log(`selected print type ${selectedPrintType} and aspect ratio ${aspectRatio}`);
       setSelectedPrint(undefined);
     }
   }, [selectedPrintType, setSelectedPrintType]);
 
   useEffect(() => {
     if (selectedPrint) {
-      console.log(`selected print: ${JSON.stringify(selectedPrint, null, 2)}`);
       const matSelections = mats?.filter(
         mt => mt.dimension1 === selectedPrint.dimension1 && mt.printType === selectedPrintType
       );
@@ -149,10 +147,6 @@ const ConfigureForPurchasePage: React.FC = () => {
     border-radius: 4px;
   `;
 
-  console.log(
-    `Build product with photo:${photo.id} print:${selectedPrint?.id} mat: ${selectedMat?.id} frame: ${selectedFrame?.id}`
-  );
-
   const createProduct = () => {
     let matId, frameId;
     if (!selectedPrint) return;
@@ -170,8 +164,9 @@ const ConfigureForPurchasePage: React.FC = () => {
       matId: matId,
       frameId: frameId
     };
-    console.log(`Adding product with input: ${JSON.stringify(input, null, 2)}`);
+
     const addVariables: AddProductMutationVariables = { input };
+
     addProduct({
       variables: addVariables
     });
