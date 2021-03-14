@@ -23,7 +23,7 @@ const ShoppingBagGallery: React.FC = () => {
   if (loading) return <Loader />;
 
   if (data) {
-    const photos = data.shoppingBagItems.photoList;
+    const photos = data.shoppingBagItems.dataList?.map(p => p.photo);
     if (photos !== null && photos !== undefined && photos.length == 0) {
       return (
         <Flex

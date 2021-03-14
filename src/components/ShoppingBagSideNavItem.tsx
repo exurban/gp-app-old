@@ -7,7 +7,7 @@ const ShoppingBagSideNavItem: React.FC = () => {
   const { data } = useQuery(ShoppingBagItemsDocument);
 
   const shoppingBagItemsCount = useMemo(() => {
-    return data?.shoppingBagItems.photoList ? data.shoppingBagItems.photoList.length : 0;
+    return data?.shoppingBagItems.dataList ? data.shoppingBagItems.dataList.length : 0;
   }, [data]);
 
   return (
