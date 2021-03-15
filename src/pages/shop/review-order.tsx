@@ -78,6 +78,8 @@ const ReviewOrderPage: React.FC = () => {
       <Heading>Review Your Order</Heading>
       {products.map(product => (
         <Box width="100%" paddingTop="major-4">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <BagItem item={product} />
         </Box>
       ))}

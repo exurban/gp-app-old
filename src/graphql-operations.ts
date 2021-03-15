@@ -2375,7 +2375,7 @@ export type ShoppingBagItemsQuery = { __typename?: "Query" } & {
       Array<
         { __typename?: "Product" } & Pick<
           Product,
-          "id" | "totalRetailPrice"
+          "id" | "totalRetailPrice" | "createdAt" | "updatedAt"
         > & {
             photo: { __typename?: "Photo" } & PhotoInfoFragment;
             print: { __typename?: "Print" } & PrintInfoFragment;
@@ -5206,6 +5206,14 @@ export const ShoppingBagItemsDocument: DocumentNode<
                             },
                           ],
                         },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
                       },
                     ],
                   },
