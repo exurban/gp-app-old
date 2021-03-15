@@ -1,7 +1,8 @@
+import { NextPage } from "next";
 import { Heading } from "bumbag";
 
-const CheckoutSuccess = () => {
-  return <Heading use="h3">Stripe Payment Succeeded!!!</Heading>;
+const CheckoutCanceled: NextPage = () => {
+  return <Heading use="h3">Stripe Payment Canceled!!!</Heading>;
 };
 
-export default CheckoutSuccess;
+export default CheckoutCanceled;
