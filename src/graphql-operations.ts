@@ -2181,7 +2181,10 @@ export type ProductQueryVariables = Exact<{
 
 export type ProductQuery = { __typename?: "Query" } & {
   product?: Maybe<
-    { __typename?: "Product" } & Pick<Product, "id" | "totalRetailPrice"> & {
+    { __typename?: "Product" } & Pick<
+      Product,
+      "id" | "totalRetailPrice" | "createdAt" | "updatedAt"
+    > & {
         photo: { __typename?: "Photo" } & PhotoInfoFragment;
         print: { __typename?: "Print" } & PrintInfoFragment;
         mat?: Maybe<{ __typename?: "Mat" } & MatInfoFragment>;
@@ -4099,6 +4102,8 @@ export const ProductDocument: DocumentNode<
                     ],
                   },
                 },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
               ],
             },
           },

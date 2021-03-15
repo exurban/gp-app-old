@@ -128,8 +128,6 @@ const ConfigureForPurchasePage: React.FC = () => {
   const paperPrices = imagePrices.map((ip, idx) => ip.price + paperPrints[idx].retailPrice);
   const lowestPricePaper = Math.min(...paperPrices);
 
-  console.log({ paperPrices });
-
   // const lowestPricePaper = paperPrints?.reduce(
   //   (min, p) => (p.retailPrice < min ? p.retailPrice : min),
   //   paperPrints[0].retailPrice
