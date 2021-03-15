@@ -57,7 +57,9 @@ const ReviewOrderPage: React.FC = () => {
       return;
     }
     // Call your backend to create the Checkout Session
-    const response = await fetch("/create-checkout-session", { method: "POST" });
+    const response = await fetch("https://gibbs-photography.com/create-checkout-session", {
+      method: "POST"
+    });
 
     const session = await response.json();
 
@@ -67,6 +69,7 @@ const ReviewOrderPage: React.FC = () => {
     });
 
     if (result.error) {
+      console.log(`Error: ${JSON.stringify(result.error, null, 2)}`);
       // If `redirectToCheckout` fails due to a browser or network
       // error, display the localized error message to your customer
       // using `result.error.message`.
