@@ -156,10 +156,14 @@ const Photo: React.FC = () => {
         title={title}
         description={description}
         openGraph={{
-          url: `https://gibbs-photography.com/image/${photo.sku}`,
+          title: title,
+          description: description,
           images: [
             {
-              url: photo.images[0].imageUrl
+              url: image.imageUrl,
+              width: image.width,
+              height: image.height,
+              alt: image.altText
             }
           ]
         }}
