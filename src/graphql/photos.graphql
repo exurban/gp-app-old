@@ -24,6 +24,19 @@ fragment PhotoInfo on Photo {
   basePrice30
   priceModifier30
   retailPrice30
+  sharingImage {
+    id
+    imageName
+    fileExtension
+    imageUrl
+    altText
+    aspectRatio
+    size
+    width
+    height
+    isPortrait
+    isPanoramic
+  }
   images {
     id
     imageName

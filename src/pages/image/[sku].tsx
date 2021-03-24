@@ -63,6 +63,7 @@ const Photo: React.FC = () => {
 
   const photo: PhotoInfoFragment = data.photoWithSku;
   const image = photo.images[0];
+  const sharingImage = photo.sharingImage || image;
 
   const pgName = photo?.photographer?.name as string;
   const locationName = photo?.location?.name as string;
@@ -160,7 +161,7 @@ const Photo: React.FC = () => {
           description: description,
           images: [
             {
-              url: image.imageUrl,
+              url: sharingImage.imageUrl || image.imageUrl,
               width: image.width,
               height: image.height,
               alt: image.altText
