@@ -148,23 +148,23 @@ const Photo: React.FC = () => {
     return bagItemIds ? bagItemIds.includes(photo.id) : false;
   }, [bagItems]);
 
-  const title = `${photo.title}`;
-  const description = `${photo.description}`;
+  // const title = `${photo.title}`;
+  // const description = `${photo.description}`;
 
   return (
     <>
       <NextSeo
-        title={title}
-        description={description}
+        title={`${photo.title}`}
+        description={`${photo.description}`}
         openGraph={{
-          title: title,
-          description: description,
+          title: photo.title,
+          description: photo.description,
           images: [
             {
-              url: sharingImage.imageUrl || image.imageUrl,
-              width: image.width,
-              height: image.height,
-              alt: image.altText
+              url: sharingImage.imageUrl,
+              width: sharingImage.width,
+              height: sharingImage.height,
+              alt: sharingImage.altText
             }
           ]
         }}
