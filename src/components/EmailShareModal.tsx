@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { PhotoInfoFragment, User } from "../graphql-operations";
+import { useSession } from "next-auth/client";
+import { PhotoInfoFragment } from "../graphql-operations";
 import {
   Modal,
   Flex,
@@ -39,14 +40,16 @@ const TextButton = applyTheme(Button, {
 
 type Props = {
   photo: PhotoInfoFragment;
-  user: User;
 };
-const EmailShareModal: React.FC<Props> = ({ photo, user }) => {
+
+const EmailShareModal: React.FC<Props> = ({ photo }) => {
   const [isSending, setIsSending] = useState(false);
   const modal = Modal.useState();
+  const [session] = useSession();
+  const user = session?.user;
 
   const initialValues = {
-    senderEmail: user.email,
+    senderEmail: user?.email,
     recipientEmail: "",
     message: "I thought you might like this photo."
   };
@@ -59,7 +62,7 @@ const EmailShareModal: React.FC<Props> = ({ photo, user }) => {
 
   const handleSend = () => {
     setIsSending(true);
-    console.log(`sending email`);
+    console.log(`sending email with photo ${photo.sku}`);
   };
 
   const clearForm = () => {

@@ -13,6 +13,7 @@ import {
   AddPhotoToFavoritesDocument,
   ShoppingBagItemsDocument
 } from "../../graphql-operations";
+import EmailShareModal from "../../components/EmailShareModal";
 import Loader from "../../components/Loader";
 import ErrorMessage from "../../components/ErrorMessage";
 import Link from "next/link";
@@ -28,14 +29,7 @@ import {
   styled,
   useToasts
 } from "bumbag";
-import {
-  TwitterShareButton,
-  TwitterIcon,
-  FacebookShareButton,
-  FacebookIcon,
-  EmailShareButton,
-  EmailIcon
-} from "react-share";
+import { TwitterShareButton, TwitterIcon, FacebookShareButton, FacebookIcon } from "react-share";
 
 const Photo: React.FC = () => {
   const [session] = useSession();
@@ -310,15 +304,7 @@ const Photo: React.FC = () => {
             >
               <FacebookIcon size={36} style={{ borderRadius: "50%" }} />
             </FacebookShareButton>
-            <EmailShareButton
-              url={`https://gibbs-photography.com/image/${photo.sku}`}
-              subject="Gibbs Photography"
-              body={`${photo.title}\n${photo.description}`}
-              separator="\n"
-              style={{ marginLeft: "8px" }}
-            >
-              <EmailIcon size={36} style={{ borderRadius: "50%" }} />
-            </EmailShareButton>
+            <EmailShareModal photo={photo} />
           </Flex>
         </Flex>
       </Flex>
