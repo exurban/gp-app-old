@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useSession } from "next-auth/client";
+import { EmailIcon } from "react-share";
 import { PhotoInfoFragment } from "../graphql-operations";
 import {
   Modal,
@@ -10,33 +11,12 @@ import {
   Button,
   Text,
   Spinner,
-  applyTheme,
   FieldStack,
   InputField,
   TextareaField,
   ActionButtons,
   Stack
 } from "bumbag";
-
-const TextButton = applyTheme(Button, {
-  styles: {
-    base: {
-      fontSize: "16px",
-      width: "60px",
-      marginLeft: "auto",
-      marginRight: "major-1",
-      marginTop: "major-1"
-    }
-  },
-  defaultProps: {
-    color: "info500",
-    variant: "ghost",
-    size: "small",
-    _focus: {
-      boxShadow: "none"
-    }
-  }
-});
 
 type Props = {
   photo: PhotoInfoFragment;
@@ -72,8 +52,8 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
   return (
     <>
       <Flex flexDirection="row">
-        <Modal.Disclosure use={TextButton} {...modal}>
-          Email
+        <Modal.Disclosure {...modal}>
+          <EmailIcon />
         </Modal.Disclosure>
       </Flex>
       <Modal {...modal}>
