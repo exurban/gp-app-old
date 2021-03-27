@@ -52,6 +52,7 @@ const Layout: React.FC = ({ children }) => {
 
   function handleSignIn() {
     localStorage.setItem("redirectUrl", router.pathname);
+    localStorage.setItem("routerQuery", router.query.toString());
     router.push("/auth/signin");
   }
 
