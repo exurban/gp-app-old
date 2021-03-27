@@ -29,7 +29,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
   const content = {
     to: `${recipientEmail}`,
-    from: `${senderEmail}`,
+    from: `info@gibbs-photography.com`,
+    reply_to: `${senderEmail}`,
     subject: `${recipientName} -- ${senderName} shared an image from Gibbs Photography with you`,
     text: `${message} ${imageInfoPage}`,
     html: `<head>
