@@ -76,11 +76,12 @@ const options: InitOptions = {
   // * remote DB config
   database: {
     type: "postgres",
-    host: "ec2-3-226-231-4.compute-1.amazonaws.com",
+    host: process.env.DB_HOST,
     port: 5432,
-    username: "smaqklhexnqisi",
-    password: "eeb692a6e5b34dfbbc35e2ef63eebe9d24f70d98d50d0869e3b25aa640c7522d",
-    database: "d7f7men5b2olvh",
+    synchronize: true,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     ssl: true,
     extra: {
       ssl: {
@@ -95,7 +96,7 @@ const options: InitOptions = {
   //   port: 5432,
   //   username: "postgres",
   //   password: "postgres",
-  //   database: "photos"
+  //   database: "photos-new"
   // },
   session: {
     jwt: true
