@@ -39,7 +39,6 @@ const SigninSuccess: React.FC = () => {
     const url = localStorage.getItem("redirectUrl");
     if (url) {
       console.log(`should be pushing to ${url}`);
-      localStorage.removeItem("redirectUrl");
       router.push(url);
     } else {
       router.push("/gallery/beast");
