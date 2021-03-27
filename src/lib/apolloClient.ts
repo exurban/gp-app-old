@@ -11,9 +11,9 @@ export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 let apolloClient: ApolloClient<NormalizedCacheObject> | null;
 
 const httpLink = createHttpLink({
-  // Server URL (must be absolute url )
-  uri: "https://api.gibbs-photography.com"
-  // uri: "http://localhost:4000/api"
+  // Server URL (must be absolute url)
+  // uri: "https://api.gibbs-photography.com"
+  uri: "http://localhost:4000/api"
 });
 
 const authLink = setContext(async (_, { headers }) => {
