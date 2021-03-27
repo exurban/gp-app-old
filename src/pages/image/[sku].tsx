@@ -292,17 +292,15 @@ const Photo: React.FC = () => {
               url={`https://gibbs-photography.com/image/${photo.sku}`}
               title={photo.title}
               hashtags={["nature", "photography"]}
-              style={{ marginLeft: "16px" }}
             >
-              <TwitterIcon size={36} style={{ borderRadius: "50%" }} />
+              <TwitterIcon size={36} style={{ borderRadius: "50%", marginLeft: "16px" }} />
             </TwitterShareButton>
             <FacebookShareButton
               url={`https://gibbs-photography.com/image/${photo.sku}`}
               title={photo.title}
               hashtag={"photography"}
-              style={{ marginLeft: "8px" }}
             >
-              <FacebookIcon size={36} style={{ borderRadius: "50%" }} />
+              <FacebookIcon size={36} style={{ borderRadius: "50%", marginLeft: "8px" }} />
             </FacebookShareButton>
             <EmailShareModal photo={photo} />
           </Flex>

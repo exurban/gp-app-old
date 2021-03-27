@@ -1,5 +1,6 @@
 import React from "react";
 import Footer from "./Footer";
+import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/client";
 import {
   usePage,
@@ -25,17 +26,14 @@ import ColorModeItem from "./ColorModeItem";
 import ActiveLink from "./ActiveLink";
 import ShoppingBagSideNavItem from "./ShoppingBagSideNavItem";
 
-const Layout: React.FC<{ title?: string }> = ({
-  children,
-  title = "Gallery - Gibbs Photography"
-}) => {
-  console.log(title);
+const Layout: React.FC = ({ children }) => {
   const page = usePage();
   const isMinDesktopAndOver = useBreakpoint("min-desktop");
   const isMaxDesktopAndUnder = useBreakpoint("max-desktop");
   const isMaxWidescreenAndUnder = useBreakpoint("max-widescreen");
   const isMinFullHDAndOver = useBreakpoint("min-fullHD");
   const [session] = useSession();
+  const router = useRouter();
 
   const StyledItem = styled(TopNav.Item)`
     &.active {
@@ -51,6 +49,11 @@ const Layout: React.FC<{ title?: string }> = ({
       box-shadow: inset 3px 0 0 0 ${palette("primary")};
     }
   `;
+
+  function handleSignIn() {
+    localStorage.setItem("redirectUrl", router.pathname);
+    router.push("/auth/signin");
+  }
 
   function signOutAndClose() {
     signOut();
@@ -236,7 +239,11 @@ const Layout: React.FC<{ title?: string }> = ({
                         href={`/auth/signin`}
                         passHref={true}
                       >
-                        <StyledItem className="nav-link" variant="rightNavText">
+                        <StyledItem
+                          className="nav-link"
+                          variant="rightNavText"
+                          onClick={() => handleSignIn()}
+                        >
                           <SignInItem size={isMaxWidescreenAndUnder ? "small" : "large"} />
                         </StyledItem>
                       </ActiveLink>
