@@ -173,13 +173,19 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
                   </FieldStack>
 
                   {photo.emailSharingImage && (
-                    <Box className="image-wrapper" marginY="20px">
+                    <Box
+                      className="image-wrapper"
+                      marginY="20px"
+                      width={photo.emailSharingImage?.width}
+                      height={photo.emailSharingImage?.height}
+                      maxHeight="600px"
+                    >
                       <Image
                         src={photo.emailSharingImage?.imageUrl}
                         alt={photo.emailSharingImage?.altText}
-                        layout="responsive"
-                        width={photo.emailSharingImage?.width}
-                        height={photo.emailSharingImage?.height}
+                        layout="fill"
+                        objectFit="contain"
+                        objectPosition="center"
                         sizes="(max-width: 400px) 100vw, 720px"
                       />
                     </Box>
