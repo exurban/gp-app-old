@@ -14,7 +14,8 @@ import {
   InputField,
   TextareaField,
   applyTheme,
-  useToasts
+  useToasts,
+  styled
 } from "bumbag";
 
 type Props = {
@@ -93,6 +94,10 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
     modal.hide;
   };
 
+  const StyledImage = styled(Image)`
+    border-radius: 6px;
+  `;
+
   const FormWrapper = applyTheme(Flex, {
     styles: {
       base: {
@@ -103,7 +108,7 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
 
   return (
     <>
-      <Flex flexDirection="row">
+      <Flex flexDirection="row" overflowY="scroll">
         <Modal.Disclosure {...modal}>
           <EmailIcon size={36} style={{ borderRadius: "50%", marginLeft: "8px" }} />
         </Modal.Disclosure>
@@ -179,8 +184,9 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
                       position="relative"
                       marginY="20px"
                       maxHeight="600px"
+                      minHeight="300px"
                     >
-                      <Image
+                      <StyledImage
                         src={photo.emailSharingImage?.imageUrl}
                         alt={photo.emailSharingImage?.altText}
                         layout="fill"

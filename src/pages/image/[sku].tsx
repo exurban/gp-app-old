@@ -285,22 +285,24 @@ const Photo: React.FC = () => {
 
           <Divider marginY="major-2" />
           <Flex alignItems="center">
-            <Text.Block fontSize="200" fontVariant="small-caps">
+            <Text.Block fontSize="200" fontVariant="small-caps" marginRight="major-2">
               Share:
             </Text.Block>
             <TwitterShareButton
               url={`https://gibbs-photography.com/image/${photo.sku}`}
               title={photo.title}
               hashtags={["nature", "photography"]}
+              style={{ marginLeft: "8px", marginRight: "8px" }}
             >
-              <TwitterIcon size={36} style={{ borderRadius: "50%", marginLeft: "16px" }} />
+              <TwitterIcon size={36} style={{ borderRadius: "50%" }} />
             </TwitterShareButton>
             <FacebookShareButton
               url={`https://gibbs-photography.com/image/${photo.sku}`}
               title={photo.title}
               hashtag={"photography"}
+              style={{ marginLeft: "8px", marginRight: "8px" }}
             >
-              <FacebookIcon size={36} style={{ borderRadius: "50%", marginLeft: "8px" }} />
+              <FacebookIcon size={36} style={{ borderRadius: "50%" }} />
             </FacebookShareButton>
             <EmailShareModal photo={photo} />
           </Flex>
