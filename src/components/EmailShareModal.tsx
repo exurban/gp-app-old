@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Formik, Form, Field } from "formik";
+import Image from "next/image";
 import * as Yup from "yup";
 import { useSession } from "next-auth/client";
 import { EmailIcon } from "react-share";
@@ -8,12 +9,14 @@ import {
   Modal,
   Flex,
   Card,
+  Box,
   Button,
   Text,
   Spinner,
   FieldStack,
   InputField,
-  TextareaField
+  TextareaField,
+  applyTheme
 } from "bumbag";
 
 type Props = {
@@ -82,7 +85,6 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
     recipientName: "",
     recipientEmail: "",
     message: "I thought you might like this photo.",
-    // shareImageUrl: photo.images[0].imageUrl,
     shareImageUrl: photo.emailSharingImage?.imageUrl || "",
     shareUrl: `https://gibbs-photography.com/image/${photo.sku}`
   };
@@ -101,6 +103,14 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
     modal.hide;
   };
 
+  const FormWrapper = applyTheme(Flex, {
+    styles: {
+      base: {
+        width: { default: "700px", "max-tablet": "400px" }
+      }
+    }
+  });
+
   return (
     <>
       <Flex flexDirection="row">
@@ -112,10 +122,9 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
         <Card>
           {!isSending ? (
             <>
-              <Flex
+              <FormWrapper
                 className="fields-wrapper"
                 flexDirection="column"
-                minWidth="300px"
                 margin="major-3"
                 flex="2 1 50%"
               >
@@ -175,6 +184,19 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
                       />
                     </FieldStack>
 
+                    {photo.emailSharingImage && (
+                      <Box className="image-wrapper" marginY="20px">
+                        <Image
+                          src={photo.emailSharingImage?.imageUrl}
+                          alt={photo.emailSharingImage?.altText}
+                          layout="responsive"
+                          width={photo.emailSharingImage?.width}
+                          height={photo.emailSharingImage?.height}
+                          sizes="(max-width: 400px) 100vw, 720px"
+                        />
+                      </Box>
+                    )}
+
                     <Flex marginTop="major-2">
                       <Modal.Disclosure
                         use={Button}
@@ -184,11 +206,13 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
                       >
                         Close
                       </Modal.Disclosure>
-                      <Button type="submit">Send</Button>
+                      <Button type="submit" palette="primary">
+                        Send
+                      </Button>
                     </Flex>
                   </Form>
                 </Formik>
-              </Flex>
+              </FormWrapper>
             </>
           ) : (
             <Flex alignX="center" alignY="center">
