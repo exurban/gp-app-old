@@ -178,8 +178,6 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
                       overflow="hidden"
                       position="relative"
                       marginY="20px"
-                      width={photo.emailSharingImage?.width}
-                      height={photo.emailSharingImage?.height}
                       maxHeight="600px"
                     >
                       <Image
