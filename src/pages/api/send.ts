@@ -62,7 +62,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
           <td style="text-align: center; padding: 20px">
             <img
             src=${imageUrl}
-            alt=photo width=615 height=300/>
+            alt=photo />
           </td>
         </tr>
       </table>

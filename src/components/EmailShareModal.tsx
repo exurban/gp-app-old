@@ -53,6 +53,8 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
     message: string;
     shareImageUrl: string;
     shareUrl: string;
+    imageWidth: number;
+    imageHeight: number;
   };
 
   const sendEmail = async (emailValues: emailValues) => {
@@ -74,7 +76,9 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
     recipientEmail: "",
     message: "I thought you might like this photo.",
     shareImageUrl: photo.emailSharingImage?.imageUrl || "",
-    shareUrl: `https://gibbs-photography.com/image/${photo.sku}`
+    shareUrl: `https://gibbs-photography.com/image/${photo.sku}`,
+    imageWidth: photo.emailSharingImage ? photo.emailSharingImage.width / 2 : 0,
+    imageHeight: photo.emailSharingImage ? photo.emailSharingImage.height / 2 : 0
   };
 
   const validationObject = {
