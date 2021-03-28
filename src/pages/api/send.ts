@@ -75,6 +75,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     res.status(200).send("Message sent successfully.");
   } catch (error) {
     console.log("ERROR", error);
-    res.status(400).send("Message not sent.");
+    res.status(400).send("Failed to send email.");
   }
 }

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import Image from "next/image";
 import * as Yup from "yup";
@@ -11,12 +10,11 @@ import {
   Card,
   Box,
   Button,
-  Text,
-  Spinner,
   FieldStack,
   InputField,
   TextareaField,
-  applyTheme
+  applyTheme,
+  useToasts
 } from "bumbag";
 
 type Props = {
@@ -24,35 +22,27 @@ type Props = {
 };
 
 const EmailShareModal: React.FC<Props> = ({ photo }) => {
-  const [isSending, setIsSending] = useState(false);
   const modal = Modal.useState();
   const [session] = useSession();
   const user = session?.user;
-
-  const [status, setStatus] = useState({
-    submitted: false,
-    submitting: false,
-    info: { error: false, msg: null }
-  });
+  const toast = useToasts();
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleResponse = (status: number, msg: any) => {
     if (status === 200) {
-      setStatus({
-        submitted: true,
-        submitting: false,
-        info: { error: false, msg: msg }
+      toast.success({
+        title: "Success!",
+        message: msg
       });
-      clearForm();
     } else {
-      setStatus({
-        submitted: true,
-        submitting: false,
-        info: { error: true, msg: msg }
+      toast.warning({
+        title: "Failure",
+        message: msg
       });
     }
+    clearForm();
   };
 
   type emailValues = {
@@ -66,8 +56,6 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
   };
 
   const sendEmail = async (emailValues: emailValues) => {
-    setStatus(prevStatus => ({ ...prevStatus, submitting: true }));
-    console.log(`posting to api/send`);
     const res = await fetch("/api/send", {
       method: "POST",
       headers: {
@@ -98,8 +86,6 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
   };
 
   const clearForm = () => {
-    console.log(`clear form`);
-    setIsSending(false);
     modal.hide;
   };
 
@@ -120,120 +106,98 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
       </Flex>
       <Modal {...modal}>
         <Card>
-          {!isSending ? (
-            <>
-              <FormWrapper
-                className="fields-wrapper"
-                flexDirection="column"
-                margin="major-3"
-                flex="2 1 50%"
+          <>
+            <FormWrapper
+              className="fields-wrapper"
+              flexDirection="column"
+              margin="major-3"
+              flex="2 1 50%"
+            >
+              <Formik
+                initialValues={initialValues}
+                validationSchema={Yup.object(validationObject)}
+                onSubmit={values => {
+                  const emailValues = {
+                    ...values,
+                    photo: photo
+                  };
+                  sendEmail(emailValues);
+                }}
               >
-                <Formik
-                  initialValues={initialValues}
-                  validationSchema={Yup.object(validationObject)}
-                  onSubmit={values => {
-                    setIsSending(true);
-                    const emailValues = {
-                      ...values,
-                      photo: photo
-                    };
-                    sendEmail(emailValues);
-                  }}
-                >
-                  <Form autoComplete="off" style={{ margin: 0, width: "100%" }}>
-                    <FieldStack orientation="vertical" spacing="major-2">
-                      <Field
-                        component={InputField.Formik}
-                        name="senderName"
-                        label="Your Name"
-                        type="text"
-                        autoComplete="off"
-                        value="senderName"
-                      />
-                      <Field
-                        component={InputField.Formik}
-                        name="senderEmail"
-                        label="Your Email Address"
-                        type="text"
-                        autoComplete="off"
-                        value="senderEmail"
-                      />
-                      <Field
-                        component={InputField.Formik}
-                        name="recipientName"
-                        label="Recipient's Name"
-                        type="text"
-                        autoComplete="off"
-                        value="recipientName"
-                      />
-                      <Field
-                        component={InputField.Formik}
-                        name="recipientEmail"
-                        label="Recipient's Email Address"
-                        type="email"
-                        autoComplete="off"
-                        value="recipientEmail"
-                      />
-                      <Field
-                        component={TextareaField.Formik}
-                        name="message"
-                        label="Message"
-                        value="message"
-                        rows={6}
-                        textareaProps={{ rows: 6, resize: "none" }}
-                      />
-                    </FieldStack>
+                <Form autoComplete="off" style={{ margin: 0, width: "100%" }}>
+                  <FieldStack orientation="vertical" spacing="major-2">
+                    <Field
+                      component={InputField.Formik}
+                      name="senderName"
+                      label="Your Name"
+                      type="text"
+                      autoComplete="off"
+                      value="senderName"
+                    />
+                    <Field
+                      component={InputField.Formik}
+                      name="senderEmail"
+                      label="Your Email Address"
+                      type="text"
+                      autoComplete="off"
+                      value="senderEmail"
+                    />
+                    <Field
+                      component={InputField.Formik}
+                      name="recipientName"
+                      label="Recipient's Name"
+                      type="text"
+                      autoComplete="off"
+                      value="recipientName"
+                    />
+                    <Field
+                      component={InputField.Formik}
+                      name="recipientEmail"
+                      label="Recipient's Email Address"
+                      type="email"
+                      autoComplete="off"
+                      value="recipientEmail"
+                    />
+                    <Field
+                      component={TextareaField.Formik}
+                      name="message"
+                      label="Message"
+                      value="message"
+                      rows={6}
+                      textareaProps={{ rows: 6, resize: "none" }}
+                    />
+                  </FieldStack>
 
-                    {photo.emailSharingImage && (
-                      <Box className="image-wrapper" marginY="20px">
-                        <Image
-                          src={photo.emailSharingImage?.imageUrl}
-                          alt={photo.emailSharingImage?.altText}
-                          layout="responsive"
-                          width={photo.emailSharingImage?.width}
-                          height={photo.emailSharingImage?.height}
-                          sizes="(max-width: 400px) 100vw, 720px"
-                        />
-                      </Box>
-                    )}
+                  {photo.emailSharingImage && (
+                    <Box className="image-wrapper" marginY="20px">
+                      <Image
+                        src={photo.emailSharingImage?.imageUrl}
+                        alt={photo.emailSharingImage?.altText}
+                        layout="responsive"
+                        width={photo.emailSharingImage?.width}
+                        height={photo.emailSharingImage?.height}
+                        sizes="(max-width: 400px) 100vw, 720px"
+                      />
+                    </Box>
+                  )}
 
-                    <Flex marginTop="major-2">
-                      <Modal.Disclosure
-                        use={Button}
-                        {...modal}
-                        marginLeft="auto"
-                        marginRight="major-1"
-                      >
-                        Close
-                      </Modal.Disclosure>
-                      <Button type="submit" palette="primary">
-                        Send
-                      </Button>
-                    </Flex>
-                  </Form>
-                </Formik>
-              </FormWrapper>
-            </>
-          ) : (
-            <Flex alignX="center" alignY="center">
-              {status.submitting && (
-                <>
-                  <Spinner fontSize="50px" />
-                  <Text.Block marginLeft="major-2">Sending email.</Text.Block>
-                </>
-              )}
-              {status.submitted && status.info.error && (
-                <>
-                  <Text.Block>Error: {status.info.error}</Text.Block>
-                </>
-              )}
-              {status.submitted && !status.info.error && (
-                <>
-                  <Text.Block>Your message is on its way!</Text.Block>
-                </>
-              )}
-            </Flex>
-          )}
+                  <Flex marginTop="major-2">
+                    <Modal.Disclosure
+                      use={Button}
+                      {...modal}
+                      marginLeft="auto"
+                      marginRight="major-1"
+                    >
+                      Close
+                    </Modal.Disclosure>
+                    <Button type="submit" palette="primary">
+                      Send
+                    </Button>
+                  </Flex>
+                </Form>
+              </Formik>
+            </FormWrapper>
+          </>
         </Card>
       </Modal>
     </>
