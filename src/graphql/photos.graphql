@@ -37,6 +37,19 @@ fragment PhotoInfo on Photo {
     isPortrait
     isPanoramic
   }
+  emailSharingImage {
+    id
+    imageName
+    fileExtension
+    imageUrl
+    altText
+    aspectRatio
+    size
+    width
+    height
+    isPortrait
+    isPanoramic
+  }
   images {
     id
     imageName

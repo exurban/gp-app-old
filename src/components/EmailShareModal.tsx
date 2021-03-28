@@ -83,7 +83,7 @@ const EmailShareModal: React.FC<Props> = ({ photo }) => {
     recipientEmail: "",
     message: "I thought you might like this photo.",
     // shareImageUrl: photo.images[0].imageUrl,
-    shareImageUrl: `https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo-1041.jpg`,
+    shareImageUrl: photo.emailSharingImage?.imageUrl || "",
     shareUrl: `https://gibbs-photography.com/image/${photo.sku}`
   };
 

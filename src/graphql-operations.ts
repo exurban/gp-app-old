@@ -265,8 +265,10 @@ export type Photo = {
   photographer?: Maybe<Photographer>;
   location?: Maybe<Location>;
   images: Array<Image>;
-  /** A 1,200px x 600px image for sharing. */
+  /** A 1,200px x 630px image for sharing. */
   sharingImage?: Maybe<Image>;
+  /** A jpg image for sharing. */
+  emailSharingImage?: Maybe<Image>;
   subjectsInPhoto?: Maybe<Array<PhotoSubject>>;
   tagsForPhoto?: Maybe<Array<PhotoTag>>;
   collectionsForPhoto?: Maybe<Array<PhotoCollection>>;
@@ -1041,6 +1043,7 @@ export type AddPhotoInput = {
   collectionIds?: Maybe<Array<Scalars["Int"]>>;
   imageId?: Maybe<Scalars["Int"]>;
   sharingImageId?: Maybe<Scalars["Int"]>;
+  emailSharingImageId?: Maybe<Scalars["Int"]>;
 };
 
 export type UpdatePhotoInput = {
@@ -1062,6 +1065,7 @@ export type UpdatePhotoInput = {
   priceModifier30?: Maybe<Scalars["Float"]>;
   imageId?: Maybe<Scalars["Int"]>;
   sharingImageId?: Maybe<Scalars["Int"]>;
+  emailSharingImageId?: Maybe<Scalars["Int"]>;
   photographerId?: Maybe<Scalars["Int"]>;
   locationId?: Maybe<Scalars["Int"]>;
   subjectIds?: Maybe<Array<Scalars["Int"]>>;
@@ -2075,6 +2079,22 @@ export type PhotoInfoFragment = { __typename?: "Photo" } & Pick<
         | "isPanoramic"
       >
     >;
+    emailSharingImage?: Maybe<
+      { __typename?: "Image" } & Pick<
+        Image,
+        | "id"
+        | "imageName"
+        | "fileExtension"
+        | "imageUrl"
+        | "altText"
+        | "aspectRatio"
+        | "size"
+        | "width"
+        | "height"
+        | "isPortrait"
+        | "isPanoramic"
+      >
+    >;
     images: Array<
       { __typename?: "Image" } & Pick<
         Image,
@@ -2548,6 +2568,29 @@ export const PhotoInfoFragmentDoc: DocumentNode<PhotoInfoFragment, unknown> = {
           {
             kind: "Field",
             name: { kind: "Name", value: "sharingImage" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "imageName" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "fileExtension" }
+                },
+                { kind: "Field", name: { kind: "Name", value: "imageUrl" } },
+                { kind: "Field", name: { kind: "Name", value: "altText" } },
+                { kind: "Field", name: { kind: "Name", value: "aspectRatio" } },
+                { kind: "Field", name: { kind: "Name", value: "size" } },
+                { kind: "Field", name: { kind: "Name", value: "width" } },
+                { kind: "Field", name: { kind: "Name", value: "height" } },
+                { kind: "Field", name: { kind: "Name", value: "isPortrait" } },
+                { kind: "Field", name: { kind: "Name", value: "isPanoramic" } }
+              ]
+            }
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "emailSharingImage" },
             selectionSet: {
               kind: "SelectionSet",
               selections: [
