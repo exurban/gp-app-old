@@ -1,17 +1,19 @@
 import Image from "next/image";
-import { Product } from "../graphql-operations";
-import { Box, Flex, Grid, Heading, Text, Divider, Button, styled } from "bumbag";
+import { Product, DeleteProductDocument, ShoppingBagItemsDocument } from "../graphql-operations";
+import { useMutation } from "@apollo/client";
+import { Box, Flex, Grid, Heading, Text, Divider, Button, styled, useToasts } from "bumbag";
 
 type Props = {
-  item: Product;
+  product: Product;
 };
 
-const BagItem: React.FC<Props> = ({ item }) => {
-  const photo = item.photo;
+const BagItem: React.FC<Props> = ({ product }) => {
+  const toasts = useToasts();
+  const photo = product.photo;
   const image = photo.images[0];
-  const print = item.print;
-  const mat = item.mat;
-  const frame = item.frame;
+  const print = product.print;
+  const mat = product.mat;
+  const frame = product.frame;
   const displayDimensions = image.isPortrait
     ? `${print.dimension1}"w x ${print.dimension2}"h`
     : `${print.dimension2}"w x ${print.dimension1}"h`;
@@ -19,6 +21,27 @@ const BagItem: React.FC<Props> = ({ item }) => {
   const StyledImage = styled(Image)`
     border-radius: 4px;
   `;
+
+  const [deleteProduct] = useMutation(DeleteProductDocument, {
+    onCompleted() {
+      toasts.success({
+        title: `Success`,
+        message: `Removed photo from your shopping bag.`
+      });
+    }
+  });
+
+  const onDelete = () => {
+    deleteProduct({
+      variables: { id: parseInt(product.id) },
+      refetchQueries: [
+        {
+          query: ShoppingBagItemsDocument,
+          variables: {}
+        }
+      ]
+    });
+  };
 
   return (
     <>
@@ -52,7 +75,7 @@ const BagItem: React.FC<Props> = ({ item }) => {
           paddingRight="12px"
           justifySelf="center"
         >
-          ${item.totalRetailPrice}
+          ${product.totalRetailPrice}
         </Flex>
         <Button
           gridRow="2"
@@ -61,6 +84,7 @@ const BagItem: React.FC<Props> = ({ item }) => {
           variant="ghost"
           color="info500"
           justifySelf="center"
+          onClick={() => onDelete()}
         >
           remove
         </Button>

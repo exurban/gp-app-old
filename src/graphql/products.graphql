@@ -83,3 +83,10 @@ mutation updateProduct($id: Int!, $input: UpdateProductInput!) {
     }
   }
 }
+
+mutation deleteProduct($id: Int!) {
+  deleteProduct(id: $id) {
+    success
+    message
+  }
+}

@@ -1,12 +1,15 @@
 import { Flex, Icon, Text } from "bumbag";
 import { signOut } from "next-auth/client";
 import React from "react";
+import { useRouter } from "next/router";
 
 type Props = {
   size: string;
 };
 
 const AccountItem: React.FC<Props> = ({ size }) => {
+  const router = useRouter();
+
   return (
     <Flex
       className="right-nav-item"
@@ -20,6 +23,7 @@ const AccountItem: React.FC<Props> = ({ size }) => {
         signOut();
         localStorage.removeItem("redirectUrl");
         localStorage.removeItem("cursor");
+        router.push("/");
       }}
     >
       <Icon aria-label="sign out" icon="regular-user-circle" margin="0 auto" fontSize="1.25rem" />

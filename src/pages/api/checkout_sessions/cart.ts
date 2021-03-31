@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { Product } from "../../../graphql-operations";
 
 /*
  * Product data can be loaded from anywhere. In this case, we’re loading it from
@@ -23,9 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     try {
       // Validate the cart details that were sent from the client.
-      const cartItems = req.body;
+      const products = req.body;
       // const line_items = validateCartItems(inventory, cartItems);
-      console.log({ cartItems });
+      console.log({ products });
       // Create Checkout Sessions from body params.
       const params: Stripe.Checkout.SessionCreateParams = {
         submit_type: "pay",
@@ -34,21 +35,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         shipping_address_collection: {
           allowed_countries: ["US", "CA"]
         },
-        line_items: [
-          {
-            price_data: {
-              currency: "USD",
-              product_data: {
-                name: `Matted and framed 24" x 36" photo.`
-              },
-              unit_amount: 24000
+        line_items: products.map((product: Product) => ({
+          price_data: {
+            currency: "USD",
+            product_data: {
+              name: product.photo.title,
+              images: [product.photo.emailSharingImage?.imageUrl]
             },
-            quantity: 1
-          }
-        ],
+            unit_amount: product.totalRetailPrice * 100
+          },
+          quantity: 1
+        })),
         mode: "payment",
-        success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${req.headers.origin}/use-shopping-cart`
+        // success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
+        // cancel_url: `${req.headers.origin}/use-shopping-cart`
+        success_url: `http://localhost:3000/checkout/success`,
+        cancel_url: `http://localhost:3000/checkout/cancel`
       };
       const checkoutSession: Stripe.Checkout.Session = await stripe.checkout.sessions.create(
         params

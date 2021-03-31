@@ -9,6 +9,7 @@ import BagItem from "../../components/BagItem";
 
 import { Heading, Text, Flex, Box, Divider, Button } from "bumbag";
 import { fetchPostJSON } from "../../utils/api-helpers";
+import getStripe from "../../utils/get-stripe";
 
 const ReviewOrderPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -56,6 +57,21 @@ const ReviewOrderPage: React.FC = () => {
       console.error(response.message);
       return;
     }
+    console.log({ response });
+
+    // Redirect to Checkout.
+    const stripe = await getStripe();
+    const { error } = await stripe!.redirectToCheckout({
+      // Make the id field from the Checkout Session creation API response
+      // available to this file, so you can provide it as parameter here
+      // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+      sessionId: response.id
+    });
+    // If `redirectToCheckout` fails due to a browser or network
+    // error, display the localized error message to your customer
+    // using `error.message`.
+    console.warn(error.message);
+    setIsLoading(false);
   };
 
   return (
@@ -65,7 +81,7 @@ const ReviewOrderPage: React.FC = () => {
         <Box key={product.id} width="100%" paddingTop="major-4">
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
           {/* @ts-ignore */}
-          <BagItem item={product} />
+          <BagItem product={product} />
         </Box>
       ))}
       <Flex flexDirection="column" width="40%" marginLeft="auto" marginRight="12px">
@@ -95,6 +111,7 @@ const ReviewOrderPage: React.FC = () => {
         marginLeft="auto"
         marginRight="0px"
         marginY="5rem"
+        disabled={isLoading}
         onClick={handleClick}
       >
         Checkout
