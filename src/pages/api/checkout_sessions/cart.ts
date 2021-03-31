@@ -40,6 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             currency: "USD",
             product_data: {
               name: product.photo.title,
+              description: product.photo.description,
               images: [product.photo.emailSharingImage?.imageUrl]
             },
             unit_amount: product.totalRetailPrice * 100
