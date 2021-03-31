@@ -82,7 +82,7 @@ const FeaturedCarousel: React.FC = () => {
         onSlideChanged={onSlideChanged}
       />
       {!isMobile && (
-        <NextButton variant="ghost" zIndex="20" onClick={slideNext}>
+        <NextButton variant="ghost" zIndex="20" onClick={() => slideNext()}>
           <Icon aria-label="next" icon="solid-chevron-right" />
         </NextButton>
       )}

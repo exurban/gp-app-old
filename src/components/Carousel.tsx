@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
-import { isMobile } from "react-device-detect";
+// import { isMobile } from "react-device-detect";
 
 type Props = {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -20,7 +20,7 @@ const Carousel: React.FC<Props> = ({ items, activeIndex, setActiveIndex }) => {
   return (
     <AliceCarousel
       autoWidth
-      disableButtonsControls={isMobile}
+      disableButtonsControls
       disableDotsControls
       infinite
       animationType="fadeout"

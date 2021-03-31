@@ -222,7 +222,7 @@ const Layout: React.FC = ({ children }) => {
                     <ActiveLink
                       activeClassName="active"
                       aria-label="Shopping Bag"
-                      href={`/gallery/user/shopping-bag`}
+                      href={`/shop/review-order`}
                       passHref={true}
                     >
                       <StyledItem className="nav-link" variant="rightNavText">

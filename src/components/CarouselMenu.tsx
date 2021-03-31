@@ -305,7 +305,6 @@ const CarouselMenu: React.FC<Props> = ({ photo }) => {
               <Text>Add to Shopping Bag</Text>
             </DropdownMenu.Item>
           )}
-          <DropdownMenu.Divider />
         </>
       }
     >

@@ -60,6 +60,7 @@ const Photo: React.FC = () => {
   const sharingImage = photo.sharingImage || image;
 
   const pgName = photo?.photographer?.name as string;
+  console.log({ pgName });
   const locationName = photo?.location?.name as string;
   const subjects = photo?.subjectsInPhoto?.map(x => x.subject);
   const tags = photo?.tagsForPhoto?.map(x => x.tag);

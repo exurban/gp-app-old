@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { useSession } from "next-auth/client";
-import { loadStripe } from "@stripe/stripe-js";
 
 import { ShoppingBagItemsDocument } from "../../graphql-operations";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -8,11 +8,10 @@ import Loader from "../../components/Loader";
 import BagItem from "../../components/BagItem";
 
 import { Heading, Text, Flex, Box, Divider, Button } from "bumbag";
-
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+import { fetchPostJSON } from "../../utils/api-helpers";
 
 const ReviewOrderPage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [session] = useSession();
 
   const { loading, error, data } = useQuery(ShoppingBagItemsDocument);
@@ -49,30 +48,13 @@ const ReviewOrderPage: React.FC = () => {
   const shippingCharge = 20;
 
   const handleClick = async () => {
-    // Get Stripe.js instance
-    const stripe = await stripePromise;
+    setIsLoading(true);
 
-    if (!stripe) {
-      console.error(`Failed to resolve Stripe promise.`);
+    const response = await fetchPostJSON(`/api/checkout_sessions/cart`, products);
+
+    if (response.statusCode === 500) {
+      console.error(response.message);
       return;
-    }
-    // Call your backend to create the Checkout Session
-    const response = await fetch("https://gibbs-photography.com/create-checkout-session", {
-      method: "POST"
-    });
-
-    const session = await response.json();
-
-    // When the customer clicks on the button, redirect them to Checkout.
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id
-    });
-
-    if (result.error) {
-      console.log(`Error: ${JSON.stringify(result.error, null, 2)}`);
-      // If `redirectToCheckout` fails due to a browser or network
-      // error, display the localized error message to your customer
-      // using `result.error.message`.
     }
   };
 
@@ -80,7 +62,7 @@ const ReviewOrderPage: React.FC = () => {
     <Flex flexDirection="column" width="90vw" maxWidth="800px" marginX="auto" marginY="major-5">
       <Heading>Review Your Order</Heading>
       {products.map(product => (
-        <Box width="100%" paddingTop="major-4">
+        <Box key={product.id} width="100%" paddingTop="major-4">
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
           {/* @ts-ignore */}
           <BagItem item={product} />
