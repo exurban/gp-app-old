@@ -51,6 +51,8 @@ const ReviewOrderPage: React.FC = () => {
   const handleClick = async () => {
     setIsLoading(true);
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const response = await fetchPostJSON(`/api/checkout_sessions/cart`, products);
 
     if (response.statusCode === 500) {
@@ -61,6 +63,7 @@ const ReviewOrderPage: React.FC = () => {
 
     // Redirect to Checkout.
     const stripe = await getStripe();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { error } = await stripe!.redirectToCheckout({
       // Make the id field from the Checkout Session creation API response
       // available to this file, so you can provide it as parameter here
