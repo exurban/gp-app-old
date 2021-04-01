@@ -28,7 +28,7 @@ const CheckoutResultPage: NextPage = () => {
       </Heading>
 
       <Text.Block marginTop="major-5">
-        {name}, your payment of ${paymentAmount} was processed successfully!
+        {name}, your payment of ${paymentAmount} was processed successfully.
       </Text.Block>
       <Text.Block marginTop="major-3"> A receipt has been sent {email}.</Text.Block>
       <Text.Block marginTop="major-3">
