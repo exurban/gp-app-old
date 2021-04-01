@@ -9,7 +9,8 @@ import {
   MatInfoFragment,
   FrameInfoFragment,
   AddProductDocument,
-  AddProductMutationVariables
+  AddProductMutationVariables,
+  ShoppingBagItemsDocument
 } from "../../../graphql-operations";
 import Loader from "../../../components/Loader";
 import ErrorMessage from "../../../components/ErrorMessage";
@@ -35,6 +36,12 @@ const ConfigureForPurchasePage: React.FC = () => {
   const [selectedFrame, setSelectedFrame] = useState<FrameInfoFragment | undefined>(undefined);
 
   const [addProduct] = useMutation(AddProductDocument, {
+    refetchQueries: [
+      {
+        query: ShoppingBagItemsDocument,
+        variables: {}
+      }
+    ],
     onCompleted(data) {
       // * if user was signed in, product was added to bag upon creation--push to review-order
       if (session && data.addProduct.success && !data.addProduct.newProduct) {
