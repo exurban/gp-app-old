@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 
 import { fetchGetJSON } from "../../utils/api-helpers";
 import useSWR from "swr";
-import PrintObject from "../../components/PrintObject";
 
 import { Heading, Box, Text } from "bumbag";
 
