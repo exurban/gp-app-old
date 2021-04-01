@@ -223,6 +223,40 @@ export type Frame = {
   updatedAt: Scalars["DateTime"];
 };
 
+export type Address = {
+  __typename?: "Address";
+  id: Scalars["ID"];
+  line1: Scalars["String"];
+  line2: Scalars["String"];
+  city: Scalars["String"];
+  state: Scalars["String"];
+  country: Scalars["String"];
+  postalCode: Scalars["String"];
+  orders: Array<Order>;
+  createdAt: Scalars["DateTime"];
+  updatedAt: Scalars["DateTime"];
+};
+
+export type Order = {
+  __typename?: "Order";
+  id: Scalars["ID"];
+  orderStatus: OrderStatus;
+  products: Array<Product>;
+  shipToAddress: Address;
+  user: User;
+  createdAt: Scalars["DateTime"];
+  updatedAt: Scalars["DateTime"];
+};
+
+/** Order status */
+export enum OrderStatus {
+  Paid = "PAID",
+  Placed = "PLACED",
+  Shipped = "SHIPPED",
+  Fulfilled = "FULFILLED",
+  Problem = "PROBLEM",
+}
+
 export type Product = {
   __typename?: "Product";
   id: Scalars["ID"];
@@ -231,9 +265,11 @@ export type Product = {
   mat?: Maybe<Mat>;
   frame?: Maybe<Frame>;
   shoppingBag?: Maybe<User>;
+  order: Order;
   totalRetailPrice: Scalars["Float"];
   createdAt: Scalars["DateTime"];
   updatedAt: Scalars["DateTime"];
+  productSummary: Scalars["String"];
 };
 
 export type Photo = {
@@ -298,6 +334,7 @@ export type User = {
   roles: Array<Scalars["String"]>;
   isSubscribed: Scalars["Boolean"];
   userFavorites: Array<UserFavorite>;
+  orders: Array<Order>;
   shoppingBagItems?: Maybe<Array<Product>>;
   createdAt: Scalars["DateTime"];
   updatedAt: Scalars["DateTime"];
@@ -2227,7 +2264,7 @@ export type PrintInfoFragment = { __typename?: "Print" } & Pick<
 
 export type ProductInfoFragment = { __typename?: "Product" } & Pick<
   Product,
-  "id" | "totalRetailPrice" | "createdAt" | "updatedAt"
+  "id" | "productSummary" | "totalRetailPrice" | "createdAt" | "updatedAt"
 > & {
     photo: { __typename?: "Photo" } & PhotoInfoFragment;
     print: { __typename?: "Print" } & PrintInfoFragment;
@@ -2243,7 +2280,7 @@ export type ProductQuery = { __typename?: "Query" } & {
   product?: Maybe<
     { __typename?: "Product" } & Pick<
       Product,
-      "id" | "totalRetailPrice" | "createdAt" | "updatedAt"
+      "id" | "productSummary" | "totalRetailPrice" | "createdAt" | "updatedAt"
     > & {
         photo: { __typename?: "Photo" } & PhotoInfoFragment;
         print: { __typename?: "Print" } & PrintInfoFragment;
@@ -2446,7 +2483,11 @@ export type ShoppingBagItemsQuery = { __typename?: "Query" } & {
       Array<
         { __typename?: "Product" } & Pick<
           Product,
-          "id" | "totalRetailPrice" | "createdAt" | "updatedAt"
+          | "id"
+          | "totalRetailPrice"
+          | "productSummary"
+          | "createdAt"
+          | "updatedAt"
         > & {
             photo: { __typename?: "Photo" } & PhotoInfoFragment;
             print: { __typename?: "Print" } & PrintInfoFragment;
@@ -2939,6 +2980,7 @@ export const ProductInfoFragmentDoc: DocumentNode<
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "productSummary" } },
           { kind: "Field", name: { kind: "Name", value: "totalRetailPrice" } },
           {
             kind: "Field",
@@ -4246,6 +4288,10 @@ export const ProductDocument: DocumentNode<
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 {
                   kind: "Field",
+                  name: { kind: "Name", value: "productSummary" },
+                },
+                {
+                  kind: "Field",
                   name: { kind: "Name", value: "totalRetailPrice" },
                 },
                 {
@@ -5401,6 +5447,10 @@ export const ShoppingBagItemsDocument: DocumentNode<
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "totalRetailPrice" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "productSummary" },
                       },
                       {
                         kind: "Field",

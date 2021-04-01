@@ -1,5 +1,6 @@
 fragment ProductInfo on Product {
   id
+  productSummary
   totalRetailPrice
   photo {
     ...PhotoInfo
@@ -20,6 +21,7 @@ fragment ProductInfo on Product {
 query product($id: Int!) {
   product(id: $id) {
     id
+    productSummary
     totalRetailPrice
     photo {
       ...PhotoInfo

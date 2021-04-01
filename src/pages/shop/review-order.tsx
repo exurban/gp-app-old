@@ -46,7 +46,17 @@ const ReviewOrderPage: React.FC = () => {
     orderPrice += product.totalRetailPrice;
   });
 
-  const shippingCharge = 20;
+  // base shipping charge is $6 per item (applies only to unmounted paper prints)
+  let shippingCharge = 6 * products.length;
+  const mattedFramedOrMetalProducts = products.filter(
+    x => x.mat != null || x.frame != null || x.print.type != "paper"
+  );
+
+  console.log(
+    `Found ${mattedFramedOrMetalProducts.length} products that need additional shipping charges`
+  );
+
+  shippingCharge += 10 * mattedFramedOrMetalProducts.length;
 
   const handleClick = async () => {
     setIsLoading(true);
