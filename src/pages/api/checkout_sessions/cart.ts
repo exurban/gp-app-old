@@ -45,26 +45,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         shipping_address_collection: {
           allowed_countries: ["US", "CA"]
         },
-        line_items: products.map((product: ProductInfoFragment) => ({
-          price_data: {
-            currency: "USD",
-            product_data: {
-              name: product.photo.title,
-              description: product.productSummary,
-              images: [product.photo.emailSharingImage?.imageUrl],
-              metadata: {
-                product: product.productSummary,
-                photo: product.photo.sku,
-                print: product.print.printSku,
-                mat: product.mat?.matSku,
-                frame: product.frame?.frameSku
-              }
+        line_items: [
+          products.map((product: ProductInfoFragment) => ({
+            price_data: {
+              currency: "USD",
+              product_data: {
+                name: product.photo.title,
+                description: product.productSummary,
+                images: [product.photo.emailSharingImage?.imageUrl],
+                metadata: {
+                  product: product.productSummary,
+                  photo: product.photo.sku,
+                  print: product.print.printSku,
+                  mat: product.mat?.matSku,
+                  frame: product.frame?.frameSku
+                }
+              },
+              unit_amount: product.totalRetailPrice * 100
             },
-            unit_amount: product.totalRetailPrice * 100
-          },
-          quantity: 1
-          // tax_rates: [`txr_1Ib8rUHWmZoCYYQSOyRPfJgi`]
-        })),
+            quantity: 1
+            // tax_rates: [`txr_1Ib8rUHWmZoCYYQSOyRPfJgi`]
+          })),
+          {
+            price_data: {
+              currency: "USD",
+              product_data: {
+                name: `Shipping`,
+                description: `Ground shipping. Please allow 2-3 weeks for delivery.`
+              },
+              unit_amount: 3000
+            }
+          }
+        ],
         mode: "payment",
         success_url: `${req.headers.origin}/checkout/result?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}/cancel`
