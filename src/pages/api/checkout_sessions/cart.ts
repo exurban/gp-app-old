@@ -28,6 +28,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // * fetch products from API and compare by filtering on matches
 
+      // base shipping charge is $6 per item (applies only to unmounted paper prints)
+      let shippingCharge = 6 * products.length;
+      const mattedFramedOrMetalProducts = products.filter(
+        (x: ProductInfoFragment) => x.mat != null || x.frame != null || x.print.type != "paper"
+      );
+
+      console.log(
+        `Found ${mattedFramedOrMetalProducts.length} products that need additional shipping charges`
+      );
+
+      shippingCharge += 10 * mattedFramedOrMetalProducts.length;
+      shippingCharge *= 100;
+
       // * create an order once payment has been processed
       // const taxRate = await stripe.taxRates.retrieve(
       //   'txr_1Ib8rUHWmZoCYYQSOyRPfJgi'
@@ -73,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 name: `Shipping`,
                 description: `Ground shipping. Please allow 2-3 weeks for delivery.`
               },
-              unit_amount: 3000
+              unit_amount: { shippingCharge }
             }
           }
         ],
