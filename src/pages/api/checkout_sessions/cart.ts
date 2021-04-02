@@ -28,28 +28,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // * fetch products from API and compare by filtering on matches
 
-      // base shipping charge is $6 per item (applies only to unmounted paper prints)
-      let shippingCharge = 6 * products.length;
-      const mattedFramedOrMetalProducts = products.filter(
-        (x: ProductInfoFragment) => x.mat != null || x.frame != null || x.print.type != "paper"
-      );
-
-      console.log(
-        `Found ${mattedFramedOrMetalProducts.length} products that need additional shipping charges`
-      );
-
-      shippingCharge += 10 * mattedFramedOrMetalProducts.length;
-      shippingCharge *= 100;
-
       // * create an order once payment has been processed
       // const taxRate = await stripe.taxRates.retrieve(
       //   'txr_1Ib8rUHWmZoCYYQSOyRPfJgi'
       // );
       // const line_items = validateCartItems(inventory, cartItems);
-      const prod = products[0];
-      console.log(JSON.stringify(prod, null, 2));
-      console.log(`product summary: ${prod.productSummary}`);
-      console.log(`image: ${prod.photo.images[0].imageUrl}`);
+      const line_items = products.map((product: ProductInfoFragment) => ({
+        price_data: {
+          currency: "USD",
+          product_data: {
+            name: product.photo.title,
+            description: product.productSummary,
+            images: [product.photo.emailSharingImage?.imageUrl],
+            metadata: {
+              product: product.productSummary,
+              photo: product.photo.sku,
+              print: product.print.printSku,
+              mat: product.mat?.matSku,
+              frame: product.frame?.frameSku
+            }
+          },
+          unit_amount: product.totalRetailPrice * 100
+        },
+        quantity: 1
+        // tax_rates: [`txr_1Ib8rUHWmZoCYYQSOyRPfJgi`]
+      }));
+
+      let shippingCharge = 6 * products.length;
+      const mattedFramedOrMetalProducts = products.filter(
+        (x: ProductInfoFragment) => x.mat != null || x.frame != null || x.print.type != "paper"
+      );
+
+      shippingCharge += 10 * mattedFramedOrMetalProducts.length;
+      shippingCharge *= 100;
+
+      const shippingLineItem = {
+        price_data: {
+          currency: "USD",
+          product_data: {
+            name: `Shipping`,
+            description: `Ground shipping. Please allow 2-3 weeks for delivery.`
+          },
+          unit_amount: shippingCharge
+        },
+        quantity: 1
+      };
+
+      line_items.push(shippingLineItem);
+
       // Create Checkout Sessions from body params.
       const params: Stripe.Checkout.SessionCreateParams = {
         submit_type: "pay",
@@ -58,38 +84,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         shipping_address_collection: {
           allowed_countries: ["US", "CA"]
         },
-        line_items: [
-          products.map((product: ProductInfoFragment) => ({
-            price_data: {
-              currency: "USD",
-              product_data: {
-                name: product.photo.title,
-                description: product.productSummary,
-                images: [product.photo.emailSharingImage?.imageUrl],
-                metadata: {
-                  product: product.productSummary,
-                  photo: product.photo.sku,
-                  print: product.print.printSku,
-                  mat: product.mat?.matSku,
-                  frame: product.frame?.frameSku
-                }
-              },
-              unit_amount: product.totalRetailPrice * 100
-            },
-            quantity: 1
-            // tax_rates: [`txr_1Ib8rUHWmZoCYYQSOyRPfJgi`]
-          })),
-          {
-            price_data: {
-              currency: "USD",
-              product_data: {
-                name: `Shipping`,
-                description: `Ground shipping. Please allow 2-3 weeks for delivery.`
-              },
-              unit_amount: { shippingCharge }
-            }
-          }
-        ],
+        line_items: line_items,
+        // {
+        //   price_data: {
+        //     currency: "USD",
+        //     product_data: {
+        //       name: `Shipping`,
+        //       description: `Ground shipping. Please allow 2-3 weeks for delivery.`
+        //     },
+        //     unit_amount: 3000
+        //   }
+        // }
+
         mode: "payment",
         success_url: `${req.headers.origin}/checkout/result?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}/cancel`
