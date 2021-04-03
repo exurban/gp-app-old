@@ -11,59 +11,11 @@ import ErrorMessage from "../../components/ErrorMessage";
 import Carousel from "../../components/Carousel";
 import CarouselItem from "../../components/CarouselItem";
 import CarouselMenu from "../../components/CarouselMenu";
-import { space, Text, Button, Icon, styled } from "bumbag";
-import { isMobile } from "react-device-detect";
+import { space, Text, styled } from "bumbag";
 
 const PhotoCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activePhoto, setActivePhoto] = useState<PhotoInfoFragment>();
-
-  // const handleKeyDown = (event: { keyCode: number }) => {
-  //   switch (event.keyCode) {
-  //     case 37:
-  //     case 38: {
-  //       slidePrev();
-  //       break;
-  //     }
-  //     case 39:
-  //     case 40: {
-  //       slideNext();
-  //       break;
-  //     }
-  //     case 73: {
-  //       console.log(`show info`);
-  //       break;
-  //     }
-  //     case 27: {
-  //       console.log(`hide info`);
-  //       break;
-  //     }
-  //     default:
-  //       console.log(`key down ${event.keyCode}`);
-  //   }
-  // };
-
-  // const slidePrev = () => {
-  //   if (activeIndex === 0) {
-  //     setActiveIndex(total - 1);
-  //   } else {
-  //     setActiveIndex(activeIndex - 1);
-  //   }
-  // };
-  // const slideNext = () => {
-  //   if (activeIndex + 1 === total) {
-  //     setActiveIndex(0);
-  //   } else {
-  //     setActiveIndex(activeIndex + 1);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("keydown", handleKeyDown);
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (sku && typeof sku === "string") {
@@ -102,38 +54,14 @@ const PhotoCarousel: React.FC = () => {
 
   const items = photos.map((photo, idx) => <CarouselItem photo={photo} idx={idx} />);
 
-  const slidePrev = () => {
-    if (activeIndex === 0) {
-      setActiveIndex(total - 1);
-    } else {
-      setActiveIndex(activeIndex - 1);
-    }
-  };
-  const slideNext = () => {
-    if (activeIndex + 1 === total) {
-      setActiveIndex(0);
-    } else {
-      setActiveIndex(activeIndex + 1);
-    }
-  };
-
   return (
     <>
       <Counter>
         {activeIndex + 1} of {total}
       </Counter>
       {activePhoto && <CarouselMenu photo={photos[activeIndex]} />}
-      {!isMobile && (
-        <PrevButton variant="ghost" zIndex="20" onClick={() => slidePrev()}>
-          <Icon aria-label="previous" icon="solid-chevron-left" />
-        </PrevButton>
-      )}
+
       <Carousel items={items} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
-      {!isMobile && (
-        <NextButton variant="ghost" zIndex="20" onClick={() => slideNext()}>
-          <Icon aria-label="next" icon="solid-chevron-right" />
-        </NextButton>
-      )}
     </>
   );
 };
@@ -154,29 +82,4 @@ const Counter = styled(Text)`
     color: #fff;
     background-color: rgba(27, 26, 28, 0.9);
   }
-`;
-
-const ArrowButton = styled(Button)`
-  z-index: 20;
-  position: absolute;
-  top: 50vh;
-  font-size: 60px;
-  color: rgba(186, 187, 186, 0.4);
-  transition: color 0.25s ease;
-
-  :hover {
-    color: #fff;
-  }
-
-  :focus {
-    box-shadow: none;
-  }
-`;
-
-const PrevButton = styled(ArrowButton)`
-  left: 10px;
-`;
-
-const NextButton = styled(ArrowButton)`
-  right: 10px;
 `;
