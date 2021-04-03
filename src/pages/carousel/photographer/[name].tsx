@@ -29,9 +29,7 @@ const PhotographerCarousel: React.FC = () => {
     if (!photos || !activeIndex) {
       return;
     }
-    console.log(
-      `useEffect happened. selected photo at index: ${activeIndex}: ${photos[activeIndex].sku}`
-    );
+
     setActivePhoto(photos[activeIndex]);
   }, [activeIndex, setActiveIndex]);
 
