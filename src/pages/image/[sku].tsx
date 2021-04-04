@@ -187,6 +187,7 @@ const Photo: React.FC = () => {
           <StyledImage
             className="image-wrapper"
             src={image.imageUrl}
+            alt={image.altText}
             layout="responsive"
             width={image.width}
             height={image.height}
@@ -219,6 +220,7 @@ const Photo: React.FC = () => {
           <Flex flexDirection="row" width="100%" alignX="center" marginY="major-3">
             {inFavorites ? (
               <Button
+                aria-label="view in favorites"
                 iconBefore="regular-star"
                 marginX="major-2"
                 onClick={() => router.push(`/user/favorites`)}
@@ -227,6 +229,7 @@ const Photo: React.FC = () => {
               </Button>
             ) : (
               <Button
+                aria-label="add to favorites"
                 iconBefore="regular-star"
                 marginX="major-2"
                 onClick={() => addPhotoToFavorites()}
@@ -236,6 +239,7 @@ const Photo: React.FC = () => {
             )}
             {inShoppingBag ? (
               <Button
+                aria-label="view in shopping bag"
                 iconBefore="solid-shopping-bag"
                 marginX="major-2"
                 onClick={() => router.push(`/shop/options/${photo.sku}`)}
@@ -244,6 +248,7 @@ const Photo: React.FC = () => {
               </Button>
             ) : (
               <Button
+                aria-label="add to shopping bag"
                 iconBefore="solid-shopping-bag"
                 marginX="major-2"
                 onClick={() => router.push(`/shop/options/${photo.sku}`)}
