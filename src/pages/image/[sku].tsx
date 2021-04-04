@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
+import Head from "next/head";
 import { useQuery, useMutation } from "@apollo/client";
 import { addApolloState, initializeApollo } from "../../lib/apolloClient";
 import { useSession } from "next-auth/client";
 import { useRouter } from "next/router";
-import { NextSeo } from "next-seo";
 import Image from "next/image";
 import {
   PhotoInfoFragment,
@@ -143,36 +143,44 @@ const Photo: React.FC = () => {
     return bagItemIds ? bagItemIds.includes(photo.id) : false;
   }, [bagItems]);
 
-  // const title = `${photo.title}`;
-  // const description = `${photo.description}`;
+  const pageTitle =
+    photo.title && photo.title != "Untitled"
+      ? `Gibbs Photography | ${photo.title}`
+      : `Gibbs Photography`;
+
+  const description =
+    photo.description && photo.description != "No description provided."
+      ? `Gibbs Photography | ${photo.description}`
+      : `Gibbs Photography | Nature & Landscape Photography`;
+
+  const twitterHandle = `@gibbs_photog`;
+  const siteName = `Gibbs Photography`;
+  const cardType = `summary_large_image`;
 
   return (
     <>
-      <NextSeo
-        title="Gibbs Photography"
-        description="Gibbs Photography | Nature & Landscape Photography"
-        openGraph={{
-          type: "website",
-          locale: "en_US",
-          url: "https://www.gibbs-photography.com",
-          site_name: "Gibbs Photography",
-          title: "Gibbs Photography",
-          description: `Gibbs Photography | Nature & Landscape Photography`,
-          images: [
-            {
-              url: sharingImage.imageUrl,
-              width: sharingImage.width,
-              height: sharingImage.height,
-              alt: sharingImage.altText
-            }
-          ]
-        }}
-        twitter={{
-          handle: "@gibbs_photog",
-          site: "https://gibbs-photography.com",
-          cardType: "summary_large_image"
-        }}
-      />
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charSet="utf-8" />
+        <meta name="description" content={description}></meta>
+        <meta
+          property="og:url"
+          content={`https://gibbs-photography.com/image/${photo.sku}`}
+          key="ogurl"
+        />
+        <meta property="og:title" content={pageTitle} key="ogtitle" />
+        <meta property="og:description" content={description} key="ogdesc" />
+        <meta property="og:image" content={sharingImage.imageUrl} key="ogimage" />
+        <meta property="og:site_name" content={siteName} key="ogsitename" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content={cardType} key="twcard" />
+        <meta name="twitter:creator" content={twitterHandle} key="twhandle" />
+        <meta property="twitter:domain" content="gibbs-photography.com" key="twdomain" />
+
+        <meta name="twitter:image" content={sharingImage.imageUrl} key="twimage" />
+      </Head>
 
       <Flex width="100%" alignX="center" marginY="major-4">
         <Flex width="90vw" maxWidth="720px" flexDirection="column">
