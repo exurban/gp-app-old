@@ -2,28 +2,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Heading, Paragraph, Button, Flex, Text } from "bumbag";
-import { NextSeo } from "next-seo";
 
 const IndexPage: React.FC = () => {
   return (
     <>
-      <NextSeo
-        title="Gibbs Photography"
-        description="Gibbs Photography | Nature & Landscape Photography"
-        openGraph={{
-          type: "website",
-          locale: "en_US",
-          url: "https://www.gibbs-photography.com",
-          site_name: "Gibbs Photography",
-          title: "Gibbs Photography",
-          description: `Gibbs Photography | Nature & Landscape Photography`
-        }}
-        twitter={{
-          handle: "@gibbs_photog",
-          site: "https://gibbs-photography.com",
-          cardType: "summary_large_image"
-        }}
-      />
       <Flex
         alignX="center"
         width="100vw"
