@@ -16,12 +16,7 @@ const IndexPage: React.FC = () => {
           url: "https://www.gibbs-photography.com",
           site_name: "Gibbs Photography",
           title: "Gibbs Photography",
-          description: `Gibbs Photography | Nature & Landscape Photography`,
-          images: [
-            {
-              url: `https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1119-1612566116438.webp`
-            }
-          ]
+          description: `Gibbs Photography | Nature & Landscape Photography`
         }}
         twitter={{
           handle: "@gibbs_photog",

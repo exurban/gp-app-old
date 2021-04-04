@@ -10,7 +10,7 @@ const FeaturedGallery: React.FC = () => {
   const router = useRouter();
   const size = useBreakpointValue({
     default: "default",
-    "max-tablet": "small"
+    "max-desktop": "small"
   });
 
   const { loading, error, data } = useQuery(AllFeaturedPhotosDocument);
@@ -35,8 +35,8 @@ const FeaturedGallery: React.FC = () => {
       >
         <Flex justifyContent="flex-end" alignItems="flex-end" width="80vw" marginX="auto">
           <Text.Block
-            fontSize={{ default: "500", "max-tablet": "300" }}
-            fontWeight={{ default: "500", "max-tablet": "300" }}
+            fontSize={{ default: "500", "max-desktop": "300" }}
+            fontWeight={{ default: "500", "max-desktop": "300" }}
             marginRight="major-2"
           >
             {total} photos
@@ -46,7 +46,8 @@ const FeaturedGallery: React.FC = () => {
               palette="primary"
               aria-label="view larger in carousel"
               size={size}
-              fontSize={{ default: "500", "max-tablet": "300" }}
+              fontSize={{ default: "500", "max-desktop": "300" }}
+              fontWeight={{ default: "500", "max-desktop": "300" }}
               onClick={() => router.push(`/carousel/featured`)}
             >
               <Icon icon="solid-expand" />
