@@ -178,8 +178,6 @@ const Photo: React.FC = () => {
         <meta name="twitter:card" content={cardType} key="twcard" />
         <meta name="twitter:creator" content={twitterHandle} key="twhandle" />
         <meta property="twitter:domain" content="gibbs-photography.com" key="twdomain" />
-
-        <meta name="twitter:image" content={sharingImage.imageUrl} key="twimage" />
       </Head>
 
       <Flex width="100%" alignX="center" marginY="major-4">
