@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
-import Head from "next/head";
 import { useQuery, useMutation } from "@apollo/client";
 import { addApolloState, initializeApollo } from "../../lib/apolloClient";
 import { useSession } from "next-auth/client";
@@ -30,6 +29,7 @@ import {
   useToasts
 } from "bumbag";
 import { TwitterShareButton, TwitterIcon, FacebookShareButton, FacebookIcon } from "react-share";
+import { NextSeo } from "next-seo";
 
 const Photo: React.FC = () => {
   const [session] = useSession();
@@ -155,30 +155,33 @@ const Photo: React.FC = () => {
 
   const twitterHandle = `@gibbs_photog`;
   const siteName = `Gibbs Photography`;
-  const cardType = `summary_large_image`;
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta charSet="utf-8" />
-        <meta name="description" content={description}></meta>
-        <meta
-          property="og:url"
-          content={`https://gibbs-photography.com/image/${photo.sku}`}
-          key="ogurl"
-        />
-        <meta property="og:title" content={pageTitle} key="ogtitle" />
-        <meta property="og:description" content={description} key="ogdesc" />
-        <meta property="og:image" content={sharingImage.imageUrl} key="ogimage" />
-        <meta property="og:site_name" content={siteName} key="ogsitename" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content={cardType} key="twcard" />
-        <meta name="twitter:creator" content={twitterHandle} key="twhandle" />
-        <meta property="twitter:domain" content="gibbs-photography.com" key="twdomain" />
-      </Head>
+      <NextSeo
+        title={pageTitle}
+        description={description}
+        openGraph={{
+          type: "website",
+          locale: "en_US",
+          url: "https://www.gibbs-photography.com",
+          site_name: siteName,
+          title: "Gibbs Photography",
+          description: `Gibbs Photography | Nature & Landscape Photography`,
+          images: [
+            {
+              url: sharingImage.imageUrl,
+              width: sharingImage.width,
+              height: sharingImage.height
+            }
+          ]
+        }}
+        twitter={{
+          handle: twitterHandle,
+          site: "https://gibbs-photography.com",
+          cardType: "summary_large_image"
+        }}
+      />
 
       <Flex width="100%" alignX="center" marginY="major-4">
         <Flex width="90vw" maxWidth="720px" flexDirection="column">
