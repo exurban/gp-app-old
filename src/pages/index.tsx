@@ -8,15 +8,15 @@ const IndexPage: React.FC = () => {
   return (
     <>
       <NextSeo
-        title="Index Page"
-        description="Index Page description"
+        title="Gibbs Photography"
+        description="Gibbs Photography | Nature & Landscape Photography"
         openGraph={{
           type: "website",
           locale: "en_US",
           url: "https://www.gibbs-photography.com",
           site_name: "Gibbs Photography",
-          title: "Index Page",
-          description: `Description for Index Page`,
+          title: "Gibbs Photography",
+          description: `Gibbs Photography | Nature & Landscape Photography`,
           images: [
             {
               url: `https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1119-1612566116438.webp`
