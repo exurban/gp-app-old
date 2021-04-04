@@ -36,8 +36,6 @@ const PhotographerCarousel: React.FC = () => {
   const router = useRouter();
   const { name, sku } = router.query;
 
-  console.log(`should be fetching photos for ${name}`);
-
   // * fetch all photos in section
   const input = { name: name } as AllPhotosByPhotographerInput;
   const { loading, error, data } = useQuery(AllPhotosByPhotographerDocument, {

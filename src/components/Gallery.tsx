@@ -1,17 +1,7 @@
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { AllPhotosOfSubjectDocument, AllPhotosOfSubjectInput } from "../graphql-operations";
-import {
-  Flex,
-  Box,
-  Icon,
-  Heading,
-  Button,
-  Tooltip,
-  useBreakpointValue,
-  useBreakpoint
-} from "bumbag";
-import { NextSeo } from "next-seo";
+import { Flex, Box, Icon, Text, Button, Tooltip, useBreakpointValue, useBreakpoint } from "bumbag";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
 import GalleryHeader from "./GalleryHeader";
@@ -25,7 +15,7 @@ const Gallery: React.FC<Props> = ({ input }) => {
   const router = useRouter();
   const size = useBreakpointValue({
     default: "default",
-    "max-tablet": "small"
+    "max-desktop": "small"
   });
   const isMinDesktopAndOver = useBreakpoint("min-desktop");
 
@@ -45,15 +35,6 @@ const Gallery: React.FC<Props> = ({ input }) => {
 
   return (
     <>
-      <NextSeo
-        title="Gallery data"
-        description="Gallery description"
-        openGraph={{
-          title: "Gallery data",
-          description: "Gallery description"
-        }}
-      />
-
       <Flex flexDirection="row" width="80vw" marginX="auto" marginTop="major-3">
         <GalleryHeader
           image={subjectInfo.coverImage}
@@ -70,15 +51,20 @@ const Gallery: React.FC<Props> = ({ input }) => {
         zIndex="2"
       >
         <Flex justifyContent="flex-end" alignItems="flex-end" width="80vw" marginX="auto">
-          <Heading use="h4" marginRight="major-2">
+          <Text.Block
+            fontSize={{ default: "500", "max-desktop": "300" }}
+            fontWeight={{ default: "500", "max-desktop": "300" }}
+            marginRight="major-2"
+          >
             {total} photos
-          </Heading>
+          </Text.Block>
           <Tooltip placement="bottom" content="View larger images in a carousel">
             <Button
               palette="primary"
               aria-label="view larger in carousel"
               size={size}
-              fontSize={{ default: "500", "max-tablet": "300" }}
+              fontSize={{ default: "500", "max-desktop": "300" }}
+              fontWeight={{ default: "500", "max-desktop": "300" }}
               onClick={() =>
                 router.push(`/carousel/${encodeURIComponent(subjectInfo.name.toLowerCase())}`)
               }

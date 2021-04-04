@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { AllFeaturedPhotosDocument } from "../graphql-operations";
-import { Flex, Box, Icon, Heading, Button, Tooltip, useBreakpointValue } from "bumbag";
+import { Flex, Box, Icon, Text, Button, Tooltip, useBreakpointValue } from "bumbag";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
 import Slide from "./Slide";
@@ -34,9 +34,13 @@ const FeaturedGallery: React.FC = () => {
         zIndex="2"
       >
         <Flex justifyContent="flex-end" alignItems="flex-end" width="80vw" marginX="auto">
-          <Heading use="h4" marginRight="major-2">
+          <Text.Block
+            fontSize={{ default: "500", "max-tablet": "300" }}
+            fontWeight={{ default: "500", "max-tablet": "300" }}
+            marginRight="major-2"
+          >
             {total} photos
-          </Heading>
+          </Text.Block>
           <Tooltip placement="bottom" content="View larger images in a carousel">
             <Button
               palette="primary"

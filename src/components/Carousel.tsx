@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { isMobile } from "react-device-detect";
@@ -11,10 +11,16 @@ type Props = {
   activeIndex: number;
   setActiveIndex: Dispatch<SetStateAction<number>>;
 };
-const Carousel: React.FC<Props> = ({ items }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const slidePrev = () => setActiveIndex(activeIndex - 1);
-  const slideNext = () => setActiveIndex(activeIndex + 1);
+
+const renderPrevButton = () => {
+  return <Button iconBefore="solid-chevron-left">Prev</Button>;
+};
+
+const renderNextButton = () => {
+  return <Button iconAfter="solid-chevron-right">Next</Button>;
+};
+
+const Carousel: React.FC<Props> = ({ items, activeIndex, setActiveIndex }) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const onSlideChanged = ({ item }) => {
@@ -32,12 +38,12 @@ const Carousel: React.FC<Props> = ({ items }) => {
         animationDuration={800}
         animationEasingFunction="ease-in-out"
         mouseTracking
+        renderPrevButton={renderPrevButton}
+        renderNextButton={renderNextButton}
         items={items}
         activeIndex={activeIndex}
         onSlideChanged={onSlideChanged}
       />
-      <Button onClick={slidePrev}>Prev</Button>
-      <Button onClick={slideNext}>Next</Button>
     </>
   );
 };

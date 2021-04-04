@@ -11,13 +11,13 @@ const BirdGallery: React.FC = () => {
   return (
     <>
       <NextSeo
-        title="Bird page title"
-        description="Bird page description"
+        title="Bird Gallery"
+        description="Bird Photography | Egrets, pelicans, ducks, woodpeckers, birds of prey and more"
         openGraph={{
           images: [
             {
               url:
-                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/photo_1047-1612554843501.webp"
+                "https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/1081_share-image-1616772590644.webp"
             }
           ]
         }}
