@@ -149,11 +149,15 @@ const Photo: React.FC = () => {
   return (
     <>
       <NextSeo
-        title={`${photo.title}`}
-        description={`${photo.description}`}
+        title="Gibbs Photography"
+        description="Gibbs Photography | Nature & Landscape Photography"
         openGraph={{
-          title: photo.title,
-          description: photo.description,
+          type: "website",
+          locale: "en_US",
+          url: "https://www.gibbs-photography.com",
+          site_name: "Gibbs Photography",
+          title: "Gibbs Photography",
+          description: `Gibbs Photography | Nature & Landscape Photography`,
           images: [
             {
               url: sharingImage.imageUrl,
@@ -162,6 +166,11 @@ const Photo: React.FC = () => {
               alt: sharingImage.altText
             }
           ]
+        }}
+        twitter={{
+          handle: "@gibbs_photog",
+          site: "https://gibbs-photography.com",
+          cardType: "summary_large_image"
         }}
       />
 
