@@ -28,7 +28,14 @@ import {
   styled,
   useToasts
 } from "bumbag";
-import { TwitterShareButton, TwitterIcon, FacebookShareButton, FacebookIcon } from "react-share";
+import {
+  TwitterShareButton,
+  TwitterIcon,
+  FacebookShareButton,
+  FacebookIcon,
+  LinkedinShareButton,
+  LinkedinIcon
+} from "react-share";
 import { NextSeo } from "next-seo";
 
 const Photo: React.FC = () => {
@@ -154,6 +161,8 @@ const Photo: React.FC = () => {
 
   const twitterHandle = `@gibbs_photog`;
   const siteName = `Gibbs Photography`;
+  const siteUrl = `https://gibbs-photography.com`;
+  const pageUrl = `https://gibbs-photography.com/image/${photo.sku}`;
 
   return (
     <>
@@ -163,7 +172,7 @@ const Photo: React.FC = () => {
         openGraph={{
           type: "website",
           locale: "en_US",
-          url: "https://www.gibbs-photography.com",
+          url: siteUrl,
           site_name: siteName,
           title: "Gibbs Photography",
           description: `Wildlife & Landscape Photography`,
@@ -312,21 +321,29 @@ const Photo: React.FC = () => {
               Share:
             </Text.Block>
             <TwitterShareButton
-              url={`https://gibbs-photography.com/image/${photo.sku}`}
-              title={photo.title}
+              url={pageUrl}
+              title={pageTitle}
               hashtags={["nature", "photography"]}
               style={{ marginLeft: "8px", marginRight: "8px" }}
             >
               <TwitterIcon size={36} style={{ borderRadius: "50%" }} />
             </TwitterShareButton>
             <FacebookShareButton
-              url={`https://gibbs-photography.com/image/${photo.sku}`}
-              title={photo.title}
+              url={pageUrl}
+              title={pageTitle}
               hashtag={"photography"}
               style={{ marginLeft: "8px", marginRight: "8px" }}
             >
               <FacebookIcon size={36} style={{ borderRadius: "50%" }} />
             </FacebookShareButton>
+            <LinkedinShareButton
+              url={pageUrl}
+              title={pageTitle}
+              summary={description}
+              source={siteUrl}
+            >
+              <LinkedinIcon size={36} style={{ borderRadius: "50%" }} />
+            </LinkedinShareButton>
             <EmailShareModal photo={photo} />
           </Flex>
         </Flex>
