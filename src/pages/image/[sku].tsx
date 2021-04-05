@@ -60,7 +60,6 @@ const Photo: React.FC = () => {
   const sharingImage = photo.sharingImage || image;
 
   const pgName = photo?.photographer?.name as string;
-  console.log({ pgName });
   const locationName = photo?.location?.name as string;
   const subjects = photo?.subjectsInPhoto?.map(x => x.subject);
   const tags = photo?.tagsForPhoto?.map(x => x.tag);
@@ -150,8 +149,8 @@ const Photo: React.FC = () => {
 
   const description =
     photo.description && photo.description != "No description provided."
-      ? `Gibbs Photography | ${photo.description}`
-      : `Gibbs Photography | Nature & Landscape Photography`;
+      ? `${photo.description}`
+      : `Wildlife & Landscape Photography`;
 
   const twitterHandle = `@gibbs_photog`;
   const siteName = `Gibbs Photography`;
@@ -167,7 +166,7 @@ const Photo: React.FC = () => {
           url: "https://www.gibbs-photography.com",
           site_name: siteName,
           title: "Gibbs Photography",
-          description: `Gibbs Photography | Nature & Landscape Photography`,
+          description: `Wildlife & Landscape Photography`,
           images: [
             {
               url: sharingImage.imageUrl,
