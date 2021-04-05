@@ -174,8 +174,8 @@ const Photo: React.FC = () => {
           locale: "en_US",
           url: siteUrl,
           site_name: siteName,
-          title: "Gibbs Photography",
-          description: `Wildlife & Landscape Photography`,
+          title: pageTitle,
+          description: description,
           images: [
             {
               url: sharingImage.imageUrl,
@@ -186,7 +186,7 @@ const Photo: React.FC = () => {
         }}
         twitter={{
           handle: twitterHandle,
-          site: "https://gibbs-photography.com",
+          site: siteUrl,
           cardType: "summary_large_image"
         }}
       />
